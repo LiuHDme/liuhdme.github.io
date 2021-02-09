@@ -6,9 +6,7 @@
   <title>scipy 稀疏矩阵小结 | LiuHDme</title>
   <meta name="author" content="LiuHDme">
   
-  <meta name="description" content="coo_matrixhttps://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html
-坐标（COOrdinate）形式的稀疏矩阵  
-几种创建方法：coo_matrix(D)coo_matrix((M,">
+  <meta name="description" content="总结几种 scipy 稀疏矩阵的用法">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -41,12 +39,6 @@
   <![endif]-->
 
   <script src="/js/jquery-2.0.3.min.js"></script>
-  
-    <script src="/js/marked.js"></script>
-    <script src="/js/comment.js"></script>
-    <script src="/js/timeago.min.js"></script>
-    <script src="/js/highlight.min.js"></script>
-	<script src="/js/spin.min.js"></script>
   
   <!-- analytics -->
   
@@ -135,7 +127,9 @@
 	<div class="mypage">		
 	  		
 
-	  <h1 id="coo-matrix"><a href="#coo-matrix" class="headerlink" title="coo_matrix"></a>coo_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html</a></p>
+	  <p>总结几种 scipy 稀疏矩阵的用法</p>
+<a id="more"></a>
+<h1 id="coo-matrix"><a href="#coo-matrix" class="headerlink" title="coo_matrix"></a>coo_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html</a></p>
 <p>坐标（COOrdinate）形式的稀疏矩阵  </p>
 <p><strong>几种创建方法：</strong><br><code>coo_matrix(D)</code><br><code>coo_matrix((M, N), [dtype])</code> # (M, N) 的空阵<br><code>coo_matrix((data, (i, j)), [shape=(M, N)])</code></p>
 <p><strong>优点：</strong></p>
@@ -267,22 +261,6 @@
     <!-- share -->
     
         
-    <div class="bdsharebuttonbox">
-        <a href="#" class="bds_more" data-cmd="more"></a>
-        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-        <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
-        <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
-        <a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
-        <a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a>
-        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
-        <a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a>
-    </div>
-    <script>
-        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
-        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-    </script>
-
 
         
 
@@ -292,26 +270,6 @@
 	
 <section id="comment">
   <h2 class="title">Comments</h2>
-    	 
-	 <div id="comment-thread"></div>
-	 <div id="loading-spin"></div>
-	 <script type="text/javascript">
-	   getComments({
-           type: "github" ? "github" : "github",       
-	       user: "liuhdme",
-	       repo: "liuhdme.github.io",
-		   client_id: "bf7d4ba11877db88543e",
-           client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
-		   no_comment: "No comments yet. Press the button and go to comment now!",
-		   go_to_comment: "Go to comment",
-		   no_issue: "no_issue",
-		   issue_title: "scipy 稀疏矩阵小结",
-		   issue_id: "",
-		   btn_class: "btn btn-primary",
-		   comments_target: "#comment-thread",
-		   loading_target: "#loading_spin"
-		   });
-	 </script>
   
 </section>
 
@@ -357,6 +315,11 @@
 
 	<!-- toc -->
 	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#coo-matrix"><span class="toc-article-text">coo_matrix</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#csr-matrix"><span class="toc-article-text">csr_matrix</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#csc-matrix"><span class="toc-article-text">csc_matrix</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#dok-matrix"><span class="toc-article-text">dok_matrix</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#lil-matrix"><span class="toc-article-text">lil_matrix</span></a></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-article-text">总结</span></a></li></ol>
+		</div>
 	
 	</div>
 	
@@ -418,35 +381,35 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -462,7 +425,11 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

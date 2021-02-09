@@ -8,7 +8,9 @@
   
   <meta name="description" content="相对熵可以衡量两个分布之间的不相似性，即 P 和 Q 两个分布越相似，相对熵越小，否则越大。
 相对熵的公式是
-D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，当 P 和 Q 的分布完全相同时，log 里就">
+D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。
+关于相对熵有个不等式：
+D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0下面给出两种证明方法：">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -41,12 +43,6 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
   <![endif]-->
 
   <script src="/js/jquery-2.0.3.min.js"></script>
-  
-    <script src="/js/marked.js"></script>
-    <script src="/js/comment.js"></script>
-    <script src="/js/timeago.min.js"></script>
-    <script src="/js/highlight.min.js"></script>
-	<script src="/js/spin.min.js"></script>
   
   <!-- analytics -->
   
@@ -140,6 +136,7 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
 <script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}</script><p>显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。</p>
 <p>关于相对熵有个不等式：</p>
 <script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0</script><p>下面给出两种证明方法：</p>
+<a id="more"></a>
 <ol>
 <li><p>由于在 $x \in (0, 1] $ 时，有 $\ln(x) \leq x-1$ 当且仅当 $x=1$ 时等号成立，因此有  </p>
 <script type="math/tex; mode=display">-D_{KL}(\mathrm{P}||\mathrm{Q}) = \sum_i p_i \log{\frac{q_i}{p_i}} \leq \sum_i p_i (\frac{q_i}{p_i} - 1) = \sum_i (q_i - p_i) = \sum_i q_i - \sum_i p_i = 0</script><p>所以有 $D_{KL}(P || Q) \geq 0$</p>
@@ -182,22 +179,6 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
     <!-- share -->
     
         
-    <div class="bdsharebuttonbox">
-        <a href="#" class="bds_more" data-cmd="more"></a>
-        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-        <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
-        <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
-        <a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
-        <a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a>
-        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
-        <a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a>
-    </div>
-    <script>
-        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
-        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-    </script>
-
 
         
 
@@ -207,26 +188,6 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
 	
 <section id="comment">
   <h2 class="title">Comments</h2>
-    	 
-	 <div id="comment-thread"></div>
-	 <div id="loading-spin"></div>
-	 <script type="text/javascript">
-	   getComments({
-           type: "github" ? "github" : "github",       
-	       user: "liuhdme",
-	       repo: "liuhdme.github.io",
-		   client_id: "bf7d4ba11877db88543e",
-           client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
-		   no_comment: "No comments yet. Press the button and go to comment now!",
-		   go_to_comment: "Go to comment",
-		   no_issue: "no_issue",
-		   issue_title: "关于相对熵的推导证明和推论",
-		   issue_id: "",
-		   btn_class: "btn btn-primary",
-		   comments_target: "#comment-thread",
-		   loading_target: "#loading_spin"
-		   });
-	 </script>
   
 </section>
 
@@ -272,6 +233,11 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
 
 	<!-- toc -->
 	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+			
+		</div>
 	
 	</div>
 	
@@ -333,35 +299,35 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -377,7 +343,11 @@ D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}显然，�
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

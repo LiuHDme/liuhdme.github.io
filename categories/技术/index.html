@@ -38,12 +38,6 @@
 
   <script src="/js/jquery-2.0.3.min.js"></script>
   
-    <script src="/js/marked.js"></script>
-    <script src="/js/comment.js"></script>
-    <script src="/js/timeago.min.js"></script>
-    <script src="/js/highlight.min.js"></script>
-	<script src="/js/spin.min.js"></script>
-  
   <!-- analytics -->
   
 
@@ -191,25 +185,17 @@
 		     <div class="entry">
   <div class="row">
 	
+           
+              <div class="thumbnail"><a href="/2019/12/14/2019/关于相对熵的推导证明和推论/"><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gni2fcx8u3j30d20hfmy4.jpg" alt="关于相对熵的推导证明和推论"  class="nofancybox"></a>
+           
+		</div>
+	
 	
 		<p>相对熵可以衡量两个分布之间的不相似性，即 P 和 Q 两个分布越相似，相对熵越小，否则越大。</p>
 <p>相对熵的公式是</p>
 <script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}</script><p>显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。</p>
 <p>关于相对熵有个不等式：</p>
 <script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0</script><p>下面给出两种证明方法：</p>
-<ol>
-<li><p>由于在 $x \in (0, 1] $ 时，有 $\ln(x) \leq x-1$ 当且仅当 $x=1$ 时等号成立，因此有  </p>
-<script type="math/tex; mode=display">-D_{KL}(\mathrm{P}||\mathrm{Q}) = \sum_i p_i \log{\frac{q_i}{p_i}} \leq \sum_i p_i (\frac{q_i}{p_i} - 1) = \sum_i (q_i - p_i) = \sum_i q_i - \sum_i p_i = 0</script><p>所以有 $D_{KL}(P || Q) \geq 0$</p>
-</li>
-<li><p>根据 Jensen 不等式，由于 $\log(x)$ 是一个严格的 concave 函数，所以有  </p>
-<script type="math/tex; mode=display">-D_{KL}(\mathrm{P}||\mathrm{Q}) = \sum_i p_i \log{\frac{q_i}{p_i}} \leq \log \sum_i p_i \frac{q_i}{p_i} = \log \sum_i q_i = 0</script><p>所以有 $D_{KL}(P || Q) \geq 0$</p>
-</li>
-</ol>
-<p>如果我们把相对熵公式展开，会得到</p>
-<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_i p_i \log{p_i} - \sum_i p_i \log{q_i} = \mathbf{H} (\mathrm{P}, \mathrm{Q}) - \mathbf{H} (\mathrm{P}) \geq 0</script><p>我们就得到了 Gibbis 不等式：</p>
-<script type="math/tex; mode=display">-\sum_i p_i \log{q_i} \geq -\sum_i p_i \log{p_i}</script><p>即因为相对熵 = 交叉熵 - 熵且其大于等于 0，故有交叉熵 ≥ 熵</p>
-<p>相对熵又叫 KL 散度，或信息增益，也称信息散度。</p>
-
 	
 	</div>
   <a type="button" href="/2019/12/14/2019/关于相对熵的推导证明和推论/#more" class="btn btn-default more">Read More</a>
@@ -229,110 +215,13 @@
 		     <div class="entry">
   <div class="row">
 	
+           
+              <div class="thumbnail"><a href="/2019/11/09/2019/scipy 稀疏矩阵小结/"><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gni2dxeuwuj30dd08d3ym.jpg" alt="scipy 稀疏矩阵小结"  class="nofancybox"></a>
+           
+		</div>
 	
-		<h1 id="coo-matrix"><a href="#coo-matrix" class="headerlink" title="coo_matrix"></a>coo_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html</a></p>
-<p>坐标（COOrdinate）形式的稀疏矩阵  </p>
-<p><strong>几种创建方法：</strong><br><code>coo_matrix(D)</code><br><code>coo_matrix((M, N), [dtype])</code> # (M, N) 的空阵<br><code>coo_matrix((data, (i, j)), [shape=(M, N)])</code></p>
-<p><strong>优点：</strong></p>
-<ul>
-<li>快速和 CSR/CSC 形式互相转换  </li>
-<li>允许重复元素（见下面例子）</li>
-</ul>
-<p><strong>缺点：</strong></p>
-<ul>
-<li>不直接支持科学算术和切片操作</li>
-</ul>
-<p><strong>用途：</strong></p>
-<ul>
-<li>快速创建稀疏矩阵  </li>
-<li>转换到 CSR 或 CSC 形式以进行快速科学算术以及矩阵、向量操作  </li>
-<li>转换到 CSR 或 CSC 形式时，重复的 (i, j) 元素会加在一起（见下面例子）</li>
-</ul>
-<p><strong>例子：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 构建空阵</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> coo_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 用 ijv 形式构建矩阵</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>row  = np.array([<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col  = np.array([<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">4</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo_matrix((data, (row, col)), shape=(<span class="number">4</span>, <span class="number">4</span>)).toarray()</span><br><span class="line">array([[<span class="number">4</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>]])</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 坐标有重复</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>row  = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col  = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo = coo_matrix((data, (row, col)), shape=(<span class="number">4</span>, <span class="number">4</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 重复元素会保留</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>np.<span class="built_in">max</span>(coo.data)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 重复元素被加起来</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo.toarray()</span><br><span class="line">array([[<span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
-<h1 id="csr-matrix"><a href="#csr-matrix" class="headerlink" title="csr_matrix"></a>csr_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html</a></p>
-<p>Compressed Sparse Row matrix</p>
-<p><strong>几种创建方法：</strong></p>
-<p><code>csr_matrix(D)</code><br><code>csr_matrix((M, N), [dtype])</code> # (M, N) 的空阵<br><code>csr_matrix((data, (row_ind, col_ind)), [shape=(M, N)])</code>  # a[row_ind[k], col_ind[k]] = data[k]<br><code>csr_matrix((data, indices, indptr), [shape=(M, N)])</code> # 标准的 CSR 表示形式，第 i 行的非零元素的所在列是 indices[indptr[i]:indptr[i+1]]，相应的元素是 data[indptr[i]:indptr[i+1]]</p>
-<p><strong>优点：</strong></p>
-<ul>
-<li>科学计算效率高</li>
-<li>行切片效率高</li>
-<li>矩阵乘法效率高</li>
-</ul>
-<p><strong>缺点：</strong></p>
-<ul>
-<li>列切片效率低（用 CSC）</li>
-<li>元素赋值效率低（用 LIL 或 DOK）</li>
-</ul>
-<p><strong>例子：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>row = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, (row, col)), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>],</span><br><span class="line">       [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, indices, indptr), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>],</span><br><span class="line">       [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
-<p>CSR 的重复元素也会累加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>docs = [[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>, <span class="string">&quot;hello&quot;</span>], [<span class="string">&quot;goodbye&quot;</span>, <span class="string">&quot;cruel&quot;</span>, <span class="string">&quot;world&quot;</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = [<span class="number">0</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>vocabulary = &#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> d <span class="keyword">in</span> docs:</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> term <span class="keyword">in</span> d:</span><br><span class="line"><span class="meta">... </span>        index = vocabulary.setdefault(term, <span class="built_in">len</span>(vocabulary))</span><br><span class="line"><span class="meta">... </span>        indices.append(index)</span><br><span class="line"><span class="meta">... </span>        data.append(<span class="number">1</span>)</span><br><span class="line"><span class="meta">... </span>    indptr.append(<span class="built_in">len</span>(indices))</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, indices, indptr), dtype=<span class="built_in">int</span>).toarray()</span><br><span class="line">array([[<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
-<h1 id="csc-matrix"><a href="#csc-matrix" class="headerlink" title="csc_matrix"></a>csc_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html</a></p>
-<p>Compressed Sparse Column matrix</p>
-<p><strong>几种创建方法：</strong></p>
-<p><code>csc_matrix(D)</code><br><code>csc_matrix(S)</code><br><code>csc_matrix((M, N), [dtype])</code><br><code>csc_matrix((data, (row_ind, col_ind)), [shape=(M, N)])</code><br><code>csc_matrix((data, indices, indptr), [shape=(M, N)])</code> # CSC 的标准表示形式，第 i 列的非零元素所在行是 indices[indptr[i]:indptr[i+1]]，相应元素是 data[indptr[i]:indptr[i+1]]</p>
-<p><strong>优点：</strong></p>
-<ul>
-<li>科学计算效率高</li>
-<li>列切片效率高</li>
-<li>矩阵乘法速度快（CSR、BSR 可能更快）</li>
-</ul>
-<p><strong>缺点：</strong></p>
-<ul>
-<li>行切片效率低（用 CSR）</li>
-<li>元素赋值效率低（用 LIL 或 DOK）</li>
-</ul>
-<p><strong>例子：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csc_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>row = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((data, (row, col)), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">       [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((data, indices, indptr), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">       [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
-<h1 id="dok-matrix"><a href="#dok-matrix" class="headerlink" title="dok_matrix"></a>dok_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.dok_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.dok_matrix.html</a></p>
-<p>Dictionary Of Keys based sparse matrix.</p>
-<p><strong>几种构建方式：</strong></p>
-<p><code>dok_matrix(D)</code><br><code>dok_matrix((M,N), [dtype])</code></p>
-<p><strong>特点：</strong></p>
-<ul>
-<li>访问某个元素的时间复杂度为 O(1)</li>
-<li>转换到 coo_matrix 效率高</li>
-</ul>
-<p><strong>例子：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> dok_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>S = dok_matrix((<span class="number">5</span>, <span class="number">5</span>), dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line"><span class="meta">... </span>        S[i, j] = i + j    <span class="comment"># Update element</span></span><br></pre></td></tr></table></figure>
-<h1 id="lil-matrix"><a href="#lil-matrix" class="headerlink" title="lil_matrix"></a>lil_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.lil_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.lil_matrix.html</a></p>
-<p>Row-based linked list sparse matrix</p>
-<p><strong>几种构建方法：</strong></p>
-<p><code>lil_matrix(D)</code><br><code>lil_matrix((M, N), [dtype])</code></p>
-<p><strong>优点：</strong></p>
-<ul>
-<li>可以灵活切片</li>
-<li>元素赋值效率高</li>
-</ul>
-<p><strong>缺点：</strong></p>
-<ul>
-<li>LIL + LIL 效率低（用 CSR 或 CSC）</li>
-<li>列切片效率低（用 CSC）</li>
-<li>矩阵乘法效率低（用 CSR 或 CSC）</li>
-</ul>
-<p><strong>一般用法：</strong></p>
-<ul>
-<li>快速构建稀疏矩阵</li>
-<li>转化到 CSR 或 CSC 形式</li>
-<li>矩阵很大时最好用 COO 形式</li>
-</ul>
-<p><strong>例子：</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> scipy.sparse <span class="keyword">as</span> sp</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil = sp.lil_matrix(np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>]]))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil.rows</span><br><span class="line">array([<span class="built_in">list</span>([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]), <span class="built_in">list</span>([<span class="number">1</span>, <span class="number">3</span>])], dtype=<span class="built_in">object</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil.data</span><br><span class="line">array([<span class="built_in">list</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]), <span class="built_in">list</span>([<span class="number">3</span>, <span class="number">5</span>])], dtype=<span class="built_in">object</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>快速构建稀疏矩阵用 COO 、DOK 或 LIL 形式</li>
-<li>给元素赋值用 DOK 或 LIL 形式</li>
-<li>进行科学计算用 CSC 或 CSR 形式</li>
-<li>行切片用 CSR，列切片用 CSC</li>
-</ul>
-
+	
+		<p>总结几种 scipy 稀疏矩阵的用法</p>
 	
 	</div>
   <a type="button" href="/2019/11/09/2019/scipy 稀疏矩阵小结/#more" class="btn btn-default more">Read More</a>
@@ -353,8 +242,8 @@
   <div class="row">
 	
 	
-		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-08-063511.png" alt=""></p>
-<p>这篇文章使用 TensorFlow 实现风格迁移。</p>
+		<p>这篇文章讲解使用 TensorFlow 实现风格迁移。</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-08-063511.png" alt=""></p>
 	
 	</div>
   <a type="button" href="/2019/02/02/2019/3 卷积神经网络/Week 4/neural_style_transfer_tensorflow/#more" class="btn btn-default more">Read More</a>
@@ -618,45 +507,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
 		
 			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
 		
-			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
-		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
-		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
-		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
-		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
-		
-			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
 		
 			<li><a href="/tags/Data-Competition/">Data Competition<span>1</span></a></li>
 		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
 		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+		
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
 		
 			<li><a href="/tags/Android/">Android<span>3</span></a></li>
 		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
 			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
+		
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+		
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+		
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
 			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
 		
-			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>
@@ -688,7 +577,7 @@
       </li>
     
       <li>
-        <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>Reasoning Over Knowledge Gr...</a>
+        <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>论文笔记：Explainable Reasoning ...</a>
       </li>
     
   </ul>
@@ -760,35 +649,35 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -804,7 +693,11 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

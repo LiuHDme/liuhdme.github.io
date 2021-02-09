@@ -38,12 +38,6 @@
 
   <script src="/js/jquery-2.0.3.min.js"></script>
   
-    <script src="/js/marked.js"></script>
-    <script src="/js/comment.js"></script>
-    <script src="/js/timeago.min.js"></script>
-    <script src="/js/highlight.min.js"></script>
-	<script src="/js/spin.min.js"></script>
-  
   <!-- analytics -->
   
 
@@ -130,7 +124,7 @@
 	<!-- display as entry -->	
 		<h3 class="title">
 			<div class="date"> 2019-09-28 </div>
-			<div class="article-title"><a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" >Reasoning Over Knowledge Graph Paths for Recommendation</a></div>						
+			<div class="article-title"><a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" >论文笔记：Explainable Reasoning over Knowledge Graphs for Recommendation</a></div>						
 		</h3>
 	
 
@@ -138,55 +132,13 @@
 		     <div class="entry">
   <div class="row">
 	
+           
+              <div class="thumbnail"><a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/"><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gni2ko57enj31sw0r4goc.jpg" alt="论文笔记：Explainable Reasoning over Knowledge Graphs for Recommendation"  class="nofancybox"></a>
+           
+		</div>
 	
-		<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Propose <strong>Knowledge-aware Path Recurrent Network (KPRN)</strong> which can generate paths representations by composing the semantics of both entities and relations. Two main main keys:</p>
-<ul>
-<li>adopting LSTM to capture sequential dependencies </li>
-<li>adopting a weighted pooling operation to discriminate different contributions of different paths, increasing explainability. </li>
-</ul>
-<h2 id="Research-Objective"><a href="#Research-Objective" class="headerlink" title="Research Objective"></a>Research Objective</h2><p>Contribute a KG based model to exploit knowledge-graph for recommendation and analyze the influence of different setting of the proposed model.</p>
-<h2 id="Background-and-Problems"><a href="#Background-and-Problems" class="headerlink" title="Background and Problems"></a>Background and Problems</h2><p>Recommender system incorporated with KG has attracted increasing attention these years, however existing efforts have not fully explored this connectivity to infer user preferences, especially in terms of modeling the sequential dependencies within and holistic semantics of a path. Following are two existing efforts: </p>
-<ul>
-<li><p><strong>Path-based models</strong> (Yu et al. 2014; 2013; Gao et al. 2018): introduce <strong>meta-paths</strong> to refine the similarities between users and items.</p>
-<ul>
-<li>hardly specify the holistic semantics of paths, especially when similar entities but different relations are involved in a meta-path.</li>
-<li>fail to automatically uncover and reason on unseen connectivity patterns, since meta-paths requires <strong>domain knowledge</strong> to be predefined.</li>
-</ul>
-</li>
-<li><p><strong>Knowledge graph embedding</strong> (KGE) (TransE (Bordes et al. 2013), TransR (Lin et al. 2015)): regularize the representations of items.</p>
-<ul>
-<li>only considers direct relations between entities, rather than multiple-hop relation paths.</li>
-<li>the characterization of user-item connectivity is achieved in a rather implicit way, that is, to guide the representation learning, but not to infer a user’s preference.</li>
-</ul>
-</li>
-</ul>
-<h2 id="Method-s"><a href="#Method-s" class="headerlink" title="Method(s)"></a>Method(s)</h2><ul>
-<li>In terms of reasoning, the method should model sequential dependencies.</li>
-<li>In terms of explainability, the method should discriminate different contributions of different paths, when inferring user interests.</li>
-</ul>
-<p>Firstly, extract qualified paths between a user-item pair from KG, each of which consists of the related entities and relations. Then adopt a <strong>LSTM</strong> network to model the sequential dependencies. Thereafter, a pooling operation if performed to aggregate the representations of paths to obtain prediction signal of the user-item pair.</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-09-28-130645.png" alt=""></p>
-<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><ul>
-<li>Dataset: MI (MovieLens-1M + IMDB) (Movie), KKBox (Music)</li>
-<li>Compare their proposed model’s performance with others’ on the above two datasets.</li>
-<li>Evaluation metrics: hit@K, ndcg@K, K={1, 2, …, 15}</li>
-<li>Use grid search to find learning rate and the coefficient of L2 regularization. (lr = {0.001, 0.002, 0.01, 0.02}, L2={10^−5, 10^−4, 10^−3, 10^−2})</li>
-<li>Explore the influence of relation in paths by discarding relation embedding to generate the input vector.</li>
-<li>Demonstrate reasoning capacity and explainability by visualizing a subgraph as an example.</li>
-</ul>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
-<li>By adopting LSTM, the model can capture the sequential dependencies of elements and reason on paths to infer user preferences.</li>
-<li>By adopting a pooling operation, the model can discriminate different contributions of different paths when inferring user interests, which also benefits the explainability of the model.</li>
-<li>We can mimic the propagation process of user preferences within KG via <strong>Graph Neural Network</strong>, since extracting qualified paths is labor-intensive.</li>
-<li>We can adopt zero-shot learning to solve the cold start issues in the large domain, since KG can links multiple domains together with overlapped entities.</li>
-</ul>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>Bordes, A.; Usunier, N.; García-Durían, A.; Weston, J.; and Yakhnenko, O. 2013. Translating embeddings for modeling multi-relational data. In <em>NIPS</em>, 2787–2795.</p>
-<p>Gao, L.; Yang, H.; Wu, J.; Zhou, C.; Lu, W.; and Hu, Y. 2018. Recommendation with multi-source heterogeneous information. In <em>IJCAI</em>, 3378–3384.</p>
-<p>Lin, Y.; Liu, Z.; Sun, M.; Liu, Y.; and Zhu, X. 2015. Learn- ing entity and relation embeddings for knowledge graph completion. In <em>AAAI</em>, 2181–2187.</p>
-<p>Yu, X.; Ren, X.; Gu, Q.; Sun, Y.; and Han, J. 2013. Collab- orative filtering with entity similarity regularization in het- erogeneous information networks. <em>IJCAI</em> 27.</p>
-<p>Yu, X.; Ren, X.; Sun, Y.; Gu, Q.; Sturt, B.; Khandelwal, U.; Norick, B.; and Han, J. 2014. Personalized entity recom- mendation: a heterogeneous information network approach. In <em>WSDM</em>, 283–292.</p>
-<p><em><a target="_blank" rel="noopener" href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4470">link for this paper</a></em></p>
-
+	
+		<p>总结一下 AAAI’19 的 Explainable Reasoning over Knowledge Graphs for Recommendation</p>
 	
 	</div>
   <a type="button" href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/#more" class="btn btn-default more">Read More</a>
@@ -268,45 +220,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/生活/">生活<span>3</span></a></li>
-		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
-		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
-		
-			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
 		
 			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
 		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
 		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
-		
-			<li><a href="/tags/Data-Competition/">Data Competition<span>1</span></a></li>
-		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
-		
-			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
-		
-			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
-		
-			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
 		
 			<li><a href="/tags/Android/">Android<span>3</span></a></li>
 		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
 			<li><a href="/tags/Python/">Python<span>1</span></a></li>
 		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
 		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+		
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
 		
 			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
 		
-			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
+		
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+		
+			<li><a href="/tags/Data-Competition/">Data Competition<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+		
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>
@@ -338,7 +290,7 @@
       </li>
     
       <li>
-        <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>Reasoning Over Knowledge Gr...</a>
+        <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>论文笔记：Explainable Reasoning ...</a>
       </li>
     
   </ul>
@@ -410,35 +362,35 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -454,7 +406,11 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>
