@@ -6,7 +6,7 @@
   <title>追本溯源，带你读懂图自编码器 | LiuHDme</title>
   <meta name="author" content="LiuHDme">
   
-  <meta name="description" content="">
+  <meta name="description" content="这篇文章简要介绍图自编码器的原理和应用">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -72,25 +72,31 @@
 		  
 		  <li>
 			<a href="/archives" title="All the articles.">
-			  <i class="fa fa-archive"></i>Archives
+			  <i class="fa fa-archive"></i>归档
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/categories" title="All the categories.">
-			  <i class="fa fa-folder"></i>Categories
+			  <i class="fa fa-folder"></i>分类
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/tags" title="All the tags.">
-			  <i class="fa fa-tags"></i>Tags
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class=""></i>相册
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/about" title="About me.">
-			  <i class="fa fa-user"></i>About
+			  <i class="fa fa-user"></i>关于
 			</a>
 		  </li>
 		  
@@ -125,16 +131,20 @@
 
 	<!-- content -->
 	<div class="mypage">		
+	  
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> <p>这篇文章简要介绍图自编码器的原理和应用</p>
+			
+		 </div> <!-- alert -->
 	  		
 
-	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-082018.png" alt=""></p>
-<a id="more"></a>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
+	  <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
 <p><strong>论文地址</strong>：<a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
 <p><strong>代码地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
 <p><strong>先介绍一下 intention 和用途</strong>。了解 embedding 概念的应该知道，获取一个合适的 embedding 来表示一张图中的节点不是一件容易的事，另外，如果我们能找到合适的 embedding，就能将它们用在上层任务中。VGAE 的用途之一就是通过 encoder-decoder 的结构来获取图中节点的 embedding。</p>
 <p><strong>VGAE 的思想和变分自编码器（VAE）很像</strong>：利用隐变量（latent variables），让模型学习出一些分布（distribution），再从这些分布中采样得到 latent representations（或者说 embedding），<strong>这个过程是 encode 阶段</strong>，然后再利用得到的 latent representations 重构（reconstruct）出原始的图，<strong>这个过程是 decode 阶段</strong>。只不过，VGAE 的 encoder 使用了 GCN，decoder 是简单的内积（inner product）形式。</p>
 <p><strong>下面具体讲解变分图自编码器（VGAE）。先讲 GAE，即图自编码器（没有变分）。</strong></p>
+<a id="more"></a>
 <h2 id="图自编码器（GAE）"><a href="#图自编码器（GAE）" class="headerlink" title="图自编码器（GAE）"></a>图自编码器（GAE）</h2><p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-094210.png" alt=""></p>
 <p><strong>统一规范，规定几个 notation 如下：</strong></p>
 <ul>
@@ -274,8 +284,8 @@
 	 <script type="text/javascript">
 	   getComments({
            type: "github" ? "github" : "github",       
-	       user: "wzpan",
-	       repo: "hexo-theme-freemind-blog",
+	       user: "liuhdme",
+	       repo: "liuhdme.github.io",
 		   client_id: "bf7d4ba11877db88543e",
            client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
 		   no_comment: "No comments yet. Press the button and go to comment now!",
@@ -333,6 +343,11 @@
 
 	<!-- toc -->
 	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-article-text">介绍</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E5%9B%BE%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88GAE%EF%BC%89"><span class="toc-article-text">图自编码器（GAE）</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Encoder"><span class="toc-article-text">Encoder</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Decoder"><span class="toc-article-text">Decoder</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#How-to-learn"><span class="toc-article-text">How to learn</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-article-text">小结</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E5%8F%98%E5%88%86%E5%9B%BE%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88VGAE%EF%BC%89"><span class="toc-article-text">变分图自编码器（VGAE）</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E7%A1%AE%E5%AE%9A%E5%9D%87%E5%80%BC%E5%92%8C%E6%96%B9%E5%B7%AE"><span class="toc-article-text">确定均值和方差</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E9%87%87%E6%A0%B7"><span class="toc-article-text">采样</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#How-to-learn-1"><span class="toc-article-text">How to learn</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%88%E6%9E%9C"><span class="toc-article-text">实验效果</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Analyze-the-code"><span class="toc-article-text">Analyze the code</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E5%B8%A6%E6%9D%83%E4%BA%A4%E5%8F%89%E7%86%B5"><span class="toc-article-text">带权交叉熵</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Github-Issues"><span class="toc-article-text">Github Issues</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-article-text">总结</span></a></li></ol>
+		</div>
 	
 	</div>
 	
@@ -394,35 +409,35 @@
   <span>▲</span> 
 </a>
 
-<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
-<script src="<%- config.root %>js/gallery.js"></script>
-<script src="<%- config.root %>js/bootstrap.min.js"></script>
-<script src="<%- config.root %>js/main.js"></script>
-<script src="<%- config.root %>js/search.js"></script> 
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
 
-<% if (theme.fancybox){ %>
-<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
-<% } %>
 
-<% if (config.search) { %>
+
+
    <script type="text/javascript">      
-     var search_path = "<%= config.search.path %>";
+     var search_path = "search.xml";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "<%= config.root %>" + search_path;
+	 var path = "/" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-<% } %>
+
 
 <!-- syntax highlighting -->
-<% if (theme.comment_js) { %>
+
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -438,11 +453,7 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
-<% } %>
 
-<% if (page.mathjax){ %>
-<%- partial('mathjax') %>
-<% } %>
 
 </body>
 </html>

@@ -72,25 +72,31 @@
 		  
 		  <li>
 			<a href="/archives" title="All the articles.">
-			  <i class="fa fa-archive"></i>Archives
+			  <i class="fa fa-archive"></i>归档
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/categories" title="All the categories.">
-			  <i class="fa fa-folder"></i>Categories
+			  <i class="fa fa-folder"></i>分类
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/tags" title="All the tags.">
-			  <i class="fa fa-tags"></i>Tags
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class=""></i>相册
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/about" title="About me.">
-			  <i class="fa fa-user"></i>About
+			  <i class="fa fa-user"></i>关于
 			</a>
 		  </li>
 		  
@@ -209,8 +215,8 @@
 	 <script type="text/javascript">
 	   getComments({
            type: "github" ? "github" : "github",       
-	       user: "wzpan",
-	       repo: "hexo-theme-freemind-blog",
+	       user: "liuhdme",
+	       repo: "liuhdme.github.io",
 		   client_id: "bf7d4ba11877db88543e",
            client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
 		   no_comment: "No comments yet. Press the button and go to comment now!",
@@ -329,35 +335,35 @@
   <span>▲</span> 
 </a>
 
-<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
-<script src="<%- config.root %>js/gallery.js"></script>
-<script src="<%- config.root %>js/bootstrap.min.js"></script>
-<script src="<%- config.root %>js/main.js"></script>
-<script src="<%- config.root %>js/search.js"></script> 
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
 
-<% if (theme.fancybox){ %>
-<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
-<% } %>
 
-<% if (config.search) { %>
+
+
    <script type="text/javascript">      
-     var search_path = "<%= config.search.path %>";
+     var search_path = "search.xml";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "<%= config.root %>" + search_path;
+	 var path = "/" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-<% } %>
+
 
 <!-- syntax highlighting -->
-<% if (theme.comment_js) { %>
+
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -373,11 +379,7 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
-<% } %>
 
-<% if (page.mathjax){ %>
-<%- partial('mathjax') %>
-<% } %>
 
 </body>
 </html>
