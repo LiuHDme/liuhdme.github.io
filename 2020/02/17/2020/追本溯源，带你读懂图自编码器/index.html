@@ -52,7 +52,9 @@
 
 
 
-<meta name="generator" content="Hexo 5.3.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
@@ -360,35 +362,35 @@
   <span>▲</span> 
 </a>
 
-<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
-<script src="<%- config.root %>js/gallery.js"></script>
-<script src="<%- config.root %>js/bootstrap.min.js"></script>
-<script src="<%- config.root %>js/main.js"></script>
-<script src="<%- config.root %>js/search.js"></script> 
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
 
-<% if (theme.fancybox){ %>
-<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
-<% } %>
 
-<% if (config.search) { %>
+
+
    <script type="text/javascript">      
-     var search_path = "<%= config.search.path %>";
+     var search_path = "search.xml";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "<%= config.root %>" + search_path;
+	 var path = "/" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-<% } %>
+
 
 <!-- syntax highlighting -->
-<% if (theme.comment_js) { %>
+
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -404,11 +406,7 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
-<% } %>
 
-<% if (page.mathjax){ %>
-<%- partial('mathjax') %>
-<% } %
 
 </body>
 </html>
