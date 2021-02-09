@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>test</title>
+      <link href="2021/02/10/test/"/>
+      <url>2021/02/10/test/</url>
+      
+        <content type="html"><![CDATA[<script type="math/tex; mode=display">f(x) = x + a</script>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>追本溯源，带你读懂图自编码器</title>
       <link href="2020/02/17/2020/%E8%BF%BD%E6%9C%AC%E6%BA%AF%E6%BA%90%EF%BC%8C%E5%B8%A6%E4%BD%A0%E8%AF%BB%E6%87%82%E5%9B%BE%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/"/>
       <url>2020/02/17/2020/%E8%BF%BD%E6%9C%AC%E6%BA%AF%E6%BA%90%EF%BC%8C%E5%B8%A6%E4%BD%A0%E8%AF%BB%E6%87%82%E5%9B%BE%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/</url>
