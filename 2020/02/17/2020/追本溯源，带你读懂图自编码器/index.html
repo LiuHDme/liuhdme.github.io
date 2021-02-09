@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>追本溯源，带你读懂图自编码器 | Deep Road</title>
+  <title>追本溯源，带你读懂图自编码器 | LiuHDme</title>
   <meta name="author" content="LiuHDme">
   
-  <meta name="description" content="介绍Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 Variational Graph Auto-Encoder（VGAE）。
-论文地址：http://bayesiandeeplearning.org/2">
+  <meta name="description" content="">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <meta property="og:title" content="追本溯源，带你读懂图自编码器"/>
-  <meta property="og:site_name" content="Deep Road"/>
+  <meta property="og:site_name" content="LiuHDme"/>
 
   
     <meta property="og:image" content=""/>
@@ -67,7 +66,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-       <a class="navbar-brand" href="/">Deep Road</a>
+       <a class="navbar-brand" href="/">LiuHDme</a>
       <div class="collapse navbar-collapse nav-menu">
 		<ul class="nav navbar-nav">
 		  
@@ -129,6 +128,7 @@
 	  		
 
 	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-082018.png" alt=""></p>
+<a id="more"></a>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
 <p><strong>论文地址</strong>：<a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
 <p><strong>代码地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
@@ -225,13 +225,13 @@
 <ul class="pagination">
 	 
 				
-    	<li class="prev"><a href="/2021/02/10/test/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+    	<li class="prev"><a href="/2020/09/15/2020/贷款违约预测赛题理解/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
   		
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-          <li class="next disabled"><a>Next<i class="fa fa-arrow-circle-o-right"></i></a></li>
+		   <li class="next"><a href="/2019/12/14/2019/关于相对熵的推导证明和推论/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -313,7 +313,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/技术/">技术<span>1</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>1</span></a></li>
+    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li>
   </li>
 
     </ul>
@@ -394,35 +394,35 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -438,7 +438,11 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

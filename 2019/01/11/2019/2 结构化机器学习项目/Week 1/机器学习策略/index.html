@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Machine Learning 策略 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="这篇文章简要谈谈实际项目中的一些策略，这些策略有助于找出项目中出现的问题以及准确快速地找出解决问题的方法。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Machine Learning 策略"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+    <script src="/js/marked.js"></script>
+    <script src="/js/comment.js"></script>
+    <script src="/js/timeago.min.js"></script>
+    <script src="/js/highlight.min.js"></script>
+	<script src="/js/spin.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> Machine Learning 策略</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>这篇文章简要谈谈实际项目中的一些策略，这些策略有助于找出项目中出现的问题以及准确快速地找出解决问题的方法。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="为什么需要机器学习策略"><a href="#为什么需要机器学习策略" class="headerlink" title="为什么需要机器学习策略"></a>为什么需要机器学习策略</h3><p>如果想提高一个深度学习系统的准确率，有很多方法：</p>
+<ul>
+<li>收集更多数据</li>
+<li>使训练集的数据更多样化</li>
+<li>训练更长时间</li>
+<li>尝试不同的优化算法</li>
+<li>尝试更大的神经网络</li>
+<li>尝试更小的神经网络</li>
+<li>使用正则化</li>
+<li>改变神经网络的结构</li>
+<li>…</li>
+</ul>
+<p>如果一一尝试这些方法，不仅会话费大量时间，有时得到的效果也非常微小，因此我们需要对具体情况进行仔细分析，从上述方法中找出最关键的方法。</p>
+<h3 id="正交化"><a href="#正交化" class="headerlink" title="正交化"></a>正交化</h3><p>一些非常有经验的深度学习研究人员非常清楚哪些超参数应该调整，哪些不该调整，这里“该不该”的标准就是，如果一个超参数调整后只会影响系统某一方面的性能，那么这个超参数就是应该调整的。比如，之前的文章讲过，数据集应该被分成训练集、开发集合测试集，那么也许你会发现系统在训练集上和开发集上表现良好，而在测试集上表现很差，那么我们就希望能通过调整几个超参数来提高系统在测试集上的表现，而不影响其在训练集和开发集上的表现。这种调整一个或几个超参数以达到只影响某一方面的性能的特性就叫做<strong>正交化</strong>。</p>
+<p>这里有一些可能出现的问题以及具有正交化这种特点的处理办法：</p>
+<ol>
+<li>如果训练集的准确率较低，你可以尝试使用更大的神经网络、其他的优化算法；</li>
+<li>如果开发集的准确率较低，你可以尝试使用正则化、更大的训练集；</li>
+<li>如果测试集的准确率较低，你可以尝试使用更大的开发集；</li>
+<li>如果你的系统在测试集的表现没有问题，却在实际应用中表现不理想，你可以尝试改变开发集中的数据，或是换一个损失函数。</li>
+</ol>
+<h3 id="单一的量化评估指标"><a href="#单一的量化评估指标" class="headerlink" title="单一的量化评估指标"></a>单一的量化评估指标</h3><p>无论你在尝试调整超参数，或是选择不同的机器学习算法，亦或是在构建机器学习系统时尝试不同的配置项，你都会发现如果你有一个单一的量化评估指标，这会让你很轻松地知道新的方法比上一次的方法是更好还是更糟，这会让整个进程加快很多，让我们来看一个例子。</p>
+<p>你构建了一个猫分类器 A，然后调整了一些超参数或别的配置项，又得到了一个猫分类器 B，这时如果你想知道两个分类器哪个更好，你可以考察两个分类器的精确率和召回率。所谓精确率就是一个分类器认为是猫的图片中真正是猫的比例，而召回率是指对于所有是猫的图片，你的分类器识别出来了多少张。你可能会发现分类器 A 的精确率很高，而召回率很低，分类器 B 的精确率很低，而召回率很高，这就让你十分苦恼，究竟应该选择哪个分类器才好呢？</p>
+<p>出现这种尴尬局面的原因就在于你使用了两个评估指标，因此，与其使用两个指标，倒不如只使用一个，而这个新的指标可以兼顾精确率和召回率，在机器学习中，一种方法是使用 F1 Score，你可以把它理解为是精确率和召回率的平均值，它的计算公式为</p>
+<script type="math/tex; mode=display">F1 = \cfrac{2}{\frac{1}{P} + \frac{1}{R}}</script><p>其中 P 是精确率，R 是召回率，实际上这计算的二者的调和平均值，但你仍然可以理解为这是一种平均计算。</p>
+<p>那么在这个例子中，你只需要考察两个分类器中哪个的 F1 分数更高，那么选择这个更高的就可以了。</p>
+<h3 id="满足与优化指标（Satisficing-Matrics-and-Optimizing-Matrics）"><a href="#满足与优化指标（Satisficing-Matrics-and-Optimizing-Matrics）" class="headerlink" title="满足与优化指标（Satisficing Matrics and Optimizing Matrics）"></a>满足与优化指标（Satisficing Matrics and Optimizing Matrics）</h3><p>虽然单一的评估指标看上去很不错，但想找到这种单一的指标并不是很容易，比如：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-30-071738.png" alt=""></p>
+<p>你很难决定到底应该如何把 F1 分数和运行时间适当的结合起来，如果只是求平均值的话，这样看起来似乎有些过于刻意了，而且当指标很多时，如果把他们结合起来的方法不当，那么即使你得到了一个单一评估指标，这个指标的作用可能也不见得有多好。</p>
+<p>怎么办呢？这里还有一些方法，即<strong>满足指标</strong>与<strong>优化指标</strong>，什么意思呢，我们仍然沿用上图中的例子。</p>
+<p>假设你希望得到的分类器的运行时间必须小于 100 毫秒，在满足这个条件下，F1 分数越高越好，那么你就可以轻松选择分类器 B，而不用再纠结如何把 F1 分数和运行时间结合起来。这个例子中，运行时间就是我们所说的满足指标，意味着它必须要满足一个最低的值，如果低于了这个值，那我们就不予考虑，比如这里的分类器 C，它的运行时间远远超过了 100 毫秒，即使它的的 F1 分数还不错，我们也不会考虑它。这里的 F1 分数就是优化指标，意味着在满足了满足指标的条件下，它越高越好。</p>
+<p>可能你一共有 N 个关心的指标，那么你可以只选择其中的一个作为优化指标，剩下的 N-1 个作为满足指标，那么你只需要找到那个满足了所有 N-1 个满足指标的分类器中，优化指标最高的那个分类器就可以了。</p>
+<p>当然了，这些指标一般是用在你的训练集/开发集/测试集中的，因此你必须要把你数据集构建成这三部分，下面我们就谈谈如何进行这样的构建。</p>
+<h3 id="训练集-开发集-测试集分布"><a href="#训练集-开发集-测试集分布" class="headerlink" title="训练集/开发集/测试集分布"></a>训练集/开发集/测试集分布</h3><p>你构建训练集、开发集、测试集的方法将会对构建系统的进展情况产生巨大的影响，这里我们先重点谈谈如何设置开发集和测试集。</p>
+<p>开发集有时也被称为交叉验证集，它和测试集有什么作用呢？比如你在训练集上训练了很多不同模型，那么你就可以用开发集来评估这些模型的表现情况，然后就可以选择一个最好的模型，再使用测试集来评估这个模型。</p>
+<p>举一个更加具体的例子。你正在构建一个猫分类器，你想在一下国家和地区推广你的分类器：</p>
+<ul>
+<li>美国</li>
+<li>英国</li>
+<li>欧洲其他地区</li>
+<li>南美</li>
+<li>印度</li>
+<li>中国</li>
+<li>亚洲其他地区</li>
+<li>澳大利亚</li>
+</ul>
+<p>那么如何设置你的开发集和测试集呢？有一种想法是，你可已选择前四个国家和地区中的猫片作为开发集，后四个国家和地区中的猫片作为测试集。事实证明，这是一个非常糟糕的想法 :) 因为在这个例子中，你的开发集和测试集中的数据来自于不同的分布。如果把这个过程比作瞄准——射击的话，就好比你或你的团队花了数月的时间瞄准一个目标，最后射击的时候却打向了另外一个目标，很难想象你们的结果会好到哪里去。</p>
+<p>合适的做法是，把你们收集到的所有地区的数据混合起来并随机打乱，再分成开发集和测试集，这样开发集和测试集就都拥有了上述八个国家和地区的数据，即开发集和测试集中的数据具有了相同的分布。</p>
+<p>这里还有一个问题，即如何选择开发集和测试集的大小呢，我们下面讨论这个问题。</p>
+<h3 id="开发集和测试集的大小"><a href="#开发集和测试集的大小" class="headerlink" title="开发集和测试集的大小"></a>开发集和测试集的大小</h3><p>建立开发集和测试集的方式随着深度学习时代的到来而发生着变化。机器学习中有一条经验法则：将你拥有的所有数据 按照 7 : 3 的比例分割成训练集和测试集，如果也需要建立开发集，则可以将 60% 的数据作为训练集，20% 作为开发集，20% 作为测试集。</p>
+<p>在早期的机器学习时代，这曾经是非常合理的做法，尤其是在数据规模不大的时候。比如如果你总共只有几百个或几千个甚至几万个样例，使用 70/30 或 60/20/20 的经验法则是非常合理的。但是在现代机器学习中，我们往往需要处理更大量的数据。假如你有 100 万个训练样例，一种合理的做法其实是，使用 98% 的数据作为训练集，1% 作为开发集，1% 作为测试集。</p>
+<p>这样做的原因其实很简单，假如你有一百万个样例，那么其中的 1% 就已经有 1 万个样例了，这对于开发集或测试集来说已经足够了。</p>
+<p>测试集的作用是在系统开发完成后，帮我们最终评估系统性能的，所以测试集的大小只要能保证对系统的评估结构的高置信度即可，因此除非你需要对系统最终的性能有十分精确的测量，你并不需要你的测试集拥有上百万个数据。</p>
+<p>有时候你可能并不需要对最终的系统评估有很高的置信度，那么在在这种情况下没有测试集也是可以的。</p>
+<p>不过我觉得还是有一个测试集要安心一些，防止数据在开发集上过拟合得太厉害。</p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2019/01/13/2019/3 卷积神经网络/Week 1/1 CNN 部分理论/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2019/01/08/2019/1 优化算法/6 学习率衰减/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+        <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+        <a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+        <a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a>
+        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+    </div>
+    <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
+        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+    	 
+	 <div id="comment-thread"></div>
+	 <div id="loading-spin"></div>
+	 <script type="text/javascript">
+	   getComments({
+           type: "github" ? "github" : "github",       
+	       user: "wzpan",
+	       repo: "hexo-theme-freemind-blog",
+		   client_id: "bf7d4ba11877db88543e",
+           client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
+		   no_comment: "No comments yet. Press the button and go to comment now!",
+		   go_to_comment: "Go to comment",
+		   no_issue: "no_issue",
+		   issue_title: "Machine Learning 策略",
+		   issue_id: "",
+		   btn_class: "btn btn-primary",
+		   comments_target: "#comment-thread",
+		   loading_target: "#loading_spin"
+		   });
+	 </script>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-11 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
+
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+<% } %>
+
+<% if (config.search) { %>
+   <script type="text/javascript">      
+     var search_path = "<%= config.search.path %>";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "<%= config.root %>" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+<% } %>
+
+<!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
+
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
+
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>LSTM | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="LSTM"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+    <script src="/js/marked.js"></script>
+    <script src="/js/comment.js"></script>
+    <script src="/js/timeago.min.js"></script>
+    <script src="/js/highlight.min.js"></script>
+	<script src="/js/spin.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> LSTM</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" alt=""></p>
+<a id="more"></a>
+<h2 id="Gated-Recurrent-Unit"><a href="#Gated-Recurrent-Unit" class="headerlink" title="Gated Recurrent Unit"></a>Gated Recurrent Unit</h2><p>GRU 和 LSTM 都可以很好的解决 RNN 中的梯度消失问题，而 GRU 与 LSTM 在某些方面很相似，为了阐述 LSTM，先阐述 GRU。</p>
+<p>下图所示是普通 RNN 单元</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-rnn_step_forward.png" alt=""></p>
+<p>GRU 的 RNN 单元与其类似，但有所不同，其中对于 a 的计算分为三部：</p>
+<ol>
+<li>计算 $\tilde{a}^{\langle t \rangle} = tanh(w_a[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_a)$</li>
+<li>计算 $\Gamma_u = \sigma(w_u[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)$</li>
+<li>最终 $a^{\langle t \rangle} = \Gamma_u \cdot \tilde{a}^{\langle t \rangle} + (1-\Gamma_u) \cdot a^{\langle {t-1} \rangle}$</li>
+</ol>
+<p>其中 $\Gamma<em>u$ 为 _update gate</em>，即更新门，其值域为 $[0, 1]$. 从上式可以看出，最终的 $a^{\langle t \rangle}$ 是当前激活值与一个时间步骤前的激活值的线性组合，通过这种方式，可以使得先前激活值有一定概率传播到当前激活值，即记住了句子之前的信息。然后用最终的 $a^{\langle t \rangle}$ 计算 $y^{\langle t \rangle}$.</p>
+<p>另外为了与普通 RNN 单元进行区分，GRU 中的激活值一般以 c 表示，将上式中的 a 替换为 c 即可，下面将使用 c 阐述其他内容。</p>
+<p>目前为止介绍的 GRU 其实做了简化，完整的 GRU 还有一个相关门，即 relevant gate，用来确定 $c^{\langle {t-1} \rangle}$ 与 $c^{\langle t \rangle}$ 的相关程度，加入了更新门后对于 c 的计算过程如下。</p>
+<ol>
+<li>计算 $\Gamma_r = \sigma(w_r[c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_r)$</li>
+<li>计算 $\tilde{c}^{\langle{t}\rangle} = tanh(w_c[\Gamma_r \cdot c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)$ </li>
+<li>计算 $\Gamma_u = \sigma(w_u[c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)$</li>
+<li>最终 $c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle {t-1} \rangle}$</li>
+</ol>
+<p>其中第一步计算 <em>relevant gate</em>，第二步利用 <em>relevatn gate</em> 计算 $\tilde{c}^{\langle t \rangle}$，其余步骤与之前相同。</p>
+<p>关于为什么要使用这样的 RNN 单元，Andrew NG 对此有下面这一番话：</p>
+<blockquote>
+<p>So why we use these architectures, why don’t we change them, how we know they will work, why not add another gate, why not use the simpler GRU instead of the full GRU; well researchers has experimented over years all the various types of these architectures with many many different versions and also addressing the vanishing gradient problem. They have found that full GRUs are one of the best RNN architectures to be used for many different problems. You can make your design but put in mind that GRUs and LSTMs are standards.</p>
+</blockquote>
+<h2 id="Long-Short-Term-Memory"><a href="#Long-Short-Term-Memory" class="headerlink" title="Long Short Term Memory"></a>Long Short Term Memory</h2><p>GRU 在解决梯度消失问题上的表现很不错，但在 GRU 提出之前，LSTM 存在已久，而 LSTM 比起 GRU 使用得更加普遍。</p>
+<p>LSTM 与 GRU 十分相似。在 GRU 中，我们有 <em>update gate</em> 和 <em>relevant gate</em>，以及激活单元 c，而在 LSTM 中，没有<em>relevant gate</em>，但新增了 <em>forget gate</em> 和 <em>output gate</em>，以及激活单元 c 和 a，下面我们来详细阐述。</p>
+<p>在 GRU 中，我们使用 <em>update gate</em> 的来控制激活单元是否更新以及更新的程度，其目的是减少激活单元更新的次数或程度，好让之前的激活单元的值得到保留，换言之，记住句子前面部分的信息，这一点在 LSTM 中并没改变，只不过相比于 GRU 使用 $1 - \Gamma<em>u$ 来表示不更新的概率，LSTM 直接使用一个 _forget gate</em> 即 $\Gamma_f$ 来代替 $1 - \Gamma_u$，下表可以清楚看出 GRU 与 LSTM 在计算 $c^{\langle t \rangle}$ 时的区别。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>GRU</th>
+<th>LSTM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle{t-1}\rangle}$</td>
+<td>$c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>另一个门，即 <em>output gate</em> 的作用是进一步控制激活单元更新的程度，在 GRU 中，上表算出的 $c^{\langle t \rangle}$ 就是激活单元，而在 LSTM 中还需进一步计算，再用一张表表示。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>GRU 的激活单元</th>
+<th>LSTM 的激活单元</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle{t-1}\rangle}$</td>
+<td>$c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}$<br>$a^{\langle t \rangle} = \Gamma_o \cdot tanh(c^{\langle t \rangle})$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>从表中可以看出，LSTM 的最终激活单元是 a，即 $y^{\langle t \rangle}$ 是通过 $a^{\langle t \rangle}$ 的计算得出的，$c^{\langle t \rangle}$ 只是中间变量，不过 $c^{\langle t \rangle}$ 和 $a^{\langle t \rangle}$ 都会传向下一个单元，一会会用一张图表示这个过程。</p>
+<p>介绍了 <em>forget gate</em> 和 <em>output gate</em> 的作用后，让我们把 LSTM 的激活单元计算过程中涉及的计算式完整写一遍：</p>
+<ol>
+<li>$\tilde{c}^{\langle t \rangle} = tanh(w_c[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)$</li>
+<li>$\Gamma_u = \sigma(w_u[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)$</li>
+<li>$\Gamma_f = \sigma(w_f[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_f)$</li>
+<li>$\Gamma_o = \sigma(w_o[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_o)$</li>
+<li>$c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}$</li>
+<li>$a^{\langle t \rangle} = \Gamma_o \cdot tanh(c^{\langle t \rangle})$</li>
+</ol>
+<p>计算顺序不一定按照上面的序号来。可以用一张图来表示 LSTM 的 RNN 单元的计算过程：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM.png" alt=""></p>
+<p>从图中可以看出，$c^{\langle t \rangle}$ 和 $a^{\langle t \rangle}$ 都传向了下一个单元（这里说下一个单元有些不太准确，准确形容应该是 the next time step），但只有 $a^{\langle t \rangle}$ 参与了 $y^{\langle t \rangle}$ 的计算。</p>
+<p>下面这幅图展示了 LSTM 的前向传播过程。</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" alt=""></p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2019/01/27/2019/4 序列模型/Week 3/1 注意力模型/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2019/01/24/2019/4 序列模型/Week 1/3 用 LSTM 生成小段音乐/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+        <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+        <a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+        <a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a>
+        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+    </div>
+    <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
+        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+    	 
+	 <div id="comment-thread"></div>
+	 <div id="loading-spin"></div>
+	 <script type="text/javascript">
+	   getComments({
+           type: "github" ? "github" : "github",       
+	       user: "wzpan",
+	       repo: "hexo-theme-freemind-blog",
+		   client_id: "bf7d4ba11877db88543e",
+           client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
+		   no_comment: "No comments yet. Press the button and go to comment now!",
+		   go_to_comment: "Go to comment",
+		   no_issue: "no_issue",
+		   issue_title: "LSTM",
+		   issue_id: "",
+		   btn_class: "btn btn-primary",
+		   comments_target: "#comment-thread",
+		   loading_target: "#loading_spin"
+		   });
+	 </script>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-26 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/NLP/">NLP<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
+
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+<% } %>
+
+<% if (config.search) { %>
+   <script type="text/javascript">      
+     var search_path = "<%= config.search.path %>";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "<%= config.root %>" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+<% } %>
+
+<!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
+
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
+
+</body>
+</html>

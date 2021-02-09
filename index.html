@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Deep Road</title>
+  <title>LiuHDme</title>
   <meta name="author" content="LiuHDme">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-  <meta property="og:site_name" content="Deep Road"/>
+  <meta property="og:site_name" content="LiuHDme"/>
 
   
     <meta property="og:image" content=""/>
@@ -64,7 +64,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-       <a class="navbar-brand" href="/">Deep Road</a>
+       <a class="navbar-brand" href="/">LiuHDme</a>
       <div class="collapse navbar-collapse nav-menu">
 		<ul class="nav navbar-nav">
 		  
@@ -101,7 +101,7 @@
   <div class="container">
     <div class="content">
       <div class="page-header page-header-inverse ">
-  <h1 class="title title-inverse ">推荐系统 | 信息检索</h1>
+  <h1 class="title title-inverse ">Rec</h1>
 </div>
 
 <div class="row page">
@@ -125,6 +125,88 @@
 		
             
 		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
+            
+		
         
         <!-- render other articles -->
         
@@ -133,8 +215,8 @@
 	
 	<!-- display as entry -->	
 		<h3 class="title">
-			<div class="date"> 2021-02-10 </div>
-			<div class="article-title"><a href="/2021/02/10/test/" >test</a></div>						
+			<div class="date"> 2020-09-15 </div>
+			<div class="article-title"><a href="/2020/09/15/2020/贷款违约预测赛题理解/" >贷款违约预测赛题理解</a></div>						
 		</h3>
 	
 
@@ -143,11 +225,11 @@
   <div class="row">
 	
 	
-		<script type="math/tex; mode=display">
-f(x) = x + a</script>
+		<p>本次的比赛的任务是二分类，即预测用户贷款是否会违约。数据为结构化数据，一共有 47 个特征，因此对特征如何筛选、优化、组合应该会对结果产生很大影响，后续的特征工程需要仔细开展。数据量上，train 有 80 万，testA 和 testB 各 20 万，数据量不算大，可以先用传统机器学习模型，后续再上深度学习模型，然后考虑模型融合。</p>
+<p>比赛地址：<a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/531830/introduction">https://tianchi.aliyun.com/competition/entrance/531830/introduction</a></p>
 	
 	</div>
-  <a type="button" href="/2021/02/10/test/#more" class="btn btn-default more">Read More</a>
+  <a type="button" href="/2020/09/15/2020/贷款违约预测赛题理解/#more" class="btn btn-default more">Read More</a>
 </div>
 
            
@@ -168,94 +250,421 @@ f(x) = x + a</script>
 	
 	
 		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-082018.png" alt=""></p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
-<p><strong>论文地址</strong>：<a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
-<p><strong>代码地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
-<p><strong>先介绍一下 intention 和用途</strong>。了解 embedding 概念的应该知道，获取一个合适的 embedding 来表示一张图中的节点不是一件容易的事，另外，如果我们能找到合适的 embedding，就能将它们用在上层任务中。VGAE 的用途之一就是通过 encoder-decoder 的结构来获取图中节点的 embedding。</p>
-<p><strong>VGAE 的思想和变分自编码器（VAE）很像</strong>：利用隐变量（latent variables），让模型学习出一些分布（distribution），再从这些分布中采样得到 latent representations（或者说 embedding），<strong>这个过程是 encode 阶段</strong>，然后再利用得到的 latent representations 重构（reconstruct）出原始的图，<strong>这个过程是 decode 阶段</strong>。只不过，VGAE 的 encoder 使用了 GCN，decoder 是简单的内积（inner product）形式。</p>
-<p><strong>下面具体讲解变分图自编码器（VGAE）。先讲 GAE，即图自编码器（没有变分）。</strong></p>
-<h2 id="图自编码器（GAE）"><a href="#图自编码器（GAE）" class="headerlink" title="图自编码器（GAE）"></a>图自编码器（GAE）</h2><p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-094210.png" alt=""></p>
-<p><strong>统一规范，规定几个 notation 如下：</strong></p>
-<ul>
-<li>图用 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ 表示，其中 $\mathcal{V}$ 表示节点集合，$\mathcal{E}$ 表示边集合</li>
-<li>$\mathbf{A}$: 邻接矩阵</li>
-<li>$\mathbf{D}$: 度矩阵</li>
-<li>$N$: 节点数</li>
-<li>$d$: 节点的特征（features）维度</li>
-<li>$\mathbf{X} \in \Bbb{R}^{N \times d}$表示节点的特征矩阵</li>
-<li>$f$: embedding 维度</li>
-<li>$\mathbf{Z} \in \Bbb{R}^{N \times f}$: 节点的 embedding</li>
-</ul>
-<h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><p><strong>GAE 使用 GCN 作为 encoder</strong>，来得到节点的 latent representations（或者说 embedding），这个过程可用一行简短的公式表达：</p>
-<script type="math/tex; mode=display">\mathbf{Z} = \mathrm{GCN}(\mathbf{X}, \mathbf{A})</script><p>我们将 $\mathrm{GCN}$ 视为一个函数，然后将 $\mathbf{X}$ 和 $\mathbf{A}$ 作为输入，输入到 $\mathrm{GCN}$ 这个函数中，输出 $\mathbf{Z} \in \Bbb{R}^{N×f}$，$\mathbf{Z}$ 代表的就是所有节点的 latent representations，或者说 embedding。</p>
-<p>如何定义 $\mathrm{GCN}$ 这个函数？kipf 在论文中定义如下：</p>
-<script type="math/tex; mode=display">\mathrm{GCN}(\mathbf{X}, \mathbf{A}) = \tilde{\mathbf{A}} \mathrm{ReLU} (\tilde{\mathbf{A}}\mathbf{XW_0})\mathbf{W_1}</script><p>其中，$\tilde{\mathbf{A}} = \mathbf{D}^{-\frac{1}{2}} \mathbf{A} \mathbf{D}^{-\frac{1}{2}}$，$\mathbf{W_0}$ 和 $\mathbf{W_1}$ 是待学习的参数。</p>
-<p>简言之，<strong>这里 $\mathrm{GCN}$ 就相当于一个以节点特征和邻接矩阵为输入、以节点 embedding 为输出的函数，目的只是为了得到 embedding</strong>。</p>
-<h3 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h3><p><strong>GAE 采用 inner-product 作为 decoder 来重构（reconstruct）原始的图</strong>：</p>
-<script type="math/tex; mode=display">\hat{\mathbf{A}} = \sigma(\mathbf{Z} \mathbf{Z}^\mathrm{T})</script><p>上式中，$\hat{\mathbf{A}}$ 就是重构（reconstruct）出来的邻接矩阵。</p>
-<h3 id="How-to-learn"><a href="#How-to-learn" class="headerlink" title="How to learn"></a>How to learn</h3><p><strong>一个好的 $\mathbf{Z}$，就应该使重构出的邻接矩阵与原始的邻接矩阵尽可能的相似</strong>，因为邻接矩阵决定了图的结构。因此，GAE 在训练过程中，采用交叉熵作为损失函数：</p>
-<script type="math/tex; mode=display">\mathcal{L} = - \frac{1}{N} \sum y \log \hat{y} + (1-y) \log (1-\hat{y})</script><p>上式中，$y$ 代表邻接矩阵 $\mathbf{A}$ 中某个元素的值（0 或 1），$\hat{y}$ 代表重构的邻接矩阵 $\mathbf{\hat{A}}$ 中相应元素的值（0 到 1 之间）。</p>
-<p>从损失函数可以看出来，我们希望重构的邻接矩阵（或者说重构的图），与原始的邻接矩阵（或者说原始的图）越接近、越相似越好。</p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p><strong>图自编码器（GAE）的原理简明、清晰，训练起来不麻烦</strong>，因为可训练的参数只有 $\mathbf{W_0}$ 和 $\mathbf{W_1}$，kipf 的代码实现中，这两个参数矩阵的维度分别是 $d \times 32$ 和 $32 \times 16$，如果 $d = 1000$，也只有 32512 个参数，相当少了。</p>
-<p>下面讲 VGAE（<strong>变分</strong>图自编码器）。</p>
-<h2 id="变分图自编码器（VGAE）"><a href="#变分图自编码器（VGAE）" class="headerlink" title="变分图自编码器（VGAE）"></a>变分图自编码器（VGAE）</h2><p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-094333.png" alt=""></p>
-<p><strong>在 GAE 中，一旦 $\mathrm{GCN}$ 中的 $\mathbf{W_0}$ 和 $\mathbf{W_1}$ 确定了，那么 $\mathrm{GCN}$ 就是一个确定的函数，给定 $\mathbf{X}$ 和 $\mathbf{A}$，输出的 $\mathbf{Z}$ 就是确定的</strong>。</p>
-<p>而<strong>在 VGAE 中，$\mathbf{Z}$ 不再由一个确定的函数得到</strong>，而是从一个（多维）高斯分布中采样得到，说得更明确些，就是我们先通过 $\mathrm{GCN}$ 确定一个（多维）高斯分布，再从这个分布中采样得到 $\mathbf{Z}$。下面简单描述一下这个过程。</p>
-<h3 id="确定均值和方差"><a href="#确定均值和方差" class="headerlink" title="确定均值和方差"></a>确定均值和方差</h3><p><strong>高斯分布可以唯一地由二阶矩确定</strong>。因此，想要确定一个高斯分布，我们只需要知道均值和方差。<strong>VGAE 利用 $\mathrm{GCN}$ 来分别计算均值和方差</strong>：</p>
-<script type="math/tex; mode=display">\mathbf{\mu} = \mathrm{GCN}_{\mu} (\mathbf{X}, \mathbf{A})</script><script type="math/tex; mode=display">\log \mathbf{\sigma} = \mathrm{GCN}_{\sigma} (\mathbf{X}, \mathbf{A})</script><p>这里有两个要注意的地方，第一个是 $\mathrm{GCN}$ 的下标，$\mathrm{GCN}<em>{\mu}$ 和 $\mathrm{GCN}</em>{\sigma}$ 中的 $\mathbf{W<em>0}$ 是相同的、共享的，但 $\mathbf{W_1}$ 是不同的，因此用下标来作区分；第二个是通过 $\mathrm{GCN}</em>{\sigma}$ 得到的是 $\log \sigma$，这样可以方便后续的计算。</p>
-<h3 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h3><p>既然已经得到了均值和方差（准确来说应该是均值向量和协方差矩阵），就可以通过采样得到 $\mathbf{Z}$ 了，但是，<strong>采样操作无法提供梯度信息</strong>，也就是说，反向传播在采样操作无法计算梯度，也就无法更新 $\mathbf{W_0}$ 和 $\mathbf{W_1}$。解决办法是<strong>重参数化（reparameterization）</strong>。<strong>了解（连续分布）重参数化的可以跳过下面一段。</strong></p>
-<blockquote>
-<p>简单说一下重参数化。大家应该知道，如果 $\epsilon$ 服从 $\cal{N}(0, 1)$，那么 $z = \mu + \epsilon \sigma$ 就服从 $\cal{N} (\mu, \sigma^2)$。因此，我们可以先从标准高斯中采样一个 $\epsilon$，再通过 $\mu + \epsilon \sigma$ 计算出 $z$，这样一来，$z$ 的表达式清晰可见，梯度信息也就有了。</p>
-</blockquote>
-<p><strong>VGAE 的 decoder 也是一个简单的 inner-product，与 GAE 的 decoder 没有区别。</strong></p>
-<h3 id="How-to-learn-1"><a href="#How-to-learn-1" class="headerlink" title="How to learn"></a>How to learn</h3><p>VGAE 依然希望重构出的图和原始的图尽可能相似，除此之外，还希望 $\mathrm{GCN}$ 计算出的分布与标准高斯尽可能相似。因此<strong>损失函数由交叉熵和 KL 散度两部分构成</strong>：</p>
-<script type="math/tex; mode=display">\cal{L} = 
-\cal{L}_{\mathrm{CE}} \mathrm{+} \mathrm{KL[\mathit{q}(\mathbf{Z} | \mathbf{X}, \mathbf{A}) || \mathit{p}(\mathbf{Z})]}</script><p>其中，$q(\mathbf{Z} | \mathbf{X}, \mathbf{A})$ 是 $\mathrm{GCN}$ 计算出的分布，$p(\mathbf{Z})$ 是标准高斯。</p>
-<p>不过，论文中的优化目标是这样的：</p>
-<script type="math/tex; mode=display">
-\mathcal{L}=\mathbb{E}_{q(\mathbf{Z} | \mathbf{X}, \mathbf{A})}[\log p(\mathbf{A} | \mathbf{Z})]-\operatorname{KL}[q(\mathbf{Z} | \mathbf{X}, \mathbf{A}) \| p(\mathbf{Z})]</script><p>这是用变分下界写出的优化目标，第一项是期望（<strong>我看到有的博客说第一项是交叉熵，这不对</strong>），第二项是 KL 散度。</p>
-<h2 id="实验效果"><a href="#实验效果" class="headerlink" title="实验效果"></a>实验效果</h2><p>Kipf 和 Welling 在三个数据集上进行了效果分析，任务是链接预测，详情见下表：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-02-19-084139.png" alt=""></p>
-<p>可见，（变分）图自编码器在三个数据集上的效果都很好，不过，<strong>注意带星号的 GAE* 和 VGAE*，这两个模型是不带 input features 的，就是说节点的 features 就是 one-hot 向量，这种情况下，（变分）图自编码器的效果不仅不比 SC 和 DW 好，甚至还有点差</strong>。不过，Kipf 和 Welling 在论文中指出，SC 和 DW 不支持 input features，就是说这是这两个方法本身的缺陷，就不能怪 Kipf 他们使用 input features 了。</p>
-<hr>
-<p>到这里，这篇介绍（变分）图自编码器的文章应该告一段落了。不过，<strong>关于 kipf 开源的代码，还有很多有意思的事情</strong>。</p>
-<h2 id="Analyze-the-code"><a href="#Analyze-the-code" class="headerlink" title="Analyze the code"></a>Analyze the code</h2><h3 id="带权交叉熵"><a href="#带权交叉熵" class="headerlink" title="带权交叉熵"></a>带权交叉熵</h3><p>不管是 GAE 还是 VGAE，损失函数中交叉熵的实现都使用的是这样一个 API：<code>tf.nn.weighted_cross_entropy_with_logits</code>，当我尝试把它换成 <code>tf.nn.sigmoid_cross_entropy_with_logits</code>（即最常用的交叉熵的定义）后，<strong>各项指标从 90 多下降到了 50 左右</strong>，所以有必要分析一下这个带权重的交叉熵在这里的意义。</p>
-<p>带权交叉熵损失的数学定义如下：</p>
-<script type="math/tex; mode=display">- \mathrm{w} · y \log \hat{y} - (1 - y) \log (1 - \hat{y})</script><p>可以看到，与常用的交叉熵损失相比，只是在正样本的那一项前面乘了一个系数，这个系数是一个参数，是需要传进去的。可以来分析一下这个系数 $\mathrm{w}$ 大于 1 和大于 0 小于 1 对交叉熵损失的影响：</p>
-<ul>
-<li>$\mathrm{w} \gt 1$: 当模型去预测一个 true label 是正样本的样本时，如果模型误预测成了负样本，那么由于 $\mathrm{w}$ 大于 1，此时交叉熵损失会更大。换句话说，$\mathrm{w} \gt 1$ 使得模型分错一个正样本时受到的惩罚变大了，因此这会使模型更“专注”于对正样本的分类。说的再专业些，就是 $\mathrm{w} \gt 1$ 会减少 false negative 的数量，增加 true positive 的数量，这会使 recall 上升。</li>
-<li>$0 \lt \mathrm{w} \lt 1$: 与 $\mathrm{w} \gt 1$ 相反，会减少 false positive 的数量，增加 true negative 的数量，使 precision 上升。</li>
-</ul>
-<p>什么情况下要设置一个 $\mathrm{w}$ ？没错，就是当训练集正负样本数量不平衡的时候。在一张图（graph）里，往往边的数量远少于节点数量，这会使邻接矩阵中 1 的数量远少于 0 的数量，即<strong>正样本的数量远少于负样本的数量</strong>，这种情况下，我们可以设定一个大于 1 的 $\mathrm{w}$，让模型更“专注”于正样本的分类。可是如何设置一个比较好的 $\mathrm{w}$ 呢？可以这样，用负样本数与正样本数的比例作为 $\mathrm{w}$ 的值，因为这个比例如果大于 1，就说明正样本比负样本少，刚好可以用这个比例作为 $\mathrm{w}$ 的值，来让模型“专注”与正样本；如果这个比例小于 1，就说明正样本比负样本多，也可以用这个比例作为 $\mathrm{w}$ 的值。</p>
-<p>下面是 kipf 的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pos_weight = <span class="built_in">float</span>(adj.shape[<span class="number">0</span>] * adj.shape[<span class="number">0</span>] - adj.<span class="built_in">sum</span>()) / adj.<span class="built_in">sum</span>()</span><br><span class="line">norm = adj.shape[<span class="number">0</span>] * adj.shape[<span class="number">0</span>] / <span class="built_in">float</span>((adj.shape[<span class="number">0</span>] * adj.shape[<span class="number">0</span>] - adj.<span class="built_in">sum</span>()) * <span class="number">2</span>)</span><br><span class="line">self.cost = norm * tf.reduce_mean(</span><br><span class="line">            tf.nn.weighted_cross_entropy_with_logits(logits=preds_sub, targets=labels_sub, pos_weight=pos_weight))</span><br></pre></td></tr></table></figure>
-<p><code>adj</code> 是邻接矩阵，<code>pos_weight</code> 就是上面说的系数 $\mathrm{w}$，<code>adj.sum()</code> 就是正样本数，<code>adj.shape[0] * adj.shape[0] - adj.sum()</code> 就是负样本数，因此 <code>pos_weight</code> 就是负样本数/正样本数。</p>
-<p><strong>另外，这里有一个 <code>norm</code></strong>，因为我们用负样本数/正样本数作为系数 $\mathrm{w}$，相当于把正样本的数目增大到和负样本相同的数目，因此计算损失的时候，应该在总损失的基础上除以 2 倍的负样本数目，而不是原始的所有样本数 $N$（正样本数 $N_1$+负样本数 $N_2$），而 <code>tf.reduce_mean</code> 相当于总损失乘上 $\frac{1}{N}$，因此 <code>norm</code> 应该被设置成 $\frac{N}{2 N_2}$，最后的效果就是总损失乘上 $\frac{1}{2N_2}$。</p>
-<p><strong>我觉得这样有点麻烦，直接把 <code>norm</code> 设置成 $\frac{1}{2N_2}$，然后把 <code>tf.reduce_mean</code> 换成 <code>tf.reduce_sum</code> 就好了</strong>，即</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">norm = <span class="number">1</span> / <span class="built_in">float</span>((adj.shape[<span class="number">0</span>] * adj.shape[<span class="number">0</span>] - adj.<span class="built_in">sum</span>()) * <span class="number">2</span>)</span><br><span class="line">self.cost = norm * tf.reduce_sum(</span><br><span class="line">            tf.nn.weighted_cross_entropy_with_logits(logits=preds_sub, targets=labels_sub, pos_weight=pos_weight))</span><br></pre></td></tr></table></figure>
-<p><strong>我重新跑了一下代码，效果一样。</strong></p>
-<h2 id="Github-Issues"><a href="#Github-Issues" class="headerlink" title="Github Issues"></a>Github Issues</h2><p><strong>说了这么多，图自编码器也有让人质疑的地方</strong>。下面是 Github 上的一些 issues：</p>
-<ol>
-<li>重构的邻接矩阵中，TP 非常大，导致 recall（TP/(TP+FN)）很高，但 precision（TP/(TP+FP)）非常低，<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-455966135">@tkipf</a> 建议找到一个合适的threshold，来平衡 recall 和 precision，但 <a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-456907910">@zzheyu</a> 发现即使将 threshold 调整到 0.9 也不能解决这个问题。</li>
-<li>另外，<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-456907910">@zzheyu</a> 认为论文中 VGAE 在 validation 和 test set 上表现出色的原因之一是 validation 和 test set 的数据非常 balance，即 half edges and half non-edges，为了印证这一点，他将 validation 和 test set 中 non-edges 的个数依次增加为之前的 5 倍、30 倍和 100 倍，发现 average precision score 随着 non-edges 的数目增多而大幅下降，同时，他发现 val/test sets 上的 F1 score 也非常低。对此，<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-456912625">@tkipf</a> 表示可以尝试用负采样来解决这一问题。</li>
-<li>此外，@tkipf 还表示，他们用 GAE 的变体在 knowledge base completion (<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.06103">https://arxiv.org/abs/1703.06103</a>) 和 recommender system (<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.02263">https://arxiv.org/abs/1706.02263</a>) 进行了测试，实验效果很好。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-478657131">@jlevy44</a> 评论说，他的 dataset 的 pos edges 的数量远少于 neg edges 的数量，他通过调整threshold 缓解了这一问题，但是，他发现模型 reconstruct 的邻接矩阵与原始邻接矩阵差异很大，他表示疑问。<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-478707136">@tkipf</a> 回复说，可以把 score function 从 $\text{sigmoid}(x^T, x)$ 替换成 $e^{-d(x, y)}$，其中 $d(x, y)$ 表示欧氏距离，他认为这样 reconstruct 的图多多少少会不那么密集。<ol>
-<li>关于这一点，他建议 @jlevy44 可以看”A Tutorial on Energy-Based Learning” by LeCun et al.，使用 $e^{-d(x,y)}$ 作为 score function，相当于在使用一个 energy-based model</li>
-<li>关于在链接预测任务中使用 energy-based loss，可以参考 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.03815">https://arxiv.org/abs/1707.03815</a></li>
-<li>使用内积作为 score function，会带来 graphons 问题（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Graphon">https://en.wikipedia.org/wiki/Graphon</a>），这会使生成模型倾向于生成一些紧致的区块（dense blobs）</li>
-</ol>
-</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-478915428">@XuanHeIIIS</a> 询问 @tkipf 是否尝试过以减小 feature reconstruction loss 作为训练目标来训练 GCN，<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae/issues/20#issuecomment-478925040">@tkipf</a> 给出的方法是，将 decoder 的 output 输入到 node-level MLP 中，以重构node features；如果 features 是二元的值，可以用交叉熵作为损失，如果是连续的值，用 MSE也可以。</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>用一句话总结图自编码器：<strong>利用 GCN 计算出节点的 embedding，再重构原始的图，要求重构的图与原始的图尽可能相似。</strong> 只不过，在这个过程中海油很多要考虑的细节，比如 $\mathbf{Z}$ 的先验，论文里使用的是高斯，但 kipf 明确指出高斯先验会带来新的问题，比如损失函数中，KL 散度前需要乘上一个系数，减小 KL 散度的影响，否则模型效果会下降，等等，还有很多值得商榷与改进的地方。众所周知，今年图神经网络是大势所趋，我们能否继续发现图自编码器的身影呢？</p>
-<p><strong>References：</strong></p>
-<p>[1] <a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
-<p>[2] <a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
-<p>[3] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/107854139">https://zhuanlan.zhihu.com/p/107854139</a></p>
-
 	
 	</div>
   <a type="button" href="/2020/02/17/2020/追本溯源，带你读懂图自编码器/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-12-14 </div>
+			<div class="article-title"><a href="/2019/12/14/2019/关于相对熵的推导证明和推论/" >关于相对熵的推导证明和推论</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>相对熵可以衡量两个分布之间的不相似性，即 P 和 Q 两个分布越相似，相对熵越小，否则越大。</p>
+<p>相对熵的公式是</p>
+<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}</script><p>显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。</p>
+<p>关于相对熵有个不等式：</p>
+<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0</script><p>下面给出两种证明方法：</p>
+<ol>
+<li><p>由于在 $x \in (0, 1] $ 时，有 $\ln(x) \leq x-1$ 当且仅当 $x=1$ 时等号成立，因此有  </p>
+<script type="math/tex; mode=display">-D_{KL}(\mathrm{P}||\mathrm{Q}) = \sum_i p_i \log{\frac{q_i}{p_i}} \leq \sum_i p_i (\frac{q_i}{p_i} - 1) = \sum_i (q_i - p_i) = \sum_i q_i - \sum_i p_i = 0</script><p>所以有 $D_{KL}(P || Q) \geq 0$</p>
+</li>
+<li><p>根据 Jensen 不等式，由于 $\log(x)$ 是一个严格的 concave 函数，所以有  </p>
+<script type="math/tex; mode=display">-D_{KL}(\mathrm{P}||\mathrm{Q}) = \sum_i p_i \log{\frac{q_i}{p_i}} \leq \log \sum_i p_i \frac{q_i}{p_i} = \log \sum_i q_i = 0</script><p>所以有 $D_{KL}(P || Q) \geq 0$</p>
+</li>
+</ol>
+<p>如果我们把相对熵公式展开，会得到</p>
+<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_i p_i \log{p_i} - \sum_i p_i \log{q_i} = \mathbf{H} (\mathrm{P}, \mathrm{Q}) - \mathbf{H} (\mathrm{P}) \geq 0</script><p>我们就得到了 Gibbis 不等式：</p>
+<script type="math/tex; mode=display">-\sum_i p_i \log{q_i} \geq -\sum_i p_i \log{p_i}</script><p>即因为相对熵 = 交叉熵 - 熵且其大于等于 0，故有交叉熵 ≥ 熵</p>
+<p>相对熵又叫 KL 散度，或信息增益，也称信息散度。</p>
+
+	
+	</div>
+  <a type="button" href="/2019/12/14/2019/关于相对熵的推导证明和推论/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-11-09 </div>
+			<div class="article-title"><a href="/2019/11/09/2019/scipy 稀疏矩阵小结/" >scipy 稀疏矩阵小结</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<h1 id="coo-matrix"><a href="#coo-matrix" class="headerlink" title="coo_matrix"></a>coo_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_matrix.html</a></p>
+<p>坐标（COOrdinate）形式的稀疏矩阵  </p>
+<p><strong>几种创建方法：</strong><br><code>coo_matrix(D)</code><br><code>coo_matrix((M, N), [dtype])</code> # (M, N) 的空阵<br><code>coo_matrix((data, (i, j)), [shape=(M, N)])</code></p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>快速和 CSR/CSC 形式互相转换  </li>
+<li>允许重复元素（见下面例子）</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>不直接支持科学算术和切片操作</li>
+</ul>
+<p><strong>用途：</strong></p>
+<ul>
+<li>快速创建稀疏矩阵  </li>
+<li>转换到 CSR 或 CSC 形式以进行快速科学算术以及矩阵、向量操作  </li>
+<li>转换到 CSR 或 CSC 形式时，重复的 (i, j) 元素会加在一起（见下面例子）</li>
+</ul>
+<p><strong>例子：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 构建空阵</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> coo_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 用 ijv 形式构建矩阵</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>row  = np.array([<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col  = np.array([<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">4</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo_matrix((data, (row, col)), shape=(<span class="number">4</span>, <span class="number">4</span>)).toarray()</span><br><span class="line">array([[<span class="number">4</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 坐标有重复</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>row  = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col  = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo = coo_matrix((data, (row, col)), shape=(<span class="number">4</span>, <span class="number">4</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 重复元素会保留</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>np.<span class="built_in">max</span>(coo.data)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># 重复元素被加起来</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>coo.toarray()</span><br><span class="line">array([[<span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
+<h1 id="csr-matrix"><a href="#csr-matrix" class="headerlink" title="csr_matrix"></a>csr_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html</a></p>
+<p>Compressed Sparse Row matrix</p>
+<p><strong>几种创建方法：</strong></p>
+<p><code>csr_matrix(D)</code><br><code>csr_matrix((M, N), [dtype])</code> # (M, N) 的空阵<br><code>csr_matrix((data, (row_ind, col_ind)), [shape=(M, N)])</code>  # a[row_ind[k], col_ind[k]] = data[k]<br><code>csr_matrix((data, indices, indptr), [shape=(M, N)])</code> # 标准的 CSR 表示形式，第 i 行的非零元素的所在列是 indices[indptr[i]:indptr[i+1]]，相应的元素是 data[indptr[i]:indptr[i+1]]</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>科学计算效率高</li>
+<li>行切片效率高</li>
+<li>矩阵乘法效率高</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>列切片效率低（用 CSC）</li>
+<li>元素赋值效率低（用 LIL 或 DOK）</li>
+</ul>
+<p><strong>例子：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>row = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, (row, col)), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>],</span><br><span class="line">       [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, indices, indptr), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>],</span><br><span class="line">       [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
+<p>CSR 的重复元素也会累加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>docs = [[<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>, <span class="string">&quot;hello&quot;</span>], [<span class="string">&quot;goodbye&quot;</span>, <span class="string">&quot;cruel&quot;</span>, <span class="string">&quot;world&quot;</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = [<span class="number">0</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>vocabulary = &#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> d <span class="keyword">in</span> docs:</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> term <span class="keyword">in</span> d:</span><br><span class="line"><span class="meta">... </span>        index = vocabulary.setdefault(term, <span class="built_in">len</span>(vocabulary))</span><br><span class="line"><span class="meta">... </span>        indices.append(index)</span><br><span class="line"><span class="meta">... </span>        data.append(<span class="number">1</span>)</span><br><span class="line"><span class="meta">... </span>    indptr.append(<span class="built_in">len</span>(indices))</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csr_matrix((data, indices, indptr), dtype=<span class="built_in">int</span>).toarray()</span><br><span class="line">array([[<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br></pre></td></tr></table></figure>
+<h1 id="csc-matrix"><a href="#csc-matrix" class="headerlink" title="csc_matrix"></a>csc_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html</a></p>
+<p>Compressed Sparse Column matrix</p>
+<p><strong>几种创建方法：</strong></p>
+<p><code>csc_matrix(D)</code><br><code>csc_matrix(S)</code><br><code>csc_matrix((M, N), [dtype])</code><br><code>csc_matrix((data, (row_ind, col_ind)), [shape=(M, N)])</code><br><code>csc_matrix((data, indices, indptr), [shape=(M, N)])</code> # CSC 的标准表示形式，第 i 列的非零元素所在行是 indices[indptr[i]:indptr[i+1]]，相应元素是 data[indptr[i]:indptr[i+1]]</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>科学计算效率高</li>
+<li>列切片效率高</li>
+<li>矩阵乘法速度快（CSR、BSR 可能更快）</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>行切片效率低（用 CSR）</li>
+<li>元素赋值效率低（用 LIL 或 DOK）</li>
+</ul>
+<p><strong>例子：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csc_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((<span class="number">3</span>, <span class="number">4</span>), dtype=np.int8).toarray()</span><br><span class="line">array([[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]], dtype=int8)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>row = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>col = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((data, (row, col)), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">       [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>indptr = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>indices = np.array([<span class="number">0</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>data = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>csc_matrix((data, indices, indptr), shape=(<span class="number">3</span>, <span class="number">3</span>)).toarray()</span><br><span class="line">array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">4</span>],</span><br><span class="line">       [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>],</span><br><span class="line">       [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>]])</span><br></pre></td></tr></table></figure>
+<h1 id="dok-matrix"><a href="#dok-matrix" class="headerlink" title="dok_matrix"></a>dok_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.dok_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.dok_matrix.html</a></p>
+<p>Dictionary Of Keys based sparse matrix.</p>
+<p><strong>几种构建方式：</strong></p>
+<p><code>dok_matrix(D)</code><br><code>dok_matrix((M,N), [dtype])</code></p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>访问某个元素的时间复杂度为 O(1)</li>
+<li>转换到 coo_matrix 效率高</li>
+</ul>
+<p><strong>例子：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> dok_matrix</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>S = dok_matrix((<span class="number">5</span>, <span class="number">5</span>), dtype=np.float32)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line"><span class="meta">... </span>        S[i, j] = i + j    <span class="comment"># Update element</span></span><br></pre></td></tr></table></figure>
+<h1 id="lil-matrix"><a href="#lil-matrix" class="headerlink" title="lil_matrix"></a>lil_matrix</h1><p><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.lil_matrix.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.lil_matrix.html</a></p>
+<p>Row-based linked list sparse matrix</p>
+<p><strong>几种构建方法：</strong></p>
+<p><code>lil_matrix(D)</code><br><code>lil_matrix((M, N), [dtype])</code></p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>可以灵活切片</li>
+<li>元素赋值效率高</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>LIL + LIL 效率低（用 CSR 或 CSC）</li>
+<li>列切片效率低（用 CSC）</li>
+<li>矩阵乘法效率低（用 CSR 或 CSC）</li>
+</ul>
+<p><strong>一般用法：</strong></p>
+<ul>
+<li>快速构建稀疏矩阵</li>
+<li>转化到 CSR 或 CSC 形式</li>
+<li>矩阵很大时最好用 COO 形式</li>
+</ul>
+<p><strong>例子：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> scipy.sparse <span class="keyword">as</span> sp</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil = sp.lil_matrix(np.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>]]))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil.rows</span><br><span class="line">array([<span class="built_in">list</span>([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]), <span class="built_in">list</span>([<span class="number">1</span>, <span class="number">3</span>])], dtype=<span class="built_in">object</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lil.data</span><br><span class="line">array([<span class="built_in">list</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]), <span class="built_in">list</span>([<span class="number">3</span>, <span class="number">5</span>])], dtype=<span class="built_in">object</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>快速构建稀疏矩阵用 COO 、DOK 或 LIL 形式</li>
+<li>给元素赋值用 DOK 或 LIL 形式</li>
+<li>进行科学计算用 CSC 或 CSR 形式</li>
+<li>行切片用 CSR，列切片用 CSC</li>
+</ul>
+
+	
+	</div>
+  <a type="button" href="/2019/11/09/2019/scipy 稀疏矩阵小结/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-09-28 </div>
+			<div class="article-title"><a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" >Reasoning Over Knowledge Graph Paths for Recommendation</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Propose <strong>Knowledge-aware Path Recurrent Network (KPRN)</strong> which can generate paths representations by composing the semantics of both entities and relations. Two main main keys:</p>
+<ul>
+<li>adopting LSTM to capture sequential dependencies </li>
+<li>adopting a weighted pooling operation to discriminate different contributions of different paths, increasing explainability. </li>
+</ul>
+<h2 id="Research-Objective"><a href="#Research-Objective" class="headerlink" title="Research Objective"></a>Research Objective</h2><p>Contribute a KG based model to exploit knowledge-graph for recommendation and analyze the influence of different setting of the proposed model.</p>
+<h2 id="Background-and-Problems"><a href="#Background-and-Problems" class="headerlink" title="Background and Problems"></a>Background and Problems</h2><p>Recommender system incorporated with KG has attracted increasing attention these years, however existing efforts have not fully explored this connectivity to infer user preferences, especially in terms of modeling the sequential dependencies within and holistic semantics of a path. Following are two existing efforts: </p>
+<ul>
+<li><p><strong>Path-based models</strong> (Yu et al. 2014; 2013; Gao et al. 2018): introduce <strong>meta-paths</strong> to refine the similarities between users and items.</p>
+<ul>
+<li>hardly specify the holistic semantics of paths, especially when similar entities but different relations are involved in a meta-path.</li>
+<li>fail to automatically uncover and reason on unseen connectivity patterns, since meta-paths requires <strong>domain knowledge</strong> to be predefined.</li>
+</ul>
+</li>
+<li><p><strong>Knowledge graph embedding</strong> (KGE) (TransE (Bordes et al. 2013), TransR (Lin et al. 2015)): regularize the representations of items.</p>
+<ul>
+<li>only considers direct relations between entities, rather than multiple-hop relation paths.</li>
+<li>the characterization of user-item connectivity is achieved in a rather implicit way, that is, to guide the representation learning, but not to infer a user’s preference.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Method-s"><a href="#Method-s" class="headerlink" title="Method(s)"></a>Method(s)</h2><ul>
+<li>In terms of reasoning, the method should model sequential dependencies.</li>
+<li>In terms of explainability, the method should discriminate different contributions of different paths, when inferring user interests.</li>
+</ul>
+<p>Firstly, extract qualified paths between a user-item pair from KG, each of which consists of the related entities and relations. Then adopt a <strong>LSTM</strong> network to model the sequential dependencies. Thereafter, a pooling operation if performed to aggregate the representations of paths to obtain prediction signal of the user-item pair.</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-09-28-130645.png" alt=""></p>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><ul>
+<li>Dataset: MI (MovieLens-1M + IMDB) (Movie), KKBox (Music)</li>
+<li>Compare their proposed model’s performance with others’ on the above two datasets.</li>
+<li>Evaluation metrics: hit@K, ndcg@K, K={1, 2, …, 15}</li>
+<li>Use grid search to find learning rate and the coefficient of L2 regularization. (lr = {0.001, 0.002, 0.01, 0.02}, L2={10^−5, 10^−4, 10^−3, 10^−2})</li>
+<li>Explore the influence of relation in paths by discarding relation embedding to generate the input vector.</li>
+<li>Demonstrate reasoning capacity and explainability by visualizing a subgraph as an example.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
+<li>By adopting LSTM, the model can capture the sequential dependencies of elements and reason on paths to infer user preferences.</li>
+<li>By adopting a pooling operation, the model can discriminate different contributions of different paths when inferring user interests, which also benefits the explainability of the model.</li>
+<li>We can mimic the propagation process of user preferences within KG via <strong>Graph Neural Network</strong>, since extracting qualified paths is labor-intensive.</li>
+<li>We can adopt zero-shot learning to solve the cold start issues in the large domain, since KG can links multiple domains together with overlapped entities.</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>Bordes, A.; Usunier, N.; García-Durían, A.; Weston, J.; and Yakhnenko, O. 2013. Translating embeddings for modeling multi-relational data. In <em>NIPS</em>, 2787–2795.</p>
+<p>Gao, L.; Yang, H.; Wu, J.; Zhou, C.; Lu, W.; and Hu, Y. 2018. Recommendation with multi-source heterogeneous information. In <em>IJCAI</em>, 3378–3384.</p>
+<p>Lin, Y.; Liu, Z.; Sun, M.; Liu, Y.; and Zhu, X. 2015. Learn- ing entity and relation embeddings for knowledge graph completion. In <em>AAAI</em>, 2181–2187.</p>
+<p>Yu, X.; Ren, X.; Gu, Q.; Sun, Y.; and Han, J. 2013. Collab- orative filtering with entity similarity regularization in het- erogeneous information networks. <em>IJCAI</em> 27.</p>
+<p>Yu, X.; Ren, X.; Sun, Y.; Gu, Q.; Sturt, B.; Khandelwal, U.; Norick, B.; and Han, J. 2014. Personalized entity recom- mendation: a heterogeneous information network approach. In <em>WSDM</em>, 283–292.</p>
+<p><em><a target="_blank" rel="noopener" href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4470">link for this paper</a></em></p>
+
+	
+	</div>
+  <a type="button" href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-02-02 </div>
+			<div class="article-title"><a href="/2019/02/02/2019/3 卷积神经网络/Week 4/neural_style_transfer_tensorflow/" >风格迁移-TensorFlow</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-08-063511.png" alt=""></p>
+<p>这篇文章使用 TensorFlow 实现风格迁移。</p>
+	
+	</div>
+  <a type="button" href="/2019/02/02/2019/3 卷积神经网络/Week 4/neural_style_transfer_tensorflow/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-02-01 </div>
+			<div class="article-title"><a href="/2019/02/01/2019/（译）Pytorch教程迁移学习/" >(译) Pytorch 教程：迁移学习</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<blockquote>
+<p>这篇文章翻译自 <a target="_blank" rel="noopener" href="https://pytorch.org/">Pytorch</a> 官方教程 <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html">Transfer Learning Tutorial</a><br><strong>原作者：</strong><a target="_blank" rel="noopener" href="https://chsasank.github.io/">Sasank Chilamkurthy</a></p>
+<p><strong>Note:</strong> 点击<a href="#code">这里</a>下载完整示例代码</p>
+</blockquote>
+<p>在这篇教程中，你将会学到如何利用迁移学习来训练你的网络。你可以通过 <a target="_blank" rel="noopener" href="https://cs231n.github.io/transfer-learning/">cs231n notes</a> 了解更多关于迁移学习的信息。</p>
+<p>引用 <a target="_blank" rel="noopener" href="https://cs231n.github.io/transfer-learning/">cs231n notes</a> 中的一段话</p>
+<blockquote>
+<p>在实践中，很少有人会从头开始训练一个卷积神经网络（随机初始化），因为你很难拥有一个足够大的数据集。事实上，更常见的做法是先在一个非常大的数据集（比如 ImageNet，该数据集含有涵盖了 1000 个类别的 120 万张图片）上预训练一个卷积神经网络，然后利用该网络中参数作为初始参数，或者把该网络当作另一项任务的固定特征提取器。</p>
+</blockquote>
+	
+	</div>
+  <a type="button" href="/2019/02/01/2019/（译）Pytorch教程迁移学习/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-01-28 </div>
+			<div class="article-title"><a href="/2019/01/28/2019/Deep Learning 文章索引/" >Deep Learning 文章索引</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>今天是我的生日。最近不知不觉已经完成了 todo-list 中的一大半了，由于近期文章数量较多，在此做一个索引，方便日后查阅。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>优化算法</th>
+<th>卷积神经网络</th>
+<th>序列模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/03/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/1%20Mini-Batch%20%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">Mini-Batch 梯度下降</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/13/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/1%20CNN%20%E9%83%A8%E5%88%86%E7%90%86%E8%AE%BA/">CNN 部分理论</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/22/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/1%20%E4%BD%BF%E7%94%A8%20Numpy%20%E5%BB%BA%E7%AB%8B%20RNN/">使用 Numpy 建立 RNN</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/04/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/2%20%E6%8C%87%E6%95%B0%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87/">指数加权平均</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/14/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/2%20%E4%BD%BF%E7%94%A8%20Numpy%20%E5%BB%BA%E7%AB%8B%20CNN/">使用 Numpy 建立 CNN</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/23/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/2%20%E7%94%A8%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%91%BD%E5%90%8D%E6%81%90%E9%BE%99/">用语言模型命名恐龙</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/05/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/3%20%E5%8A%A8%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">动量梯度下降算法</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/16/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/Transfer%20Learning%20%E8%AF%86%E5%88%AB%E5%8A%A8%E7%89%A9%E5%93%81%E7%A7%8D/">Transform Learning 识别狗猫品种</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/24/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/3%20%E7%94%A8%20LSTM%20%E7%94%9F%E6%88%90%E5%B0%8F%E6%AE%B5%E9%9F%B3%E4%B9%90/">用 LSTM 生成小段音乐</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/06/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/4%20RMSprop/">RMSprop</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/17/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/1%20%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%85%B8%20CNN/">一些经典 CNN</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/27/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%203/1%20%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%9E%8B/">注意力模型</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/07/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/5%20Adam%20%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">Adam 优化算法</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/19/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/2%20Keras-Happy%20House/">Keras 实现 Happy House</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/08/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/6%20%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%A1%B0%E5%87%8F/">学习率衰减</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/20/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/3%20Keras%20%E5%AE%9E%E7%8E%B0%20ResNet/">Keras 实现 ResNet</a></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/16/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/3%20TensorFlow%20%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB/">TensorFlow 实现手势识别</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>学如逆水行舟，不进则退。</p>
+</blockquote>
+
+	
+	</div>
+  <a type="button" href="/2019/01/28/2019/Deep Learning 文章索引/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-01-27 </div>
+			<div class="article-title"><a href="/2019/01/27/2019/4 序列模型/Week 3/1 注意力模型/" >注意力模型</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<blockquote>
+<p>注意力模型是深度学习领域的一个非常重要的理论，这篇文章简要谈及我对注意力模型的理解。</p>
+</blockquote>
+	
+	</div>
+  <a type="button" href="/2019/01/27/2019/4 序列模型/Week 3/1 注意力模型/#more" class="btn btn-default more">Read More</a>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-01-26 </div>
+			<div class="article-title"><a href="/2019/01/26/2019/4 序列模型/Week 3/2 LSTM/" >LSTM</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" alt=""></p>
+	
+	</div>
+  <a type="button" href="/2019/01/26/2019/4 序列模型/Week 3/2 LSTM/#more" class="btn btn-default more">Read More</a>
 </div>
 
            
@@ -269,6 +678,16 @@ f(x) = x + a</script>
 		<div class="pagination">
 <ul class="pagination">
 	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+
+		
+		   <li class="next"> <a href="/page/2/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a> </li>          
+        
+	
 </ul>
 </div>
 
@@ -317,9 +736,37 @@ f(x) = x + a</script>
 		<h4>Categories</h4>
 		<ul class="tag_box inline list-unstyled">
 		
-			<li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>1</span></a></li>
+			<li><a href="/categories/技术/Android/">Android<span>3</span></a></li>
 		
-			<li><a href="/categories/技术/">技术<span>1</span></a></li>
+			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
+		
+			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
+			<li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li>
+		
+			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/categories/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
+			<li><a href="/categories/Paper-Notes/Recommender-System/">Recommender System<span>1</span></a></li>
+		
+			<li><a href="/categories/技术/Tips/">Tips<span>1</span></a></li>
+		
+			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/categories/数字图像处理/傅里叶变换/">傅里叶变换<span>2</span></a></li>
+		
+			<li><a href="/categories/技术/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/categories/技术/">技术<span>36</span></a></li>
+		
+			<li><a href="/categories/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
+			<li><a href="/categories/考试/数字图像处理/">数字图像处理<span>1</span></a></li>
+		
+			<li><a href="/categories/技术/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/categories/考试/">考试<span>1</span></a></li>
 		
 		</ul>
 	</div>
@@ -330,8 +777,48 @@ f(x) = x + a</script>
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
 			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
 		
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+		
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+		
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
+		
+			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+		
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
+			<li><a href="/tags/Data-Competition/">Data Competition<span>1</span></a></li>
+		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+		
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
 		 
 		</ul>
 	</div>
@@ -344,11 +831,23 @@ f(x) = x + a</script>
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/2021/02/10/test/" ><i class="fa fa-file-o"></i>test</a>
+        <a href="/2020/09/15/2020/贷款违约预测赛题理解/" ><i class="fa fa-file-o"></i>贷款违约预测赛题理解</a>
       </li>
     
       <li>
         <a href="/2020/02/17/2020/追本溯源，带你读懂图自编码器/" ><i class="fa fa-file-o"></i>追本溯源，带你读懂图自编码器</a>
+      </li>
+    
+      <li>
+        <a href="/2019/12/14/2019/关于相对熵的推导证明和推论/" ><i class="fa fa-file-o"></i>关于相对熵的推导证明和推论</a>
+      </li>
+    
+      <li>
+        <a href="/2019/11/09/2019/scipy 稀疏矩阵小结/" ><i class="fa fa-file-o"></i>scipy 稀疏矩阵小结</a>
+      </li>
+    
+      <li>
+        <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>Reasoning Over Knowledge Gr...</a>
       </li>
     
   </ul>
@@ -422,35 +921,35 @@ f(x) = x + a</script>
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -466,7 +965,11 @@ f(x) = x + a</script>
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

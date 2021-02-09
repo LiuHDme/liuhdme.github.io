@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CNN 部分理论 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="卷积神经网络是深度学习在计算机视觉领域应用的基础，这篇文章简要谈谈 Padding、Stride、Pooling Layer 等内容。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="CNN 部分理论"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+    <script src="/js/marked.js"></script>
+    <script src="/js/comment.js"></script>
+    <script src="/js/timeago.min.js"></script>
+    <script src="/js/highlight.min.js"></script>
+	<script src="/js/spin.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> CNN 部分理论</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>卷积神经网络是深度学习在计算机视觉领域应用的基础，这篇文章简要谈谈 Padding、Stride、Pooling Layer 等内容。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="Padding（填充）"><a href="#Padding（填充）" class="headerlink" title="Padding（填充）"></a>Padding（填充）</h2><p>如果没有填充，那么每经过一次卷积操作，图像的大小都会变小，比如一个大小为 $3 × 3$ 的过滤器在一个大小为 $6 × 6$ 的图像上进行卷积，会得到一个大小为 $4 × 4$ 的图像。事实上，假设原始图像大小为 $n × n$，过滤器大小为 $f × f$，那么卷积后的图像大小为 $(n-f+1) × (n-f+1)$，很明显，这会导致图像的大小在几次卷积操作后就会越来越小。</p>
+<p>没有填充的另一个缺点是，位于图像边缘的像素在卷积操作时只会被用到一次，而更接近图像中心的像素却会被用到多次，这使我们丢失了许多靠近图像边界的信息。</p>
+<p>所以为了解决以上两个问题，一个方法是在进行卷积操作前对图像进行填充。同样用大小为 $6×6$ 的图像为例，如果在该图像周围填充一圈像素点，那么该图像的大小就会变为 $8×8$，再用一个大小为 $3×3$ 的过滤器对该图像进行卷积后，得到的图像的大小为 $6×6$，这就使得卷积后的图像大小和原始图像（填充之前）的大小一样了。</p>
+<p>我们用 p 来表示填充的像素圈数，此时卷积后的图像大小为 $(n+2p-f+1)×(n+2p-f+1)$，合理设置 p 的值，即可保证卷积后的图像大小不变，同时也提高了原始图像（填充前）边界信息的利用率。</p>
+<p>如果希望卷积后图像大小不变，即 $n+2p-f+1=n$，解得 $p = \cfrac{f-1}{2}$ 即可。这里的 $f$ 在绝大多数情况都是奇数而不是偶数，这样有两个好处：</p>
+<ol>
+<li>如果 $f$ 是偶数，将得到不对称的填充，因为这里的 p 无法除尽；</li>
+<li>$f$ 为奇数可以保证过滤器有一个中心像素点，可以称之为中心像素，这样可以方便我们描述过滤器的位置。</li>
+</ol>
+<p>当然用偶数的 $f$ 也可以得到不错的结果，但一般情况下人们都会把 $f$ 设置成奇数。</p>
+<h2 id="Stride（步幅）"><a href="#Stride（步幅）" class="headerlink" title="Stride（步幅）"></a>Stride（步幅）</h2><p>没有引入 Stride（步幅）时，过滤器每次只移动一个像素点距离。引入 Stride 后用 s 表示步幅，此时过滤器每次移动 s 个像素点距离。比如一个大小为 $3×3$ 的过滤器在一个大小为 $7×7$ 的图像上进行步幅为 2 的卷积操作后，得到的图像大小为 $3×3$。</p>
+<p>这里的关系式为，如果原始图像大小为 $n×n$，过滤器大小为 $f×f$，填充为 p，步幅为 s，那么卷积后的图像大小为 $(\cfrac{n+2p-f}{s}+1) × (\cfrac{n+2p-f}{s}+1)$。</p>
+<p>一个问题是，如果式子中的分数除不尽怎么办？办法是对 $(\cfrac{n+2p-f}{s}+1)$ 向下取整，因为如果过滤器移动到了其一部分超出图像边界的地方，那么这里是不进行卷积运算的。</p>
+<h2 id="在三维图像上进行卷积运算"><a href="#在三维图像上进行卷积运算" class="headerlink" title="在三维图像上进行卷积运算"></a>在三维图像上进行卷积运算</h2><p>一副彩色图像有 RGB 三个通道，一个 $6×6$ 大小的图像维度应该是 $6×6×3$，这里的 3 便对应三个通道，对这样的图像进行卷积运算时，用到的过滤器的通道数必须与其一致，比如这里可以使用<font color=red><strong>一个</strong></font>维度为 $3×3×3$ 的过滤器，得到卷积后的图像维度为 $4×4$。如果使用 $x$ 个该维度的过滤器，那么卷积后的图像维度应为 $4×4×x$。</p>
+<p>具体该如何运算呢？先以一个过滤器为例。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fzi8h72nd8j31hk0u0q6a.jpg" alt=""></p>
+<p>方便起见，这里不讨论 Padding 和 Stride。如上图所示，先将过滤器的三个通道分别于原图像左上角贴合，然后将这 27 个位置的元素对应相乘再相加，得到结果，填入输出图像的最左上角元素，然后移动过滤器继续运算，直到移动到原图像右下角为止。</p>
+<p>如果有多个过滤器，比如两个，如图所示：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzi8xyeat8j31ha0u0tcq.jpg" alt=""></p>
+<p>那么按照刚才的计算方法，会得到两个维度为 $4×4$ 的图像，再将这两幅二维图像叠在一起便得到了维度为 $4×4×2$ 的图像。对于其他数量的过滤器，方法也是一样的。</p>
+<h2 id="Pooling-layer-池化层"><a href="#Pooling-layer-池化层" class="headerlink" title="(Pooling layer) 池化层"></a>(Pooling layer) 池化层</h2><h3 id="Max-pooling-最大池化"><a href="#Max-pooling-最大池化" class="headerlink" title="Max pooling (最大池化)"></a>Max pooling (最大池化)</h3><p>假设原始图像大小为 $4×4$，过滤器大小为 $2×2$，步幅为 2，不填充，那么经过池化层后的图像大小为 $2×2$，过滤器移动的方式和之前一样，只不过这里进行的运算不是卷积，而是取最大值，具体操作看这张图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzj1bvjd39j31hf0u0q61.jpg" alt=""></p>
+<p>如上图所示，原始图像被分成了四个区域，这四个区域实际就是过滤器进行操作的四个区域，在每个区域里，取最大值赋给输出图像的相应位置。</p>
+<p>如果考虑输入图像的通道数目，比如 $n×n×n_c$，其中 $n_c$ 代表通道数目，那么输出图像的通道数目也是 $n_c$，具体过程就是在输入图像的每个通道都进行池化操作。</p>
+<h3 id="Average-pooling-平均池化"><a href="#Average-pooling-平均池化" class="headerlink" title="Average pooling (平均池化)"></a>Average pooling (平均池化)</h3><p>顾名思义，与 Max Pooling 不同，Average pooling 在运算时取过滤器覆盖区域的平均像素值，再赋给输出图像的相应位置。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzj1chskjtj31hb0u00v0.jpg" alt=""></p>
+<h3 id="关于超参数的选择"><a href="#关于超参数的选择" class="headerlink" title="关于超参数的选择"></a>关于超参数的选择</h3><ul>
+<li>f 和 s 都取 2 或者 f 取 3，s 取 2，这会使得输入图像的长宽近似变为一半</li>
+<li>p 一般取 0，即不作任何填充</li>
+<li>Max pooling 比 Average pooling 用得更多些</li>
+</ul>
+<h3 id="卷积神经网络的优势"><a href="#卷积神经网络的优势" class="headerlink" title="卷积神经网络的优势"></a>卷积神经网络的优势</h3><h4 id="Parameter-sharing-参数共享"><a href="#Parameter-sharing-参数共享" class="headerlink" title="Parameter sharing (参数共享)"></a>Parameter sharing (参数共享)</h4><p>如果一个过滤器是专门用来检测垂直边缘的，那么对于输入图像的每一部分，该过滤器都能起作用，换句话说，该过滤器中的参数对于输入图像的每一部分都是有作用的，这使得一个用于检测某种特征（如垂直边界）的过滤器能够被用在输入图像的任何一个部分，这同时使得神经网络的参数大大减少，除了减少运算量，在一定程度上也能防止过拟合的发生。</p>
+<h4 id="Sparsity-of-connections-连接的稀疏性"><a href="#Sparsity-of-connections-连接的稀疏性" class="headerlink" title="Sparsity of connections (连接的稀疏性)"></a>Sparsity of connections (连接的稀疏性)</h4><p>在每一层，每个输出值都只和输入图像中某一部分的输入值有关。这可以实现 translation invarience（平移无关性）。</p>
+<p>关于平移无关性可以参考<a target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/208936/what-is-translation-invariance-in-computer-vision-and-convolutional-neural-netwo#">这篇在 StackExchange 上的讨论</a></p>
+<p>-</p>
+<p>代码练习链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/10/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">卷积神经网络——代码部分</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8/">手势识别</a></li>
+</ul>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2019/01/14/2019/3 卷积神经网络/Week 1/2 使用 Numpy 建立 CNN/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2019/01/11/2019/2 结构化机器学习项目/Week 1/机器学习策略/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+    <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+        <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+        <a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+        <a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a>
+        <a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
+        <a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+    </div>
+    <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
+        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+    	 
+	 <div id="comment-thread"></div>
+	 <div id="loading-spin"></div>
+	 <script type="text/javascript">
+	   getComments({
+           type: "github" ? "github" : "github",       
+	       user: "wzpan",
+	       repo: "hexo-theme-freemind-blog",
+		   client_id: "bf7d4ba11877db88543e",
+           client_secret: "bff8a6b06b745c0bfcdccbe225623ea8e2a057bb",
+		   no_comment: "No comments yet. Press the button and go to comment now!",
+		   go_to_comment: "Go to comment",
+		   no_issue: "no_issue",
+		   issue_title: "CNN 部分理论",
+		   issue_id: "",
+		   btn_class: "btn btn-primary",
+		   comments_target: "#comment-thread",
+		   loading_target: "#loading_spin"
+		   });
+	 </script>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-13 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
+
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+<% } %>
+
+<% if (config.search) { %>
+   <script type="text/javascript">      
+     var search_path = "<%= config.search.path %>";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "<%= config.root %>" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+<% } %>
+
+<!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
+
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
+
+</body>
+</html>
