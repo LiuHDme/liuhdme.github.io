@@ -127,36 +127,34 @@
 <p>比赛地址：<a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/531830/introduction">https://tianchi.aliyun.com/competition/entrance/531830/introduction</a></p>
 <h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><p>这次赛题的指标是 AUC，AUC 越大，模型的预测性能越好，但 AUC 具体该如何计算，下面详细讲讲。</p>
 <h3 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a>AUC</h3><p>AUC 就是 ROC 的曲线下面积，而 ROC 是根据 fpr 和 tpr 得到的，因此需要先了解 fpr 和 tpr 的概念。</p>
-<p>fpr 和 tpr 的定义如下面两个式子所示：(tp: true positive, tn: true negative, fp: false positive, fn: false negative)<br>$$<br>tpr = \frac{tp}{tp+fn}<br>$$</p>
-<p>$$<br>fpr = \frac{fp}{fp+tn}<br>$$</p>
-<p>其中，tpr 也叫 recall，意义是把正样本预测为正样本占所有正样本的比例，fpr 的意义是把负样本预测成正样本占所有负样本的比例。在计算 AUC 前，需要先得到 ROC，而得到 ROC 需要得到 fpr 和 tpr，上面的代码通过调用 <code>sklearn.metrics.roc_curve</code> 来计算 fpr 和 tpr。</p>
+<p>fpr 和 tpr 的定义如下面两个式子所示：(tp: true positive, tn: true negative, fp: false positive, fn: false negative)</p>
+<script type="math/tex; mode=display">
+tpr = \frac{tp}{tp+fn}</script><script type="math/tex; mode=display">
+fpr = \frac{fp}{fp+tn}</script><p>其中，tpr 也叫 recall，意义是把正样本预测为正样本占所有正样本的比例，fpr 的意义是把负样本预测成正样本占所有负样本的比例。在计算 AUC 前，需要先得到 ROC，而得到 ROC 需要得到 fpr 和 tpr，上面的代码通过调用 <code>sklearn.metrics.roc_curve</code> 来计算 fpr 和 tpr。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> metrics</span><br><span class="line">y = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line">scores = np.array([<span class="number">0.1</span>, <span class="number">0.4</span>, <span class="number">0.35</span>, <span class="number">0.8</span>])</span><br><span class="line">fpr, tpr, thresholds = metrics.roc_curve(y, scores, pos_label=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 <p>下面来模拟一下计算过程。</p>
 <p>首先得到阈值为：<code>[1.8, 0.8, 0.4, 0.35, 0.1]</code>，即把最大预测值加 1 然后从大到小排序。</p>
 <ol>
-<li><p>阈值为 1.8 时，tp = 0, tn = 2, fp = 0, fn = 2，所以 tpr = 0, fpr = 0</p>
-</li>
-<li><p>阈值为 0.8 时，tp = 1, tn = 2, fp = 0, fn = 1，所以 tpr = 0.5, fpr = 0</p>
-</li>
+<li>阈值为 1.8 时，tp = 0, tn = 2, fp = 0, fn = 2，所以 tpr = 0, fpr = 0</li>
+<li>阈值为 0.8 时，tp = 1, tn = 2, fp = 0, fn = 1，所以 tpr = 0.5, fpr = 0</li>
 <li><p>阈值为 0.4 时，tp = 1, tn = 1, fp = 1, fn = 1，所以 tpr = 0.5, fpr = 0.5</p>
 </li>
 <li><p>阈值为 0.35 时，tp = 2, tn = 1, fp = 1, fn = 0，所以 tpr = 1, fpr = 0.5</p>
 </li>
-<li><p>阈值为 0.1 时，tp = 2, tn = 0, fp = 2, fn = 0，所以 tpr = 1, fpr = 1</p>
-</li>
+<li>阈值为 0.1 时，tp = 2, tn = 0, fp = 2, fn = 0，所以 tpr = 1, fpr = 1</li>
 </ol>
 <p>即最后有，<code>tpr = [0, 0.5, 0.5, 1, 1], fpr = [0, 0, 0.5, 0.5, 1]</code>，这和程序的输出是一致的：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>fpr</span><br><span class="line">array([<span class="number">0.</span> , <span class="number">0.</span> , <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1.</span> ])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tpr</span><br><span class="line">array([<span class="number">0.</span> , <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1.</span> , <span class="number">1.</span> ])</span><br></pre></td></tr></table></figure>
 <p>根据上面的 tpr 和 fpr，可以画出 ROC 如下：</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-073418.png" style="zoom:50%;" />
-
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-073418.png" style="zoom:50%;" /></p>
 <p>可以看出 AUC 应该是 0.75，验证一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>metrics.roc_auc_score(y, scores)</span><br><span class="line"><span class="number">0.75</span></span><br></pre></td></tr></table></figure>
 <p>确实如此。</p>
 <hr>
-<h3 id="PR-CUrve"><a href="#PR-CUrve" class="headerlink" title="PR-CUrve"></a>PR-CUrve</h3><p>和 ROC 类似的还有 PR 曲线，就是 precision-recall 曲线，precision 和 recall 的定义如下：<br>$$<br>Precision = \frac{tp}{tp+fp}<br>$$</p>
-<p>$$<br>Recall = \frac{tp}{tp+fn}<br>$$</p>
-<p>Recall 就是计算 ROC 时提到的 tpr，precision 的意义是，你预测为正样本的所有样本中，有多少真的是正样本。显然，如果把所有样本都预测为正样本，那 recall 取到最大值 1，而 precision 会降低，至于多低取决于负样本的数量，负样本越多 precision 越低。</p>
+<h3 id="PR-CUrve"><a href="#PR-CUrve" class="headerlink" title="PR-CUrve"></a>PR-CUrve</h3><p>和 ROC 类似的还有 PR 曲线，就是 precision-recall 曲线，precision 和 recall 的定义如下：</p>
+<script type="math/tex; mode=display">
+Precision = \frac{tp}{tp+fp}</script><script type="math/tex; mode=display">
+Recall = \frac{tp}{tp+fn}</script><p>Recall 就是计算 ROC 时提到的 tpr，precision 的意义是，你预测为正样本的所有样本中，有多少真的是正样本。显然，如果把所有样本都预测为正样本，那 recall 取到最大值 1，而 precision 会降低，至于多低取决于负样本的数量，负样本越多 precision 越低。</p>
 <p>下面的代码调用 <code>sklearn.metrics.precision_recall_curve</code> 得到不同阈值下的 precision 和 recall</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_recall_curve</span><br><span class="line">y_true = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">y_scores = np.array([<span class="number">0.1</span>, <span class="number">0.4</span>, <span class="number">0.35</span>, <span class="number">0.8</span>])</span><br><span class="line">precision, recall, thresholds = precision_recall_curve(y_true, y_scores)</span><br></pre></td></tr></table></figure>
 <p>下面模拟计算过程。</p>
@@ -176,17 +174,19 @@
 </ol>
 <p>最后有，<code>recall = [1, 0.5, 0.5, 0], precision = [2/3, 0.5, 1, 1]</code></p>
 <p>画出 PR-curve 如下：</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-075807.png" style="zoom:50%;" />
-
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-075807.png" style="zoom:50%;" /></p>
 <p>ROC 有曲线下面积 AUC，PR-curve 也有类似的概念：AP，即 average precision，类似于 PR-curve 的曲线下面积。</p>
 <hr>
-<h3 id="Average-Precision"><a href="#Average-Precision" class="headerlink" title="Average Precision"></a>Average Precision</h3><p>PR-Curve 对应的 AP 的是一个值，计算方式如下：<br>$$<br>AP = \sum_{n}(R_n - R_{n-1})P_n<br>$$<br>其中 $R_n$ 表示第 $n$ 个阈值时的 recall，$P_n$ 表示第 $n$ 个阈值时的 precision</p>
-<p>用刚刚计算的 PR-Curve 为例，计算其 AP 如下：<br>$$<br>AP = (1-0.5) \times \frac{2}{3} + (0.5-0.5) \times 0.5 + (0.5-0) \times 1 ≈ 0.83<br>$$<br>用 <code>sklearn.metrics.average_precision_score</code> 验证一下：</p>
+<h3 id="Average-Precision"><a href="#Average-Precision" class="headerlink" title="Average Precision"></a>Average Precision</h3><p>PR-Curve 对应的 AP 的是一个值，计算方式如下：</p>
+<script type="math/tex; mode=display">
+AP = \sum_{n}(R_n - R_{n-1})P_n</script><p>其中 $R_n$ 表示第 $n$ 个阈值时的 recall，$P_n$ 表示第 $n$ 个阈值时的 precision</p>
+<p>用刚刚计算的 PR-Curve 为例，计算其 AP 如下：</p>
+<script type="math/tex; mode=display">
+AP = (1-0.5) \times \frac{2}{3} + (0.5-0.5) \times 0.5 + (0.5-0) \times 1 ≈ 0.83</script><p>用 <code>sklearn.metrics.average_precision_score</code> 验证一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>y_true = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y_scores = np.array([<span class="number">0.1</span>, <span class="number">0.4</span>, <span class="number">0.35</span>, <span class="number">0.8</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>average_precision_score(y_true, y_scores)</span><br><span class="line"><span class="number">0.8333333333333333</span></span><br></pre></td></tr></table></figure>
 <p>确实如此。</p>
 <p>仔细观察 AP 的计算式，可以发现这是对 PR-Curve 下面积的近似，比如上面的式子其实是在计算下图被框出来的部分的面积：</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-081631.jpg" style="zoom:25%;" />
-
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2020-09-15-081631.jpg" style="zoom:25%;" /></p>
 <hr>
 <p>以上就是 ROC, AUC, PR-Curve 和 AP 的一些概念和计算细节，其中 AUC是 ROC 的曲线下面积，AP 是 PR-Curve 的下面积的近似，ROC 的纵轴是 tpr 也就是 recall，PR-Curve 的横轴是 recall，即 ROC 的纵轴和 PR-Curve 的横轴表示的量是相同的。</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>[1] <a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve">https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve</a></p>
@@ -343,35 +343,35 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
-
+<% if (theme.comment_js) { %>
   <script>
   marked.setOptions({
     highlight: function (code, lang) {
@@ -387,7 +387,11 @@
   window.addEventListener('DOMContentLoaded', Highlighting, false);
   window.addEventListener('load', Highlighting, false);
   </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %
 
 </body>
 </html>
