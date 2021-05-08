@@ -218,9 +218,10 @@
 		</div>
 	
 	
-		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
-<p><strong>论文地址</strong>：<a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
-<p><strong>代码地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
+		<h2 id="介绍">介绍</h2>
+<p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
+<p><strong>论文地址</strong>：http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</p>
+<p><strong>代码地址</strong>：https://github.com/tkipf/gae</p>
 <p><strong>先介绍一下 intention 和用途</strong>。了解 embedding 概念的应该知道，获取一个合适的 embedding 来表示一张图中的节点不是一件容易的事，另外，如果我们能找到合适的 embedding，就能将它们用在上层任务中。VGAE 的用途之一就是通过 encoder-decoder 的结构来获取图中节点的 embedding。</p>
 <p><strong>VGAE 的思想和变分自编码器（VAE）很像</strong>：利用隐变量（latent variables），让模型学习出一些分布（distribution），再从这些分布中采样得到 latent representations（或者说 embedding），<strong>这个过程是 encode 阶段</strong>，然后再利用得到的 latent representations 重构（reconstruct）出原始的图，<strong>这个过程是 decode 阶段</strong>。只不过，VGAE 的 encoder 使用了 GCN，decoder 是简单的内积（inner product）形式。</p>
 <p><strong>下面具体讲解变分图自编码器（VGAE）。先讲 GAE，即图自编码器（没有变分）。</strong></p>
@@ -619,43 +620,43 @@
 		
 			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
-			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
-		
-			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
-		
-			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
-		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
-		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
-		
-			<li><a href="/tags/Android/">Android<span>3</span></a></li>
-		
-			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
-		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
-			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
 		
 			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
-			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
-		
-			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
-		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
 		
 			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
 		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
+		
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+		
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+		
+			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
+		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
 		
 		 
 		</ul>
