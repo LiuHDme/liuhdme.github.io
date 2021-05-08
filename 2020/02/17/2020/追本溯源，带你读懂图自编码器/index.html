@@ -45,11 +45,7 @@
 
 
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
@@ -161,7 +157,7 @@
 <p><strong>在 GAE 中，一旦 $\mathrm{GCN}$ 中的 $\mathbf{W_0}$ 和 $\mathbf{W_1}$ 确定了，那么 $\mathrm{GCN}$ 就是一个确定的函数，给定 $\mathbf{X}$ 和 $\mathbf{A}$，输出的 $\mathbf{Z}$ 就是确定的</strong>。</p>
 <p>而<strong>在 VGAE 中，$\mathbf{Z}$ 不再由一个确定的函数得到</strong>，而是从一个（多维）高斯分布中采样得到，说得更明确些，就是我们先通过 $\mathrm{GCN}$ 确定一个（多维）高斯分布，再从这个分布中采样得到 $\mathbf{Z}$。下面简单描述一下这个过程。</p>
 <h3 id="确定均值和方差"><a href="#确定均值和方差" class="headerlink" title="确定均值和方差"></a>确定均值和方差</h3><p><strong>高斯分布可以唯一地由二阶矩确定</strong>。因此，想要确定一个高斯分布，我们只需要知道均值和方差。<strong>VGAE 利用 $\mathrm{GCN}$ 来分别计算均值和方差</strong>：</p>
-<script type="math/tex; mode=display">\mathbf{\mu} = \mathrm{GCN}_{\mu} (\mathbf{X}, \mathbf{A})</script><script type="math/tex; mode=display">\log \mathbf{\sigma} = \mathrm{GCN}_{\sigma} (\mathbf{X}, \mathbf{A})</script><p>这里有两个要注意的地方，第一个是 $\mathrm{GCN}$ 的下标，$\mathrm{GCN}<em>{\mu}$ 和 $\mathrm{GCN}</em>{\sigma}$ 中的 $\mathbf{W<em>0}$ 是相同的、共享的，但 $\mathbf{W_1}$ 是不同的，因此用下标来作区分；第二个是通过 $\mathrm{GCN}</em>{\sigma}$ 得到的是 $\log \sigma$，这样可以方便后续的计算。</p>
+<script type="math/tex; mode=display">\mathbf{\mu} = \mathrm{GCN}_{\mu} (\mathbf{X}, \mathbf{A})</script><script type="math/tex; mode=display">\log \mathbf{\sigma} = \mathrm{GCN}_{\sigma} (\mathbf{X}, \mathbf{A})</script><p>这里有两个要注意的地方，第一个是 $\mathrm{GCN}$ 的下标，$GCN<em>\mu$ 和 $\mathrm{GCN}</em>\sigma$ 中的 $\mathbf{W<em>0}$ 是相同的、共享的，但 $\mathbf{W_1}$ 是不同的，因此用下标来作区分；第二个是通过 $\mathrm{GCN}\</em>{\sigma}$ 得到的是 $\log \sigma$，这样可以方便后续的计算。</p>
 <h3 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h3><p>既然已经得到了均值和方差（准确来说应该是均值向量和协方差矩阵），就可以通过采样得到 $\mathbf{Z}$ 了，但是，<strong>采样操作无法提供梯度信息</strong>，也就是说，反向传播在采样操作无法计算梯度，也就无法更新 $\mathbf{W_0}$ 和 $\mathbf{W_1}$。解决办法是<strong>重参数化（reparameterization）</strong>。<strong>了解（连续分布）重参数化的可以跳过下面一段。</strong></p>
 <blockquote>
 <p>简单说一下重参数化。大家应该知道，如果 $\epsilon$ 服从 $\cal{N}(0, 1)$，那么 $z = \mu + \epsilon \sigma$ 就服从 $\cal{N} (\mu, \sigma^2)$。因此，我们可以先从标准高斯中采样一个 $\epsilon$，再通过 $\mu + \epsilon \sigma$ 计算出 $z$，这样一来，$z$ 的表达式清晰可见，梯度信息也就有了。</p>
@@ -222,9 +218,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/2020/09/15/2020/贷款违约预测赛题理解/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -275,7 +271,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li>
   </li>
 
     </ul>

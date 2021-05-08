@@ -45,11 +45,7 @@
 
 
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
@@ -127,15 +123,15 @@
 <a id="more"></a>
 <p>在训练网络时，如果训练数据非常庞大，那么把所有训练数据都输入一次神经网络需要非常长的时间，另外，这些数据可能根本无法一次性装入内存。人们在实践中发现并证明了另外一种方法，这种方法可以解决这些问题，更快地完成训练。</p>
 <p>假如我们有 m = 500000 对训练数据 X Y，把这些数据按照每组 1000 对分成 500 组，即 X 被分成：</p>
-<pre><code>- X&#123;1&#125; = 0    ...    1000
-- X&#123;2&#125; = 1001    ...    2000
+<pre><code>- X&#123;1&#125; = 0  ... 1000
+- X&#123;2&#125; = 1001   ... 2000
 - ...
-- X&#123;500&#125; = 499001    ...    500000
-</code></pre><p>Y 的分法和 X 相同，但要保证 X 和 Y 的对应关系不变。</p>
+- X&#123;500&#125; = 499001   ... 500000</code></pre>
+<p>Y 的分法和 X 相同，但要保证 X 和 Y 的对应关系不变。</p>
 <p>这就将 m 对训练数据分成了 500 组 <strong>mini batches</strong>，每组都有 1000 对数据，我们可以这样形容第 t 组训练数据数据：\(X{t}, Y{t}\)</p>
 <p>在之前的梯度下降算法中，我们使用整个数据集来运行梯度下降算法，但现在，我们在每组 mini-batch 上运行梯度下降算法，即在这个例子中，我们只需要将 1000 对训练数据，就可以更新一次网络中的权重，而在之前，我们需要全部 500000 对训练数据才能更新一次权重。这种新的梯度下降就叫做 <strong>mini-batch 梯度下降</strong>，而之前的梯度下降其实叫做 <strong>batch 梯度下降</strong>。</p>
 <p>虽然 mini-batch 梯度下降算法可以更快地更新权重，但是损失函数并不会在每次更新权重后都下降，不过总体趋势仍然是下降的，下面是两种梯度下降算法的对比：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-27-140347.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-27-140347.png" /></p>
 <blockquote>
 <p>左图是 batch 梯度下降，横轴为迭代次数，纵轴为损失函数值，注意，这里的一次迭代是指所有的训练数据都参与权重的一次更新。</p>
 <p>右图是 mini-batch 梯度下降，横轴为用于更新权重的 mini-batch 数，纵轴为损失函数值，可以明显发现，虽然损失函数不是每次都下降，但整体趋势是下降的。</p>
@@ -147,9 +143,9 @@
 <li>1~m 之间 =&gt; <strong>mini-batch 梯度下降算法</strong></li>
 </ul>
 <p>这里说一下随机梯度下降算法，如果每输入一个训练数据后，都更新一次权重，这种梯度下降就叫随机梯度下降，它的好处在于权重的更新非常快，但缺点在于噪声非常大，损失函数变化的方向非常多，虽然最后能到达最优值附近，但不会停下来，而是在最优值附近摆动，看起来是这样的：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-061118.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-061118.png" /></p>
 <p>图中紫色的线对应随机梯度下降中的损失函数，蓝色的线对应 batch 梯度下降中的损失函数，而 mini-batch 梯度下降的损失函数变化过程介于这二者之间，如下图绿线所示：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-061328.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-061328.png" /></p>
 <p>mini-batch 梯度下降中的损失函数最后也会在最优值附近摆动，但幅度比 SGD 要小，同时也可以通过学习率衰减来进一步减小摆动幅度。</p>
 <p>下面是一些在选择 mini-batch size 时的经验：</p>
 <ul>
@@ -222,7 +218,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/优化算法/">优化算法<span>6</span></a></li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/优化算法/">优化算法<span>6</span></a></li>
   </li>
 
     </ul>

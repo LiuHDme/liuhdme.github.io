@@ -45,11 +45,7 @@
 
 
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
@@ -125,41 +121,53 @@
 <p>卷积神经网络是深度学习在计算机视觉领域应用的基础，这篇文章简要谈谈 Padding、Stride、Pooling Layer 等内容。</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="Padding（填充）"><a href="#Padding（填充）" class="headerlink" title="Padding（填充）"></a>Padding（填充）</h2><p>如果没有填充，那么每经过一次卷积操作，图像的大小都会变小，比如一个大小为 $3 × 3$ 的过滤器在一个大小为 $6 × 6$ 的图像上进行卷积，会得到一个大小为 $4 × 4$ 的图像。事实上，假设原始图像大小为 $n × n$，过滤器大小为 $f × f$，那么卷积后的图像大小为 $(n-f+1) × (n-f+1)$，很明显，这会导致图像的大小在几次卷积操作后就会越来越小。</p>
+<h2 id="padding填充">Padding（填充）</h2>
+<p>如果没有填充，那么每经过一次卷积操作，图像的大小都会变小，比如一个大小为 <span class="math inline">\(3 × 3\)</span> 的过滤器在一个大小为 <span class="math inline">\(6 × 6\)</span> 的图像上进行卷积，会得到一个大小为 <span class="math inline">\(4 × 4\)</span> 的图像。事实上，假设原始图像大小为 <span class="math inline">\(n × n\)</span>，过滤器大小为 <span class="math inline">\(f × f\)</span>，那么卷积后的图像大小为 <span class="math inline">\((n-f+1) × (n-f+1)\)</span>，很明显，这会导致图像的大小在几次卷积操作后就会越来越小。</p>
 <p>没有填充的另一个缺点是，位于图像边缘的像素在卷积操作时只会被用到一次，而更接近图像中心的像素却会被用到多次，这使我们丢失了许多靠近图像边界的信息。</p>
-<p>所以为了解决以上两个问题，一个方法是在进行卷积操作前对图像进行填充。同样用大小为 $6×6$ 的图像为例，如果在该图像周围填充一圈像素点，那么该图像的大小就会变为 $8×8$，再用一个大小为 $3×3$ 的过滤器对该图像进行卷积后，得到的图像的大小为 $6×6$，这就使得卷积后的图像大小和原始图像（填充之前）的大小一样了。</p>
-<p>我们用 p 来表示填充的像素圈数，此时卷积后的图像大小为 $(n+2p-f+1)×(n+2p-f+1)$，合理设置 p 的值，即可保证卷积后的图像大小不变，同时也提高了原始图像（填充前）边界信息的利用率。</p>
-<p>如果希望卷积后图像大小不变，即 $n+2p-f+1=n$，解得 $p = \cfrac{f-1}{2}$ 即可。这里的 $f$ 在绝大多数情况都是奇数而不是偶数，这样有两个好处：</p>
-<ol>
-<li>如果 $f$ 是偶数，将得到不对称的填充，因为这里的 p 无法除尽；</li>
-<li>$f$ 为奇数可以保证过滤器有一个中心像素点，可以称之为中心像素，这样可以方便我们描述过滤器的位置。</li>
+<p>所以为了解决以上两个问题，一个方法是在进行卷积操作前对图像进行填充。同样用大小为 <span class="math inline">\(6×6\)</span> 的图像为例，如果在该图像周围填充一圈像素点，那么该图像的大小就会变为 <span class="math inline">\(8×8\)</span>，再用一个大小为 <span class="math inline">\(3×3\)</span> 的过滤器对该图像进行卷积后，得到的图像的大小为 <span class="math inline">\(6×6\)</span>，这就使得卷积后的图像大小和原始图像（填充之前）的大小一样了。</p>
+<p>我们用 p 来表示填充的像素圈数，此时卷积后的图像大小为 <span class="math inline">\((n+2p-f+1)×(n+2p-f+1)\)</span>，合理设置 p 的值，即可保证卷积后的图像大小不变，同时也提高了原始图像（填充前）边界信息的利用率。</p>
+<p>如果希望卷积后图像大小不变，即 <span class="math inline">\(n+2p-f+1=n\)</span>，解得 <span class="math inline">\(p = \cfrac{f-1}{2}\)</span> 即可。这里的 <span class="math inline">\(f\)</span> 在绝大多数情况都是奇数而不是偶数，这样有两个好处：</p>
+<ol type="1">
+<li>如果 <span class="math inline">\(f\)</span> 是偶数，将得到不对称的填充，因为这里的 p 无法除尽；</li>
+<li><span class="math inline">\(f\)</span> 为奇数可以保证过滤器有一个中心像素点，可以称之为中心像素，这样可以方便我们描述过滤器的位置。</li>
 </ol>
-<p>当然用偶数的 $f$ 也可以得到不错的结果，但一般情况下人们都会把 $f$ 设置成奇数。</p>
-<h2 id="Stride（步幅）"><a href="#Stride（步幅）" class="headerlink" title="Stride（步幅）"></a>Stride（步幅）</h2><p>没有引入 Stride（步幅）时，过滤器每次只移动一个像素点距离。引入 Stride 后用 s 表示步幅，此时过滤器每次移动 s 个像素点距离。比如一个大小为 $3×3$ 的过滤器在一个大小为 $7×7$ 的图像上进行步幅为 2 的卷积操作后，得到的图像大小为 $3×3$。</p>
-<p>这里的关系式为，如果原始图像大小为 $n×n$，过滤器大小为 $f×f$，填充为 p，步幅为 s，那么卷积后的图像大小为 $(\cfrac{n+2p-f}{s}+1) × (\cfrac{n+2p-f}{s}+1)$。</p>
-<p>一个问题是，如果式子中的分数除不尽怎么办？办法是对 $(\cfrac{n+2p-f}{s}+1)$ 向下取整，因为如果过滤器移动到了其一部分超出图像边界的地方，那么这里是不进行卷积运算的。</p>
-<h2 id="在三维图像上进行卷积运算"><a href="#在三维图像上进行卷积运算" class="headerlink" title="在三维图像上进行卷积运算"></a>在三维图像上进行卷积运算</h2><p>一副彩色图像有 RGB 三个通道，一个 $6×6$ 大小的图像维度应该是 $6×6×3$，这里的 3 便对应三个通道，对这样的图像进行卷积运算时，用到的过滤器的通道数必须与其一致，比如这里可以使用<font color=red><strong>一个</strong></font>维度为 $3×3×3$ 的过滤器，得到卷积后的图像维度为 $4×4$。如果使用 $x$ 个该维度的过滤器，那么卷积后的图像维度应为 $4×4×x$。</p>
+<p>当然用偶数的 <span class="math inline">\(f\)</span> 也可以得到不错的结果，但一般情况下人们都会把 <span class="math inline">\(f\)</span> 设置成奇数。</p>
+<h2 id="stride步幅">Stride（步幅）</h2>
+<p>没有引入 Stride（步幅）时，过滤器每次只移动一个像素点距离。引入 Stride 后用 s 表示步幅，此时过滤器每次移动 s 个像素点距离。比如一个大小为 <span class="math inline">\(3×3\)</span> 的过滤器在一个大小为 <span class="math inline">\(7×7\)</span> 的图像上进行步幅为 2 的卷积操作后，得到的图像大小为 <span class="math inline">\(3×3\)</span>。</p>
+<p>这里的关系式为，如果原始图像大小为 <span class="math inline">\(n×n\)</span>，过滤器大小为 <span class="math inline">\(f×f\)</span>，填充为 p，步幅为 s，那么卷积后的图像大小为 <span class="math inline">\((\cfrac{n+2p-f}{s}+1) × (\cfrac{n+2p-f}{s}+1)\)</span>。</p>
+<p>一个问题是，如果式子中的分数除不尽怎么办？办法是对 <span class="math inline">\((\cfrac{n+2p-f}{s}+1)\)</span> 向下取整，因为如果过滤器移动到了其一部分超出图像边界的地方，那么这里是不进行卷积运算的。</p>
+<h2 id="在三维图像上进行卷积运算">在三维图像上进行卷积运算</h2>
+<p>一副彩色图像有 RGB 三个通道，一个 <span class="math inline">\(6×6\)</span> 大小的图像维度应该是 <span class="math inline">\(6×6×3\)</span>，这里的 3 便对应三个通道，对这样的图像进行卷积运算时，用到的过滤器的通道数必须与其一致，比如这里可以使用<font color=red><strong>一个</strong></font>维度为 <span class="math inline">\(3×3×3\)</span> 的过滤器，得到卷积后的图像维度为 <span class="math inline">\(4×4\)</span>。如果使用 <span class="math inline">\(x\)</span> 个该维度的过滤器，那么卷积后的图像维度应为 <span class="math inline">\(4×4×x\)</span>。</p>
 <p>具体该如何运算呢？先以一个过滤器为例。</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fzi8h72nd8j31hk0u0q6a.jpg" alt=""></p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fzi8h72nd8j31hk0u0q6a.jpg" /></p>
 <p>方便起见，这里不讨论 Padding 和 Stride。如上图所示，先将过滤器的三个通道分别于原图像左上角贴合，然后将这 27 个位置的元素对应相乘再相加，得到结果，填入输出图像的最左上角元素，然后移动过滤器继续运算，直到移动到原图像右下角为止。</p>
 <p>如果有多个过滤器，比如两个，如图所示：</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzi8xyeat8j31ha0u0tcq.jpg" alt=""></p>
-<p>那么按照刚才的计算方法，会得到两个维度为 $4×4$ 的图像，再将这两幅二维图像叠在一起便得到了维度为 $4×4×2$ 的图像。对于其他数量的过滤器，方法也是一样的。</p>
-<h2 id="Pooling-layer-池化层"><a href="#Pooling-layer-池化层" class="headerlink" title="(Pooling layer) 池化层"></a>(Pooling layer) 池化层</h2><h3 id="Max-pooling-最大池化"><a href="#Max-pooling-最大池化" class="headerlink" title="Max pooling (最大池化)"></a>Max pooling (最大池化)</h3><p>假设原始图像大小为 $4×4$，过滤器大小为 $2×2$，步幅为 2，不填充，那么经过池化层后的图像大小为 $2×2$，过滤器移动的方式和之前一样，只不过这里进行的运算不是卷积，而是取最大值，具体操作看这张图：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzj1bvjd39j31hf0u0q61.jpg" alt=""></p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzi8xyeat8j31ha0u0tcq.jpg" /></p>
+<p>那么按照刚才的计算方法，会得到两个维度为 <span class="math inline">\(4×4\)</span> 的图像，再将这两幅二维图像叠在一起便得到了维度为 <span class="math inline">\(4×4×2\)</span> 的图像。对于其他数量的过滤器，方法也是一样的。</p>
+<h2 id="pooling-layer-池化层">(Pooling layer) 池化层</h2>
+<h3 id="max-pooling-最大池化">Max pooling (最大池化)</h3>
+<p>假设原始图像大小为 <span class="math inline">\(4×4\)</span>，过滤器大小为 <span class="math inline">\(2×2\)</span>，步幅为 2，不填充，那么经过池化层后的图像大小为 <span class="math inline">\(2×2\)</span>，过滤器移动的方式和之前一样，只不过这里进行的运算不是卷积，而是取最大值，具体操作看这张图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzj1bvjd39j31hf0u0q61.jpg" /></p>
 <p>如上图所示，原始图像被分成了四个区域，这四个区域实际就是过滤器进行操作的四个区域，在每个区域里，取最大值赋给输出图像的相应位置。</p>
-<p>如果考虑输入图像的通道数目，比如 $n×n×n_c$，其中 $n_c$ 代表通道数目，那么输出图像的通道数目也是 $n_c$，具体过程就是在输入图像的每个通道都进行池化操作。</p>
-<h3 id="Average-pooling-平均池化"><a href="#Average-pooling-平均池化" class="headerlink" title="Average pooling (平均池化)"></a>Average pooling (平均池化)</h3><p>顾名思义，与 Max Pooling 不同，Average pooling 在运算时取过滤器覆盖区域的平均像素值，再赋给输出图像的相应位置。</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzj1chskjtj31hb0u00v0.jpg" alt=""></p>
-<h3 id="关于超参数的选择"><a href="#关于超参数的选择" class="headerlink" title="关于超参数的选择"></a>关于超参数的选择</h3><ul>
+<p>如果考虑输入图像的通道数目，比如 <span class="math inline">\(n×n×n_c\)</span>，其中 <span class="math inline">\(n_c\)</span> 代表通道数目，那么输出图像的通道数目也是 <span class="math inline">\(n_c\)</span>，具体过程就是在输入图像的每个通道都进行池化操作。</p>
+<h3 id="average-pooling-平均池化">Average pooling (平均池化)</h3>
+<p>顾名思义，与 Max Pooling 不同，Average pooling 在运算时取过滤器覆盖区域的平均像素值，再赋给输出图像的相应位置。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzj1chskjtj31hb0u00v0.jpg" /></p>
+<h3 id="关于超参数的选择">关于超参数的选择</h3>
+<ul>
 <li>f 和 s 都取 2 或者 f 取 3，s 取 2，这会使得输入图像的长宽近似变为一半</li>
 <li>p 一般取 0，即不作任何填充</li>
 <li>Max pooling 比 Average pooling 用得更多些</li>
 </ul>
-<h3 id="卷积神经网络的优势"><a href="#卷积神经网络的优势" class="headerlink" title="卷积神经网络的优势"></a>卷积神经网络的优势</h3><h4 id="Parameter-sharing-参数共享"><a href="#Parameter-sharing-参数共享" class="headerlink" title="Parameter sharing (参数共享)"></a>Parameter sharing (参数共享)</h4><p>如果一个过滤器是专门用来检测垂直边缘的，那么对于输入图像的每一部分，该过滤器都能起作用，换句话说，该过滤器中的参数对于输入图像的每一部分都是有作用的，这使得一个用于检测某种特征（如垂直边界）的过滤器能够被用在输入图像的任何一个部分，这同时使得神经网络的参数大大减少，除了减少运算量，在一定程度上也能防止过拟合的发生。</p>
-<h4 id="Sparsity-of-connections-连接的稀疏性"><a href="#Sparsity-of-connections-连接的稀疏性" class="headerlink" title="Sparsity of connections (连接的稀疏性)"></a>Sparsity of connections (连接的稀疏性)</h4><p>在每一层，每个输出值都只和输入图像中某一部分的输入值有关。这可以实现 translation invarience（平移无关性）。</p>
+<h3 id="卷积神经网络的优势">卷积神经网络的优势</h3>
+<h4 id="parameter-sharing-参数共享">Parameter sharing (参数共享)</h4>
+<p>如果一个过滤器是专门用来检测垂直边缘的，那么对于输入图像的每一部分，该过滤器都能起作用，换句话说，该过滤器中的参数对于输入图像的每一部分都是有作用的，这使得一个用于检测某种特征（如垂直边界）的过滤器能够被用在输入图像的任何一个部分，这同时使得神经网络的参数大大减少，除了减少运算量，在一定程度上也能防止过拟合的发生。</p>
+<h4 id="sparsity-of-connections-连接的稀疏性">Sparsity of connections (连接的稀疏性)</h4>
+<p>在每一层，每个输出值都只和输入图像中某一部分的输入值有关。这可以实现 translation invarience（平移无关性）。</p>
 <p>关于平移无关性可以参考<a target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/208936/what-is-translation-invariance-in-computer-vision-and-convolutional-neural-netwo#">这篇在 StackExchange 上的讨论</a></p>
-<p>-</p>
+<ul>
+<li></li>
+</ul>
 <p>代码练习链接：</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/10/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">卷积神经网络——代码部分</a></li>
@@ -229,7 +237,7 @@
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/技术/">技术<span>36</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
   </li>
 
     </ul>

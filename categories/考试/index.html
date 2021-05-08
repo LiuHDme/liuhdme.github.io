@@ -43,11 +43,7 @@
 
 
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.3.0"></head>
 
 <body>
   <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
@@ -134,22 +130,16 @@
 <p><strong>闭操作：</strong>同样使图像的轮廓变得光滑，但与开操作相反，它能消除狭窄的间断和长细的鸿沟，消除小的孔洞，并填补轮廓线中的裂痕（先用B对A膨胀，然后用B对结果腐蚀）A·B=(A+B)-B</p>
 <p><strong>击中击不中变换：</strong>形状检测的一个基本工具</p>
 <p><strong>拉普拉斯算子优缺点：</strong></p>
-<p><strong>缺点：</strong><br>拉普拉斯算子对噪声具有敏感性；拉普拉斯算子的幅值产生双边缘；拉普拉斯算子不能检测边缘的方向</p>
-<p><strong>优点：</strong><br>可以利用零交叉的性质进行边缘定位；可以确定一个像素是在边缘暗的一边还是亮的一边</p>
-<p><strong>阈值处理算法：</strong></p>
-<ol>
+<p><strong>缺点：</strong>拉普拉斯算子对噪声具有敏感性；拉普拉斯算子的幅值产生双边缘；拉普拉斯算子不能检测边缘的方向<strong>优点：</strong>可以利用零交叉的性质进行边缘定位；可以确定一个像素是在边缘暗的一边还是亮的一边<strong>阈值处理算法：</strong></p>
+<ol type="1">
 <li>选择一个T的初始估计值</li>
-<li>用T分割图像，生成两组像素：G1由所有灰度值大 于T的    像素组成，而G2由所有灰度值小于或等于T的 像素组成</li>
-<li>对区域G1和G2中的所有像素计算平均灰度值µ1和µ2</li>
+<li>用T分割图像，生成两组像素：G1由所有灰度值大 于T的 像素组成，而G2由所有灰度值小于或等于T的 像素组成3. 对区域G1和G2中的所有像素计算平均灰度值µ1和µ2</li>
 <li>计算新的阈值 T = 1/2 (µ1 + µ2)</li>
 <li>重复步骤2到4，直到逐次迭代所得的T值之差小于事先定义的参数ΔT</li>
 </ol>
 <p><strong>区域增长算法：</strong></p>
-<ol>
-<li>根据图像的不同应用选择一个或一组种子，它或者是最亮或最暗的点，或者是位于点簇中心的点</li>
-<li>选择一个描述符（条件）</li>
-<li>从该种子开始向外扩张，首先把种子像素 加入结果集合，然后不断将与集合中各个 像素连通、且满足描述符的像素加入集合</li>
-<li>上一过程进行到不再有满足条件的新结点 加入集合为止</li>
+<ol type="1">
+<li>根据图像的不同应用选择一个或一组种子，它或者是最亮或最暗的点，或者是位于点簇中心的点2. 选择一个描述符（条件）3. 从该种子开始向外扩张，首先把种子像素 加入结果集合，然后不断将与集合中各个 像素连通、且满足描述符的像素加入集合4. 上一过程进行到不再有满足条件的新结点 加入集合为止</li>
 </ol>
 
 	
@@ -198,7 +188,7 @@
 		
 			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li>
 		
-			<li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>28</span></a></li>
+			<li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li>
 		
 			<li><a href="/categories/技术/Machine-Learning/Deep-Learning/NLP/">NLP<span>5</span></a></li>
 		
@@ -214,7 +204,7 @@
 		
 			<li><a href="/categories/技术/大数据/">大数据<span>1</span></a></li>
 		
-			<li><a href="/categories/技术/">技术<span>36</span></a></li>
+			<li><a href="/categories/技术/">技术<span>35</span></a></li>
 		
 			<li><a href="/categories/数字图像处理/">数字图像处理<span>2</span></a></li>
 		
@@ -233,48 +223,46 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
 			<li><a href="/tags/生活/">生活<span>3</span></a></li>
 		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
 		
-			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
 		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
-			<li><a href="/tags/Data-Competition/">Data Competition<span>1</span></a></li>
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
 		
 			<li><a href="/tags/Android/">Android<span>3</span></a></li>
 		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
-		
 			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
-		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
 			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
 		
 			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
 		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
 		
-			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
-		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
 		
 			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
 		
-			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
 		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
 		
-		   <li><a href="/tags">...<span>21</span></a></li>
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+		
 		 
 		</ul>
 	</div>
@@ -285,10 +273,6 @@
 <div class="widget">
   <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
-    
-      <li>
-        <a href="/2020/09/15/2020/贷款违约预测赛题理解/" ><i class="fa fa-file-o"></i>贷款违约预测赛题理解</a>
-      </li>
     
       <li>
         <a href="/2020/02/17/2020/追本溯源，带你读懂图自编码器/"  title="这篇文章简要介绍图自编码器的原理和应用" ><i class="fa fa-file-o"></i>追本溯源，带你读懂图自编码器</a>
@@ -304,6 +288,10 @@
     
       <li>
         <a href="/2019/09/28/论文笔记/Reasoning Over Knowledge Graph Paths for Recommendation/" ><i class="fa fa-file-o"></i>论文笔记：Explainable Reasoning ...</a>
+      </li>
+    
+      <li>
+        <a href="/2019/02/02/2019/3 卷积神经网络/Week 4/neural_style_transfer_tensorflow/" ><i class="fa fa-file-o"></i>风格迁移-TensorFlow</a>
       </li>
     
   </ul>
