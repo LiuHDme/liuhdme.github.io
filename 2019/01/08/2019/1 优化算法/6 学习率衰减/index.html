@@ -121,22 +121,27 @@
 <p>学习率衰减（learning rate decay）同样也可以让我们的学习算法运行地更快，它能保证损失函数最终摆动时处在离最优值很近的范围内。</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="为什么需要学习率衰减"><a href="#为什么需要学习率衰减" class="headerlink" title="为什么需要学习率衰减"></a>为什么需要学习率衰减</h3><p>前面我们讲过，mini-batch 梯度下降算法可以提高更新权重的速度，让我们及时看到损失函数的情况，但是每个损失函数并不会一直下降，而是在保证整体趋势减小的情况下略微波动，如果用一个等高线图来表示就是这样的：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-111554.png" alt=""></p>
+<h3 id="为什么需要学习率衰减">为什么需要学习率衰减</h3>
+<p>前面我们讲过，mini-batch 梯度下降算法可以提高更新权重的速度，让我们及时看到损失函数的情况，但是每个损失函数并不会一直下降，而是在保证整体趋势减小的情况下略微波动，如果用一个等高线图来表示就是这样的：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-111554.png" /></p>
 <p>上图的中心点为最优值点，我们可以看到损失函数渐渐接近最优值，但最后却在最优值附近摆动，这是因为学习率的大小一直不变，如果我们可以让学习率随着损失函数接近最优值或是随着迭代次数的增加而慢慢减小的话，就可以得到下图中的绿线：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-112320.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-112320.png" /></p>
 <p>可以看到，随着损失函数接近最优值，摆动的幅度也在减小，从而保证最后损失函数在离最优值更近的范围内摆动。</p>
-<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><p>我们的目标是让学习率 $\alpha$ 随着迭代次数的增加而逐渐减小。先明确迭代这个概念，所谓迭代就是让训练集中的所有数据都输入一次网络，这就是一次迭代。如果训练集被分成了许多个 mini batches，那一次迭代就是所有 mini batches 中的数据都依次输入进网络并更新了权重。因此我们可以这样定义学习率：</p>
-<script type="math/tex; mode=display">\alpha = \cfrac{1}{1 + decayRate · epochNum} · \alpha_0</script><p>其中，</p>
+<h3 id="如何实现">如何实现</h3>
+<p>我们的目标是让学习率 <span class="math inline">\(\alpha\)</span> 随着迭代次数的增加而逐渐减小。先明确迭代这个概念，所谓迭代就是让训练集中的所有数据都输入一次网络，这就是一次迭代。如果训练集被分成了许多个 mini batches，那一次迭代就是所有 mini batches 中的数据都依次输入进网络并更新了权重。因此我们可以这样定义学习率：</p>
+<p><span class="math display">\[\alpha = \cfrac{1}{1 + decayRate · epochNum} · \alpha_0\]</span></p>
+<p>其中，</p>
 <ul>
 <li>decayRate 是衰减率，衰减率越大，学习率就减小得越快</li>
 <li>epochNum 是迭代次数</li>
-<li>$\alpha_0$ 是初始学习率，初始学习率可以设置得大一些，这样可以保证算法一开始的学习速度不会太慢</li>
+<li><span class="math inline">\(\alpha_0\)</span> 是初始学习率，初始学习率可以设置得大一些，这样可以保证算法一开始的学习速度不会太慢</li>
 </ul>
-<p>从这个式子可以明显看出，随着迭代次数 epochNum 的增大，$\alpha$ 就会变小。</p>
-<p>decayRate 和 $\alpha_0$ 都是超参数，我们需要在实践中调整这些值以得到满意的结果。</p>
+<p>从这个式子可以明显看出，随着迭代次数 epochNum 的增大，<span class="math inline">\(\alpha\)</span> 就会变小。</p>
+<p>decayRate 和 <span class="math inline">\(\alpha_0\)</span> 都是超参数，我们需要在实践中调整这些值以得到满意的结果。</p>
 <p>当然还有一些别的方法实现学习率衰减，比如：</p>
-<script type="math/tex; mode=display">\alpha = decayRate^{epochNum} · \alpha_0</script><script type="math/tex; mode=display">\alpha = \cfrac{k}{\sqrt{epochNum}} · \alpha_0</script><p>还有人会选择手动调整 $\alpha$ 的值，比如每个几小时或几天就去手工调整学习率的值，这种方法也是可行的。</p>
+<p><span class="math display">\[\alpha = decayRate^{epochNum} · \alpha_0\]</span></p>
+<p><span class="math display">\[\alpha = \cfrac{k}{\sqrt{epochNum}} · \alpha_0\]</span></p>
+<p>还有人会选择手动调整 <span class="math inline">\(\alpha\)</span> 的值，比如每个几小时或几天就去手工调整学习率的值，这种方法也是可行的。</p>
 <p>以上就是对学习率衰减的简要介绍，其基本思想就是让学习率随着迭代次数的增加而减小，以保证损失函数在离最优值比较近的区域内摆动。</p>
 	  
 	</div>

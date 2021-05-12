@@ -121,74 +121,134 @@
 <p>现在我们的学习方向该从回归问题转向分类问题了，因此这一周的主要内容是逻辑回归（Logistic Regression），千万别觉得逻辑回归这个名字弄混淆了，逻辑回归之所以被命名为逻辑回归只是因为一些历史遗留问题，你只需要知道这是一种处理分类问题而不是回归问题的方法就行了。</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="二元分类"><a href="#二元分类" class="headerlink" title=" 二元分类 "></a><p style="color:#3A5FCD"> 二元分类 </p></h1><p>不同于回归问题，回归问题的输出可能是一个存储着很多连续值的向量，二元分类问题的输出只能是 0 或 1，即 y∈{0,1}</p>
+#
+<p style="color:#3A5FCD">
+二元分类
+</p>
+<p>不同于回归问题，回归问题的输出可能是一个存储着很多连续值的向量，二元分类问题的输出只能是 0 或 1，即 y∈{0,1}</p>
 <p>一般 0 代表负面的类，而 1 代表正面的类，不过当然你也可以自己选择 0 和 1 分别代表哪一类。</p>
 <p>而且我们只处理两个类别，因此这个问题被称为二元分类或二值分类。</p>
 <p>其中一个解决这个问题的方法是，先采用线性回归，然后把预测值中所有大于 0.5 的结果标记为 1，把所有小于 0.5 的结果标记为 0。但是因为大多数分类问题并不是线性的，概率的分布可能不是均匀的，因此这种方法并不是很好用。</p>
 <p>我们还是先表示一下假设函数，我们的假设函数应当满足：</p>
-<script type="math/tex; mode=display">0 \leq h_\theta (x) \leq 1</script><p>因为概率的分布是由 0 到 1 的。</p>
+<p><span class="math display">\[0 \leq h_\theta (x) \leq 1\]</span></p>
+<p>因为概率的分布是由 0 到 1 的。</p>
 <p>然后，我们要引进一个叫做“Sigmoid”的函数，它也被称为逻辑函数。</p>
-<script type="math/tex; mode=display">
-g(z) = \dfrac{1}{1 + e^{-z}}</script><p><img src="http://upload-images.jianshu.io/upload_images/4933688-b12fdb69bcc83114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><span class="math display">\[
+g(z) = \dfrac{1}{1 + e^{-z}}
+\]</span></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-b12fdb69bcc83114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
 <p>可以发现，它的值是在 0 和 1 之间的，因此它很适合用来描述分类问题。你可以通过这个网站来更直观的感受一下 Sigmoid 函数：<a target="_blank" rel="noopener" href="https://www.desmos.com/calculator/bgontvxotm">https://www.desmos.com/calculator/bgontvxotm</a></p>
-<p>那么如何用 Sigmoid 函数来表示预测函数呢，很简单，只需要把表达式中的 z 换成 \(\theta^Tx\) 就可以了，如果你还记得上节课的内容，就能理解 \(θ^Tx\) 其实是你的输入 x 乘上相应的参数，由于矩阵相乘需要满足第一个矩阵的列数等于第二个矩阵的行数，因此需要把参数矩阵 \(\theta\) 转置，这才有了 \(\theta^Tx\)。</p>
+<p>那么如何用 Sigmoid 函数来表示预测函数呢，很简单，只需要把表达式中的 z 换成 \(^Tx\) 就可以了，如果你还记得上节课的内容，就能理解 \(θ^Tx\) 其实是你的输入 x 乘上相应的参数，由于矩阵相乘需要满足第一个矩阵的列数等于第二个矩阵的行数，因此需要把参数矩阵 \(\) 转置，这才有了 \(^Tx\)。</p>
 <p>因此我们预测函数应该是这个样子：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}h_\theta (x) &= g ( \theta^T x )\newline\newline& = \dfrac{1}{1 + e^{-\theta^Tx}}\newline
-\end{align\*}</script><p>\(h<em>\theta(x)\) 的结果告诉了我们输出为 1 的可能性，比如 \(h</em>\theta(x) = 0.7\) 就告诉我们这个类别为 1 的可能性为 70%。</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& h_\theta(x) = P(y=1 | x ; \theta) = 1 - P(y=0 | x ; \theta) \newline& P(y = 0 | x;\theta) + P(y = 1 | x ; \theta) = 1\end{align\*}</script><p>结果为 0 的可能性和结果为 1 的可能性加在一起等于 1。</p>
-<h1 id="决策边界"><a href="#决策边界" class="headerlink" title=" 决策边界 "></a><p style="color:#3A5FCD"> 决策边界 </p></h1><p>为了得到 0 和 1 两个类别，我们可以把预测函数得到的结果进行如下转换：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& h_\theta(x) \geq 0.5 \rightarrow y = 1 \newline& h_\theta(x) < 0.5 \rightarrow y = 0 \newline\end{align\*}</script><p>回想一下 Sigmoid 函数的图像，当 z 等于 0 时，g(z)=0.5；当 z 大于 0 时，g(z)&gt;0.5；当 z 小于 0 时，g(z)&lt;0.5。</p>
+<p><span class="math display">\[
+\begin{align\*}h_\theta (x) &amp;= g ( \theta^T x )\newline\newline&amp; = \dfrac{1}{1 + e^{-\theta^Tx}}\newline
+\end{align\*}
+\]</span></p>
+<p>\(h_(x)\) 的结果告诉了我们输出为 1 的可能性，比如 \(h_(x) = 0.7\) 就告诉我们这个类别为 1 的可能性为 70%。</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; h_\theta(x) = P(y=1 | x ; \theta) = 1 - P(y=0 | x ; \theta) \newline&amp; P(y = 0 | x;\theta) + P(y = 1 | x ; \theta) = 1\end{align\*}
+\]</span></p>
+<p>结果为 0 的可能性和结果为 1 的可能性加在一起等于 1。</p>
+#
+<p style="color:#3A5FCD">
+决策边界
+</p>
+<p>为了得到 0 和 1 两个类别，我们可以把预测函数得到的结果进行如下转换：</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; h_\theta(x) \geq 0.5 \rightarrow y = 1 \newline&amp; h_\theta(x) &lt; 0.5 \rightarrow y = 0 \newline\end{align\*}
+\]</span></p>
+<p>回想一下 Sigmoid 函数的图像，当 z 等于 0 时，g(z)=0.5；当 z 大于 0 时，g(z)&gt;0.5；当 z 小于 0 时，g(z)&lt;0.5。</p>
 <p>这很好解释，因为：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}z=0,  e^{0}=1 \Rightarrow  g(z)=1/2\newline z \to \infty, e^{-\infty} \to 0 \Rightarrow g(z)=1 \newline z \to -\infty, e^{\infty}\to \infty \Rightarrow g(z)=0 \end{align\*}</script><p>所以当把 z 换成 \(\theta^Tx\) 后，就有</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& h_\theta(x) = g(\theta^T x) \geq 0.5 \newline& when \; \theta^T x \geq 0\end{align\*}</script><p>于是，通过上面的推导，我们最终可以得到如下的结论：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& \theta^T x \geq 0 \Rightarrow y = 1 \newline& \theta^T x < 0 \Rightarrow y = 0 \newline\end{align\*}</script><p>决策边界就是把 y=0 和 y=1 这两个区域分开的线，这是由我们的预测函数产生的。</p>
+<p><span class="math display">\[
+\begin{align\*}z=0,  e^{0}=1 \Rightarrow  g(z)=1/2\newline z \to \infty, e^{-\infty} \to 0 \Rightarrow g(z)=1 \newline z \to -\infty, e^{\infty}\to \infty \Rightarrow g(z)=0 \end{align\*}
+\]</span></p>
+<p>所以当把 z 换成 \(^Tx\) 后，就有</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; h_\theta(x) = g(\theta^T x) \geq 0.5 \newline&amp; when \; \theta^T x \geq 0\end{align\*}
+\]</span></p>
+<p>于是，通过上面的推导，我们最终可以得到如下的结论：</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; \theta^T x \geq 0 \Rightarrow y = 1 \newline&amp; \theta^T x &lt; 0 \Rightarrow y = 0 \newline\end{align\*}
+\]</span></p>
+<p>决策边界就是把 y=0 和 y=1 这两个区域分开的线，这是由我们的预测函数产生的。</p>
 <p>比如：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& \theta = \begin{bmatrix}5 \newline -1 \newline 0\end{bmatrix} \newline & y = 1 \; if \; 5 + (-1) x_1 + 0 x_2 \geq 0 \newline & 5 - x_1 \geq 0 \newline & - x_1 \geq -5 \newline& x_1 \leq 5 \newline \end{align\*}</script><p>在上面这个例子中，决策边界就是 x=5 这条垂直于 x 轴的线，所有在这条线左边的区域的 y 值都为 1，右边的区域的 y 值都为 0。</p>
-<p>最后注意一点，Sigmoid 函数的输入值不一定非要是直线，它也可以是一个圆（比如\(z = \theta_0 + \theta_1 x_1^2 +\theta_2 x_2^2\)）或者任何形状。</p>
-<h1 id="损失函数"><a href="#损失函数" class="headerlink" title=" 损失函数 "></a><p style="color:#3A5FCD"> 损失函数 </p></h1><p>我们不能使用在线性回归中使用的损失函数，因为逻辑回归会产生很多过于波动的输出，这就会产生许多局部最优解。换句话说，这将不是一个凸函数。</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; \theta = \begin{bmatrix}5 \newline -1 \newline 0\end{bmatrix} \newline &amp; y = 1 \; if \; 5 + (-1) x_1 + 0 x_2 \geq 0 \newline &amp; 5 - x_1 \geq 0 \newline &amp; - x_1 \geq -5 \newline&amp; x_1 \leq 5 \newline \end{align\*}
+\]</span></p>
+<p>在上面这个例子中，决策边界就是 x=5 这条垂直于 x 轴的线，所有在这条线左边的区域的 y 值都为 1，右边的区域的 y 值都为 0。</p>
+<p>最后注意一点，Sigmoid 函数的输入值不一定非要是直线，它也可以是一个圆（比如\(z = _0 + _1 x_1^2 +_2 x_2^2\)）或者任何形状。</p>
+#
+<p style="color:#3A5FCD">
+损失函数
+</p>
+<p>我们不能使用在线性回归中使用的损失函数，因为逻辑回归会产生很多过于波动的输出，这就会产生许多局部最优解。换句话说，这将不是一个凸函数。</p>
 <p>逻辑回归的损失函数应该像下面这样：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& J(\theta) = \dfrac{1}{m} \sum_{i=1}^m \mathrm{Cost}(h_\theta(x^{(i)}),y^{(i)}) \newline & \mathrm{Cost}(h_\theta(x),y) = -\log(h_\theta(x)) \; & \text{if y = 1} \newline & \mathrm{Cost}(h_\theta(x),y) = -\log(1-h_\theta(x)) \; & \text{if y = 0}\end{align\*}</script><p><img src="http://upload-images.jianshu.io/upload_images/4933688-9ac7ed192f29692e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4933688-e50acb8f875c0aee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><span class="math display">\[
+\begin{align\*}&amp; J(\theta) = \dfrac{1}{m} \sum_{i=1}^m \mathrm{Cost}(h_\theta(x^{(i)}),y^{(i)}) \newline &amp; \mathrm{Cost}(h_\theta(x),y) = -\log(h_\theta(x)) \; &amp; \text{if y = 1} \newline &amp; \mathrm{Cost}(h_\theta(x),y) = -\log(1-h_\theta(x)) \; &amp; \text{if y = 0}\end{align\*}
+\]</span></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-9ac7ed192f29692e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-e50acb8f875c0aee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
 <p>我解释一下当 y=1 的情况（即实际结果为 1）。</p>
-<p>由于预测函数 \(h<em>\theta(x)\) 的取值范围是 0 到 1，因此 \(log(h</em>\theta(x))\) 的取值范围是负无穷到 0，那么 \(-log(h<em>\theta(x))\) 的取值范围就是正无穷到 0。如果 \(h</em>\theta(x) = 1\)，说明和真实情况相符，那么损失函数理应为 0，反之则应该为无穷大。</p>
+<p>由于预测函数 \(h_(x)\) 的取值范围是 0 到 1，因此 \(log(h_(x))\) 的取值范围是负无穷到 0，那么 \(-log(h_(x))\) 的取值范围就是正无穷到 0。如果 \(h_(x) = 1\)，说明和真实情况相符，那么损失函数理应为 0，反之则应该为无穷大。</p>
 <p>因此，预测函数的结果和真实情况偏离的越多，损失函数的值就越大，如果预测函数的结果和真实结果一致，那么损失函数就为 0。</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& \mathrm{Cost}(h_\theta(x),y) = 0 \text{  if  } h_\theta(x) = y \newline & \mathrm{Cost}(h_\theta(x),y) \rightarrow \infty \text{  if  } y = 0 \; \mathrm{and} \; h_\theta(x) \rightarrow 1 \newline & \mathrm{Cost}(h_\theta(x),y) \rightarrow \infty \text{  if  } y = 1 \; \mathrm{and} \; h_\theta(x) \rightarrow 0 \newline \end{align\*}</script><p>把损失函数写成这种形式可以保证 \(J(\theta)\) 是一个凸函数。</p>
-<h1 id="化简损失函数和梯度下降"><a href="#化简损失函数和梯度下降" class="headerlink" title=" 化简损失函数和梯度下降 "></a><p style="color:#3A5FCD"> 化简损失函数和梯度下降 </p></h1><p>我们可以把损失函数的两种情况合并成一种情况：</p>
-<script type="math/tex; mode=display">\mathrm{Cost}(h_\theta(x),y) = - y \; \log(h_\theta(x)) - (1 - y) \log(1 - h_\theta(x))</script><p>当 y=0 时，等号右边的第一部分就为 0 了，只剩下了第二部分；当 y=1 时，等号右边的第二部分就为 0 了，只剩下了第一部分。</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; \mathrm{Cost}(h_\theta(x),y) = 0 \text{  if  } h_\theta(x) = y \newline &amp; \mathrm{Cost}(h_\theta(x),y) \rightarrow \infty \text{  if  } y = 0 \; \mathrm{and} \; h_\theta(x) \rightarrow 1 \newline &amp; \mathrm{Cost}(h_\theta(x),y) \rightarrow \infty \text{  if  } y = 1 \; \mathrm{and} \; h_\theta(x) \rightarrow 0 \newline \end{align\*}
+\]</span></p>
+<p>把损失函数写成这种形式可以保证 \(J()\) 是一个凸函数。</p>
+#
+<p style="color:#3A5FCD">
+化简损失函数和梯度下降
+</p>
+<p>我们可以把损失函数的两种情况合并成一种情况：</p>
+<p><span class="math display">\[\mathrm{Cost}(h_\theta(x),y) = - y \; \log(h_\theta(x)) - (1 - y) \log(1 - h_\theta(x))\]</span></p>
+<p>当 y=0 时，等号右边的第一部分就为 0 了，只剩下了第二部分；当 y=1 时，等号右边的第二部分就为 0 了，只剩下了第一部分。</p>
 <p>我们可以把损失函数写完整：</p>
-<script type="math/tex; mode=display">J(\theta) = - \frac{1}{m} \displaystyle \sum_{i=1}^m [y^{(i)}\log (h_\theta (x^{(i)})) + (1 - y^{(i)})\log (1 - h_\theta(x^{(i)}))]</script><p>向量形式如下：</p>
-<script type="math/tex; mode=display">
+<p><span class="math display">\[J(\theta) = - \frac{1}{m} \displaystyle \sum_{i=1}^m [y^{(i)}\log (h_\theta (x^{(i)})) + (1 - y^{(i)})\log (1 - h_\theta(x^{(i)}))]\]</span></p>
+<p>向量形式如下：</p>
+<p><span class="math display">\[
 \begin{align\*}
-& h = g(X\theta)\newline
-& J(\theta)  = \frac{1}{m} \cdot \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right)
-\end{align\*}</script><h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><p>回想一下在线性回归中梯度下降的一般形式：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& Repeat \; \lbrace \newline & \; \theta_j := \theta_j - \alpha \dfrac{\partial}{\partial \theta_j}J(\theta) \newline & \rbrace\end{align\*}</script><p>通过积分我们可以把它进一步写成如下形式：</p>
-<script type="math/tex; mode=display">
+&amp; h = g(X\theta)\newline
+&amp; J(\theta)  = \frac{1}{m} \cdot \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right)
+\end{align\*}
+\]</span></p>
+<h2 id="梯度下降">梯度下降</h2>
+<p>回想一下在线性回归中梯度下降的一般形式：</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; Repeat \; \lbrace \newline &amp; \; \theta_j := \theta_j - \alpha \dfrac{\partial}{\partial \theta_j}J(\theta) \newline &amp; \rbrace\end{align\*}
+\]</span></p>
+<p>通过积分我们可以把它进一步写成如下形式：</p>
+<p><span class="math display">\[
 \begin{align\*}
-& Repeat \; \lbrace \newline
-& \; \theta_j := \theta_j - \frac{\alpha}{m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)}) x_j^{(i)} \newline & \rbrace
-\end{align\*}</script><p>向量形式为：</p>
-<script type="math/tex; mode=display">
-\theta := \theta - \frac{\alpha}{m} X^{T} (g(X \theta ) - \vec{y})</script><p>在逻辑回归中，由于损失函数和线性回归的损失函数不同，因此积分的过程肯定不同，但结果都是 \(\frac{1}{m} \sum<em>{i=1}^m (h</em>\theta(x^{(i)}) - y^{(i)}) x<em>j^{(i)}\) 这种形式，不同在于 \(h</em>\theta(x)\) 的内容不一样，下一节是具体推导过程（不感兴趣可以跳过）</p>
-<h2 id="J-theta-的偏导"><a href="#J-theta-的偏导" class="headerlink" title="\(J(\theta)\) 的偏导"></a>\(J(\theta)\) 的偏导</h2><p>首先需要计算 Sigmoid 函数的偏导：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}\sigma(x)'&=\left(\frac{1}{1+e^{-x}}\right)'=\frac{-(1+e^{-x})'}{(1+e^{-x})^2}=\frac{-1'-(e^{-x})'}{(1+e^{-x})^2}=\frac{0-(-x)'(e^{-x})}{(1+e^{-x})^2}=\frac{-(-1)(e^{-x})}{(1+e^{-x})^2}=\frac{e^{-x}}{(1+e^{-x})^2} \newline &=\left(\frac{1}{1+e^{-x}}\right)\left(\frac{e^{-x}}{1+e^{-x}}\right)=\sigma(x)\left(\frac{+1-1 + e^{-x}}{1+e^{-x}}\right)=\sigma(x)\left(\frac{1 + e^{-x}}{1+e^{-x}} - \frac{1}{1+e^{-x}}\right)=\sigma(x)(1 - \sigma(x))\end{align\*}</script><p>现在计算 \(J(\theta)\) 的偏导：</p>
-<script type="math/tex; mode=display">
-\begin{align\*}\frac{\partial}{\partial \theta_j} J(\theta) &= \frac{\partial}{\partial \theta_j} \frac{-1}{m}\sum_{i=1}^m \left [ y^{(i)} log (h_\theta(x^{(i)})) + (1-y^{(i)}) log (1 - h_\theta(x^{(i)})) \right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} \frac{\partial}{\partial \theta_j} log (h_\theta(x^{(i)}))   + (1-y^{(i)}) \frac{\partial}{\partial \theta_j} log (1 - h_\theta(x^{(i)}))\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \frac{\partial}{\partial \theta_j} h_\theta(x^{(i)})}{h_\theta(x^{(i)})}   + \frac{(1-y^{(i)})\frac{\partial}{\partial \theta_j} (1 - h_\theta(x^{(i)}))}{1 - h_\theta(x^{(i)})}\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \frac{\partial}{\partial \theta_j} \sigma(\theta^T x^{(i)})}{h_\theta(x^{(i)})}   + \frac{(1-y^{(i)})\frac{\partial}{\partial \theta_j} (1 - \sigma(\theta^T x^{(i)}))}{1 - h_\theta(x^{(i)})}\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \sigma(\theta^T x^{(i)}) (1 - \sigma(\theta^T x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{h_\theta(x^{(i)})}   + \frac{- (1-y^{(i)}) \sigma(\theta^T x^{(i)}) (1 - \sigma(\theta^T x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{1 - h_\theta(x^{(i)})}\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} h_\theta(x^{(i)}) (1 - h_\theta(x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{h_\theta(x^{(i)})}   - \frac{(1-y^{(i)}) h_\theta(x^{(i)}) (1 - h_\theta(x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{1 - h_\theta(x^{(i)})}\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} (1 - h_\theta(x^{(i)})) x^{(i)}_j - (1-y^{(i)}) h_\theta(x^{(i)}) x^{(i)}_j\right ] \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} (1 - h_\theta(x^{(i)})) - (1-y^{(i)}) h_\theta(x^{(i)}) \right ] x^{(i)}_j \newline&= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} - y^{(i)} h_\theta(x^{(i)}) - h_\theta(x^{(i)}) + y^{(i)} h_\theta(x^{(i)}) \right ] x^{(i)}_j \newline&= - \frac{1}{m}\sum_{i=1}^m \left [ y^{(i)} - h_\theta(x^{(i)}) \right ] x^{(i)}_j  \newline&= \frac{1}{m}\sum_{i=1}^m \left [ h_\theta(x^{(i)}) - y^{(i)} \right ] x^{(i)}_j\end{align\*}</script><p>向量形式为：</p>
-<script type="math/tex; mode=display">\nabla J(\theta) = \frac{1}{m} \cdot  X^T \cdot \left(g\left(X\cdot\theta\right) - \vec{y}\right)</script><h1 id="多元分类"><a href="#多元分类" class="headerlink" title=" 多元分类 "></a><p style="color:#3A5FCD"> 多元分类 </p></h1><p>相比于二元分类，多元分类中有更多类别等着我们去分类。不同于二元分类中的 y={0, 1}，多元分类中的 y={0, 1, 2 …n}。</p>
+&amp; Repeat \; \lbrace \newline
+&amp; \; \theta_j := \theta_j - \frac{\alpha}{m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)}) x_j^{(i)} \newline &amp; \rbrace
+\end{align\*}
+\]</span></p>
+<p>向量形式为：</p>
+<p><span class="math display">\[
+\theta := \theta - \frac{\alpha}{m} X^{T} (g(X \theta ) - \vec{y})
+\]</span></p>
+<p>在逻辑回归中，由于损失函数和线性回归的损失函数不同，因此积分的过程肯定不同，但结果都是 \( <em>{i=1}^m (h</em>(x^{(i)}) - y^{(i)}) x_j^{(i)}\) 这种形式，不同在于 \(h_(x)\) 的内容不一样，下一节是具体推导过程（不感兴趣可以跳过）</p>
+<h2 id="j-的偏导">\(J()\) 的偏导</h2>
+<p>首先需要计算 Sigmoid 函数的偏导：</p>
+<p><span class="math display">\[
+\begin{align\*}\sigma(x)&#39;&amp;=\left(\frac{1}{1+e^{-x}}\right)&#39;=\frac{-(1+e^{-x})&#39;}{(1+e^{-x})^2}=\frac{-1&#39;-(e^{-x})&#39;}{(1+e^{-x})^2}=\frac{0-(-x)&#39;(e^{-x})}{(1+e^{-x})^2}=\frac{-(-1)(e^{-x})}{(1+e^{-x})^2}=\frac{e^{-x}}{(1+e^{-x})^2} \newline &amp;=\left(\frac{1}{1+e^{-x}}\right)\left(\frac{e^{-x}}{1+e^{-x}}\right)=\sigma(x)\left(\frac{+1-1 + e^{-x}}{1+e^{-x}}\right)=\sigma(x)\left(\frac{1 + e^{-x}}{1+e^{-x}} - \frac{1}{1+e^{-x}}\right)=\sigma(x)(1 - \sigma(x))\end{align\*}
+\]</span></p>
+<p>现在计算 \(J()\) 的偏导：</p>
+<p><span class="math display">\[
+\begin{align\*}\frac{\partial}{\partial \theta_j} J(\theta) &amp;= \frac{\partial}{\partial \theta_j} \frac{-1}{m}\sum_{i=1}^m \left [ y^{(i)} log (h_\theta(x^{(i)})) + (1-y^{(i)}) log (1 - h_\theta(x^{(i)})) \right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} \frac{\partial}{\partial \theta_j} log (h_\theta(x^{(i)}))   + (1-y^{(i)}) \frac{\partial}{\partial \theta_j} log (1 - h_\theta(x^{(i)}))\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \frac{\partial}{\partial \theta_j} h_\theta(x^{(i)})}{h_\theta(x^{(i)})}   + \frac{(1-y^{(i)})\frac{\partial}{\partial \theta_j} (1 - h_\theta(x^{(i)}))}{1 - h_\theta(x^{(i)})}\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \frac{\partial}{\partial \theta_j} \sigma(\theta^T x^{(i)})}{h_\theta(x^{(i)})}   + \frac{(1-y^{(i)})\frac{\partial}{\partial \theta_j} (1 - \sigma(\theta^T x^{(i)}))}{1 - h_\theta(x^{(i)})}\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} \sigma(\theta^T x^{(i)}) (1 - \sigma(\theta^T x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{h_\theta(x^{(i)})}   + \frac{- (1-y^{(i)}) \sigma(\theta^T x^{(i)}) (1 - \sigma(\theta^T x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{1 - h_\theta(x^{(i)})}\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     \frac{y^{(i)} h_\theta(x^{(i)}) (1 - h_\theta(x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{h_\theta(x^{(i)})}   - \frac{(1-y^{(i)}) h_\theta(x^{(i)}) (1 - h_\theta(x^{(i)})) \frac{\partial}{\partial \theta_j} \theta^T x^{(i)}}{1 - h_\theta(x^{(i)})}\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} (1 - h_\theta(x^{(i)})) x^{(i)}_j - (1-y^{(i)}) h_\theta(x^{(i)}) x^{(i)}_j\right ] \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} (1 - h_\theta(x^{(i)})) - (1-y^{(i)}) h_\theta(x^{(i)}) \right ] x^{(i)}_j \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [     y^{(i)} - y^{(i)} h_\theta(x^{(i)}) - h_\theta(x^{(i)}) + y^{(i)} h_\theta(x^{(i)}) \right ] x^{(i)}_j \newline&amp;= - \frac{1}{m}\sum_{i=1}^m \left [ y^{(i)} - h_\theta(x^{(i)}) \right ] x^{(i)}_j  \newline&amp;= \frac{1}{m}\sum_{i=1}^m \left [ h_\theta(x^{(i)}) - y^{(i)} \right ] x^{(i)}_j\end{align\*}
+\]</span></p>
+<p>向量形式为：</p>
+<p><span class="math display">\[\nabla J(\theta) = \frac{1}{m} \cdot  X^T \cdot \left(g\left(X\cdot\theta\right) - \vec{y}\right)\]</span></p>
+#
+<p style="color:#3A5FCD">
+多元分类
+</p>
+<p>相比于二元分类，多元分类中有更多类别等着我们去分类。不同于二元分类中的 y={0, 1}，多元分类中的 y={0, 1, 2 ...n}。</p>
 <p>其实我们只需要把这个问题看作是 n+1 次的二元分类就可以了（+1 是因为类别的下标从 0 开始），每次二元分类中，我们都预测一下结果是当前类别的可能性。</p>
-<script type="math/tex; mode=display">
-\begin{align\*}& y \in \lbrace0, 1 ... n\rbrace \newline& h_\theta^{(0)}(x) = P(y = 0 | x ; \theta) \newline& h_\theta^{(1)}(x) = P(y = 1 | x ; \theta) \newline& \cdots \newline& h_\theta^{(n)}(x) = P(y = n | x ; \theta) \newline& \mathrm{prediction} = \max_i( h_\theta ^{(i)}(x) )\newline\end{align\*}</script><p>那么最后的输出结果就是这 n+1 次预测中可能性最大的那个类别（即 \(h_\theta(x)\) 最大的那个类别）。</p>
+<p><span class="math display">\[
+\begin{align\*}&amp; y \in \lbrace0, 1 ... n\rbrace \newline&amp; h_\theta^{(0)}(x) = P(y = 0 | x ; \theta) \newline&amp; h_\theta^{(1)}(x) = P(y = 1 | x ; \theta) \newline&amp; \cdots \newline&amp; h_\theta^{(n)}(x) = P(y = n | x ; \theta) \newline&amp; \mathrm{prediction} = \max_i( h_\theta ^{(i)}(x) )\newline\end{align\*}
+\]</span></p>
+<p>那么最后的输出结果就是这 n+1 次预测中可能性最大的那个类别（即 \(h_(x)\) 最大的那个类别）。</p>
 	  
 	</div>
 

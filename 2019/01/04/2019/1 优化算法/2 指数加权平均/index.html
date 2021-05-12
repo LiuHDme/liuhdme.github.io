@@ -122,79 +122,96 @@
 </blockquote>
 <a id="more"></a>
 <p>我会先讲指数加权平均的具体做法，然后再讲这么做的原因。</p>
-<h3 id="指数加权平均"><a href="#指数加权平均" class="headerlink" title="指数加权平均"></a>指数加权平均</h3><p>假设我们收集了一个在北半球的地区一年中每天的温度，像这样：</p>
+<h3 id="指数加权平均">指数加权平均</h3>
+<p>假设我们收集了一个在北半球的地区一年中每天的温度，像这样：</p>
 <ul>
 <li>t(1) = 4°C</li>
 <li>t(2) = 9°C</li>
 <li>t(3) = 6°C</li>
-<li>…</li>
+<li>...</li>
 <li>t(180) = 15°C</li>
-<li>…</li>
+<li>...</li>
 </ul>
 <p>将这些温度作出一张图是这样的：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-063740.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-063740.png" /></p>
 <p>可以发现，一年中开头和结尾气温较低，中间气温较高，整体趋势是这样的，但是噪声很大。</p>
 <p>下面我们来计算指数加权平均：</p>
 <ul>
-<li>$v_0 = 0$</li>
-<li>$v_1 = 0.9 × v_0 + 0.1 × t(1) = 0.4$</li>
-<li>$v_2 = 0.9 × v_1 + 0.1 × t(2) = 1.26$</li>
-<li>$v_3 = 0.9 × v_2 + 0.1 × t(3) = 1.734$</li>
-<li>…</li>
+<li><span class="math inline">\(v_0 = 0\)</span></li>
+<li><span class="math inline">\(v_1 = 0.9 × v_0 + 0.1 × t(1) = 0.4\)</span></li>
+<li><span class="math inline">\(v_2 = 0.9 × v_1 + 0.1 × t(2) = 1.26\)</span></li>
+<li><span class="math inline">\(v_3 = 0.9 × v_2 + 0.1 × t(3) = 1.734\)</span></li>
+<li>...</li>
 </ul>
 <p>如果按照这个公式一直计算下去，将得到的结果也画出来，可以得到下面的结果：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-064821.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-064821.png" /></p>
 <p>其中红色的线就是利用指数加权平均计算出的结果，比之前的结果要平滑了很多。</p>
 <p>具体来讲，在这个例子中，指数加权平均的一般公式为</p>
-<script type="math/tex; mode=display">v_t = \beta × v_{t-1} + (1 - \beta) × \theta(t)</script><p>这里的 $\beta $ 是一个超参数，上面的例子中 $\beta = 0.9$.</p>
-<p>稍后会讲到，这里的 $v_t$ 相当于粗略计算了前 $\cfrac{1}{1 - \beta}$ 天的平均气温，即在这个例子中，$v_t$ 相当于前 10 天的平均气温。</p>
-<p>让我们把 $\beta$ 的值设置得更接近 1，比如说 0.98，那此时的 $v_t$ 便相当于粗略计算了前50 天的平均气温，也将其画出来，便得到了下面的绿线：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-065810.png" alt=""></p>
-<p>可以发现，当 $\beta$ 更大时，得到的曲线更加光滑，因为我们对更多天数的温度做了平均处理，因此曲线就波动更小，更加光滑。但另一方面，曲线会右移，因为这时我们在一个更大的窗口内计算平均值，这导致温度变化时曲线会适应地更加缓慢，这就造成了一些延迟。</p>
-<p>如果将 $/beta$ 减小呢，比如取 $\beta = 0.5$，那么这时 $v_t$ 只相当于前两天的平均天气，将曲线画出来就如下面的黄线所示：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-070348.png" alt=""></p>
+<p><span class="math display">\[v_t = \beta × v_{t-1} + (1 - \beta) × \theta(t)\]</span></p>
+<p>这里的 $$ 是一个超参数，上面的例子中 <span class="math inline">\(\beta = 0.9\)</span>.</p>
+<p>稍后会讲到，这里的 <span class="math inline">\(v_t\)</span> 相当于粗略计算了前 <span class="math inline">\(\cfrac{1}{1 - \beta}\)</span> 天的平均气温，即在这个例子中，<span class="math inline">\(v_t\)</span> 相当于前 10 天的平均气温。</p>
+<p>让我们把 <span class="math inline">\(\beta\)</span> 的值设置得更接近 1，比如说 0.98，那此时的 <span class="math inline">\(v_t\)</span> 便相当于粗略计算了前50 天的平均气温，也将其画出来，便得到了下面的绿线：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-065810.png" /></p>
+<p>可以发现，当 <span class="math inline">\(\beta\)</span> 更大时，得到的曲线更加光滑，因为我们对更多天数的温度做了平均处理，因此曲线就波动更小，更加光滑。但另一方面，曲线会右移，因为这时我们在一个更大的窗口内计算平均值，这导致温度变化时曲线会适应地更加缓慢，这就造成了一些延迟。</p>
+<p>如果将 <span class="math inline">\(/beta\)</span> 减小呢，比如取 <span class="math inline">\(\beta = 0.5\)</span>，那么这时 <span class="math inline">\(v_t\)</span> 只相当于前两天的平均天气，将曲线画出来就如下面的黄线所示：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-070348.png" /></p>
 <p>可以发现，由于只对前两天的温度进行平均计算，曲线的波动会更大，有更多的噪声，但是也能更快适应温度的变化。</p>
-<p>总之，使用 $v<em>t = \beta × v</em>{t-1} + (1 - \beta) × \theta(t)$ 这个公式就能实现指数加权平均，在统计学中，这也被称为指数加权滑动平均，但我们可以简称为指数加权平均，通过调整 $beta$ 这个参数，我们可以得到一些略微不同的结果，在这个温度的例子中，这条红色的线要更好一些。</p>
+<p>总之，使用 <span class="math inline">\(v_t = \beta × v_{t-1} + (1 - \beta) × \theta(t)\)</span> 这个公式就能实现指数加权平均，在统计学中，这也被称为指数加权滑动平均，但我们可以简称为指数加权平均，通过调整 <span class="math inline">\(beta\)</span> 这个参数，我们可以得到一些略微不同的结果，在这个温度的例子中，这条红色的线要更好一些。</p>
 <p>下面我们来理解一下指数加权平均的本质以及它为什么有效。</p>
-<h3 id="为什么要用指数加权平均"><a href="#为什么要用指数加权平均" class="headerlink" title="为什么要用指数加权平均"></a>为什么要用指数加权平均</h3><p>先看一下这几个式子：</p>
+<h3 id="为什么要用指数加权平均">为什么要用指数加权平均</h3>
+<p>先看一下这几个式子：</p>
 <blockquote>
-<p>$v<em>{100} = 0.9·v</em>{99} + 0.1 · \theta_{100}$&nbsp;&nbsp;&nbsp;· · · · · · &nbsp;&nbsp;&nbsp;①</p>
-<p>$v<em>{99} = 0.9·v</em>{98} + 0.1 · \theta_{99}$&nbsp;&nbsp;&nbsp;· · · · · · &nbsp;&nbsp;&nbsp;②</p>
-<p>$v<em>{98} = 0.9·v</em>{97} + 0.1 · \theta_{98}$&nbsp;&nbsp;&nbsp;· · · · · · &nbsp;&nbsp;&nbsp;③</p>
-<p>…</p>
+<p><span class="math inline">\(v_{100} = 0.9·v_{99} + 0.1 · \theta_{100}\)</span>   · · · · · ·    ①</p>
+</blockquote>
+<blockquote>
+<p><span class="math inline">\(v_{99} = 0.9·v_{98} + 0.1 · \theta_{99}\)</span>   · · · · · ·    ②</p>
+</blockquote>
+<blockquote>
+<p><span class="math inline">\(v_{98} = 0.9·v_{97} + 0.1 · \theta_{98}\)</span>   · · · · · ·    ③</p>
+</blockquote>
+<blockquote>
+<p>...</p>
 </blockquote>
 <p>将 ③ 式代入 ② 式，再将 ② 式代入 ① 式可以得到：</p>
-<script type="math/tex; mode=display">v_{100} = 0.1·\theta_{100} + 0.1 · 0.9 · \theta_{99} + 0.1 · 0.9^2 · \theta_{98}</script><p>如果继续向下递推，最终可以得到下式</p>
-<script type="math/tex; mode=display">v_{100} = 0.1·(\theta_{100} + 0.9 · \theta_{99} + 0.9^2 · \theta_{98} + ··· + 0.9^{99} · \theta_1)</script><p>从这个式子中可以发现，运用指数加权平均后，第 100 天的温度受到了前面所有天温度的影响，随着向前的天数减小，影响也减小，总之，这就使得处理后的数据更加平滑，噪声更少。</p>
-<p>但是为什么说 $\beta=0.9$ 时，这里的 $v_{100}$ 是对前 10 天气温平均值的粗略计算呢？</p>
-<p>观察 $v<em>{100} = 0.1·(\theta</em>{100} + 0.9 · \theta<em>{99} + 0.9^2 · \theta</em>{98} + ··· + 0.9^{99} · \theta<em>1)$ 中的系数可以发现，$\theta</em>{90}$ 前面的系数应为 $0.9^{10} ≈ 0.34$，由于这些项系数呈指数级减少，从该项开始，后面项的系数逐渐减小到了可以忽略不计的地步，因此我们如果只考察从 $\theta<em>{91}$ 到 $\theta</em>{100}$，并把 $0.1$ 写作分数的形式，就有</p>
-<script type="math/tex; mode=display">v_{100} ≈ \cfrac{\theta_{100} + 0.9 · \theta_{99} + 0.9^2 · \theta_{98} + ··· + 0.9^{9} · \theta_{91}}{10} ≈ \cfrac{\theta_{100} + \theta_{99} + ··· + \theta_{91}}{10}</script><p>这便是对前 10 天平均气温的粗略计算。</p>
+<p><span class="math display">\[v_{100} = 0.1·\theta_{100} + 0.1 · 0.9 · \theta_{99} + 0.1 · 0.9^2 · \theta_{98}\]</span></p>
+<p>如果继续向下递推，最终可以得到下式</p>
+<p><span class="math display">\[v_{100} = 0.1·(\theta_{100} + 0.9 · \theta_{99} + 0.9^2 · \theta_{98} + ··· + 0.9^{99} · \theta_1)\]</span></p>
+<p>从这个式子中可以发现，运用指数加权平均后，第 100 天的温度受到了前面所有天温度的影响，随着向前的天数减小，影响也减小，总之，这就使得处理后的数据更加平滑，噪声更少。</p>
+<p>但是为什么说 <span class="math inline">\(\beta=0.9\)</span> 时，这里的 <span class="math inline">\(v_{100}\)</span> 是对前 10 天气温平均值的粗略计算呢？</p>
+<p>观察 <span class="math inline">\(v_{100} = 0.1·(\theta_{100} + 0.9 · \theta_{99} + 0.9^2 · \theta_{98} + ··· + 0.9^{99} · \theta_1)\)</span> 中的系数可以发现，<span class="math inline">\(\theta_{90}\)</span> 前面的系数应为 <span class="math inline">\(0.9^{10} ≈ 0.34\)</span>，由于这些项系数呈指数级减少，从该项开始，后面项的系数逐渐减小到了可以忽略不计的地步，因此我们如果只考察从 <span class="math inline">\(\theta_{91}\)</span> 到 <span class="math inline">\(\theta_{100}\)</span>，并把 <span class="math inline">\(0.1\)</span> 写作分数的形式，就有</p>
+<p><span class="math display">\[v_{100} ≈ \cfrac{\theta_{100} + 0.9 · \theta_{99} + 0.9^2 · \theta_{98} + ··· + 0.9^{9} · \theta_{91}}{10} ≈ \cfrac{\theta_{100} + \theta_{99} + ··· + \theta_{91}}{10}\]</span></p>
+<p>这便是对前 10 天平均气温的粗略计算。</p>
 <p>事实上有，</p>
-<script type="math/tex; mode=display">\lim_{x \to 0}(1-x)^\frac{1}{x} = \frac{1}{e} ≈ 0.37</script><p>因此在上面的例子中，可以认为 $\theta<em>{90}$ 的系数 $0.9^{10} = (1-0.1)^{\frac{1}{0.1}} ≈ 0.34 ≈ \cfrac{1}{e}$，这有什么意义呢？这可以说明在计算 $v</em>{100}$ 选择保留 $\theta<em>{91}$ 至 $\theta</em>{100}$ 而去掉 $\theta<em>{90}$ 以及之后的项是有道理和规律的，因为只要 $\beta$ 接近 1，就有一个接近 0 的数 $\epsilon = 1 - \beta$ 使得 $\beta^{\frac{1}{1-\beta}} = (1-\epsilon)^{\frac{1}{\epsilon}} ≈ \cfrac{1}{e} ≈ 0.37$ 可以忽略不计，也就是说系数为 $\beta^\frac{1}{1-\beta}$ 及其之后的项都可丢弃，不参与 $v</em>{100}$ 的计算，从而参与计算的只有系数为 $\beta^\frac{1}{1-\beta}$ 之前的项，而这些项的数目正好为 $\frac{1}{1-\beta}$，因此最后计算的便是前 $\frac{1}{1-\beta}$ 天温度的平均值。比如在上面的例子中 $\frac{1}{1-\beta} = 10$，$v_{100}$ 便是前 10 天温度平均值的粗略计算。</p>
-<p>所以对于计算 $v_{t}$，更一般的式子为</p>
-<script type="math/tex; mode=display">
+<p><span class="math display">\[\lim_{x \to 0}(1-x)^\frac{1}{x} = \frac{1}{e} ≈ 0.37\]</span></p>
+<p>因此在上面的例子中，可以认为 <span class="math inline">\(\theta_{90}\)</span> 的系数 <span class="math inline">\(0.9^{10} = (1-0.1)^{\frac{1}{0.1}} ≈ 0.34 ≈ \cfrac{1}{e}\)</span>，这有什么意义呢？这可以说明在计算 <span class="math inline">\(v_{100}\)</span> 选择保留 <span class="math inline">\(\theta_{91}\)</span> 至 <span class="math inline">\(\theta_{100}\)</span> 而去掉 <span class="math inline">\(\theta_{90}\)</span> 以及之后的项是有道理和规律的，因为只要 <span class="math inline">\(\beta\)</span> 接近 1，就有一个接近 0 的数 <span class="math inline">\(\epsilon = 1 - \beta\)</span> 使得 <span class="math inline">\(\beta^{\frac{1}{1-\beta}} = (1-\epsilon)^{\frac{1}{\epsilon}} ≈ \cfrac{1}{e} ≈ 0.37\)</span> 可以忽略不计，也就是说系数为 <span class="math inline">\(\beta^\frac{1}{1-\beta}\)</span> 及其之后的项都可丢弃，不参与 <span class="math inline">\(v_{100}\)</span> 的计算，从而参与计算的只有系数为 <span class="math inline">\(\beta^\frac{1}{1-\beta}\)</span> 之前的项，而这些项的数目正好为 <span class="math inline">\(\frac{1}{1-\beta}\)</span>，因此最后计算的便是前 <span class="math inline">\(\frac{1}{1-\beta}\)</span> 天温度的平均值。比如在上面的例子中 <span class="math inline">\(\frac{1}{1-\beta} = 10\)</span>，<span class="math inline">\(v_{100}\)</span> 便是前 10 天温度平均值的粗略计算。</p>
+<p>所以对于计算 <span class="math inline">\(v_{t}\)</span>，更一般的式子为</p>
+<p><span class="math display">\[
 \begin{align}
-v_{t} & = \cfrac{\theta_t + \beta · \theta_{t-1} + \beta^2 · \theta_{t-2} + ··· + \beta^{t-1} · \theta_1}{\cfrac{1}{1-\beta}}\\
-& ≈ \cfrac{\theta_t + \beta · \theta_{t-1} + \beta^2 · \theta_{t-2} + ··· + \beta^{\frac{1}{1-\beta}-1} · \theta_{t-\frac{1}{1-\beta}+1}}{\cfrac{1}{1-\beta}}
-\end{align}</script><p>最终结果就是对前 $\cfrac{1}{1-\beta}$ 天气温平均值的粗略计算。</p>
+v_{t} &amp; = \cfrac{\theta_t + \beta · \theta_{t-1} + \beta^2 · \theta_{t-2} + ··· + \beta^{t-1} · \theta_1}{\cfrac{1}{1-\beta}}\\
+&amp; ≈ \cfrac{\theta_t + \beta · \theta_{t-1} + \beta^2 · \theta_{t-2} + ··· + \beta^{\frac{1}{1-\beta}-1} · \theta_{t-\frac{1}{1-\beta}+1}}{\cfrac{1}{1-\beta}}
+\end{align}
+\]</span></p>
+<p>最终结果就是对前 <span class="math inline">\(\cfrac{1}{1-\beta}\)</span> 天气温平均值的粗略计算。</p>
 <p>如果对于具体原理仍感迷惑也没关系，因为这并不影响实际运用。</p>
 <p>当然，这里是用气温举的例子，以上算法和理论对其他类型的数据也是成立的。</p>
-<h3 id="偏差修正"><a href="#偏差修正" class="headerlink" title="偏差修正"></a>偏差修正</h3><p>在之前的例子中，如果取 $\beta = 0.98$，我们应该得到下图中的绿线：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-065810.png" alt=""></p>
+<h3 id="偏差修正">偏差修正</h3>
+<p>在之前的例子中，如果取 <span class="math inline">\(\beta = 0.98\)</span>，我们应该得到下图中的绿线：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-28-065810.png" /></p>
 <p>但实际上我们得到的是下面这条紫线：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-30-100747.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-30-100747.png" /></p>
 <p>可以发现，绿线和紫线在后半部分基本贴合，但在开始阶段，紫线要低于绿线，下面我们来解释为什么会出现这种情况以及如何应对。</p>
 <p>回想一下指数加权平均的过程：</p>
 <ul>
-<li>$v_0 = 0$</li>
-<li>$v_1 = 0.98 × v_0 + 0.02 × t(1) = 0.08$</li>
-<li>$v_2 = 0.98 × v_1 + 0.02 × t(2) = 0.2584$</li>
-<li>…</li>
+<li><span class="math inline">\(v_0 = 0\)</span></li>
+<li><span class="math inline">\(v_1 = 0.98 × v_0 + 0.02 × t(1) = 0.08\)</span></li>
+<li><span class="math inline">\(v_2 = 0.98 × v_1 + 0.02 × t(2) = 0.2584\)</span></li>
+<li>...</li>
 </ul>
-<p>我们把 $v_0$ 设置为 0，所以 $v_1$ 其实等于 $0.02 × t(1)$，远远小于第一天的真实温度，这就是一个偏差，亦即紫线一开始比较低的原因，我们可以通过偏差修正的方法来解决这个问题。</p>
-<p>所谓偏差修正，就是在计算 $v_t$ 的时候增加一个步骤：</p>
-<script type="math/tex; mode=display">v_t := \frac{v_t}{1 - \beta^t}</script><p>注意观察这个式子，在这个例子中，当 t = 1 时，$1 - \beta^t$ 的值为 0.02，故应用上面这个式子后相当于使 $v_t$ 放大了 50 倍。随着 t 增大，$1 - \beta^t$ 增大，且最后会接近于 1，这时 $v_t$ 基本就不再变化了。</p>
-<p>总结一下，偏差修正就是找一个方法，在开始阶段放大 $v_t$ ，使上图中的紫线在开始阶段与绿线进行拟合。</p>
+<p>我们把 <span class="math inline">\(v_0\)</span> 设置为 0，所以 <span class="math inline">\(v_1\)</span> 其实等于 <span class="math inline">\(0.02 × t(1)\)</span>，远远小于第一天的真实温度，这就是一个偏差，亦即紫线一开始比较低的原因，我们可以通过偏差修正的方法来解决这个问题。</p>
+<p>所谓偏差修正，就是在计算 <span class="math inline">\(v_t\)</span> 的时候增加一个步骤：</p>
+<p><span class="math display">\[v_t := \frac{v_t}{1 - \beta^t}\]</span></p>
+<p>注意观察这个式子，在这个例子中，当 t = 1 时，<span class="math inline">\(1 - \beta^t\)</span> 的值为 0.02，故应用上面这个式子后相当于使 <span class="math inline">\(v_t\)</span> 放大了 50 倍。随着 t 增大，<span class="math inline">\(1 - \beta^t\)</span> 增大，且最后会接近于 1，这时 <span class="math inline">\(v_t\)</span> 基本就不再变化了。</p>
+<p>总结一下，偏差修正就是找一个方法，在开始阶段放大 <span class="math inline">\(v_t\)</span> ，使上图中的紫线在开始阶段与绿线进行拟合。</p>
 	  
 	</div>
 

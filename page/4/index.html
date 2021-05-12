@@ -128,7 +128,7 @@
 	
 	
 		<blockquote>
-<p>该软件分为两部分：图形处理部分和图像处理部分，下面分别进行讲解。<br><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fn4fgkby28j30xc0q8dmz.jpg" alt=""></p>
+<p>该软件分为两部分：图形处理部分和图像处理部分，下面分别进行讲解。 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fn4fgkby28j30xc0q8dmz.jpg" /></p>
 </blockquote>
 	
 	</div>
@@ -154,20 +154,24 @@
 	
 		<p>In this lesson, we have studied in greater details the discrete Fourier transform (DFT), the Fourier analysis tool for finite-length signals.</p>
 <p>The DFT is just a simple change of basis. The analysis formula (moving from the time to the frequency domain) is given by the inner product of the signal with the Fourier basis vector,</p>
-<script type="math/tex; mode=display">
+<p><span class="math display">\[
 \begin{align} 
 X[k] 
-&= \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \\
-&= \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} nk}
-\end{align}.</script><p>The synthesis formula (moving from the frequency to the time domain) is a linear combination of the basis functions, scaled by the coefficients we found in the analysis formula,</p>
-<script type="math/tex; mode=display">
+&amp;= \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \\
+&amp;= \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} nk}
+\end{align}.
+\]</span></p>
+<p>The synthesis formula (moving from the frequency to the time domain) is a linear combination of the basis functions, scaled by the coefficients we found in the analysis formula,</p>
+<p><span class="math display">\[
 \begin{align} 
 x[n]
-&= \frac{1}{N} \sum_{k=0}^{N-1} X[k]\mathbf{w}^{(k)} \\
-&= \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} nk}
-\end{align}</script><p>In the most general case, the DFT coefficients \(X[k]\) are complex numbers and thus have a real and imaginary part. In order to interpret these coefficients, it is convenient to represent their magnitude \(|X[k]|\) and phase \(\angle X[k]\), wrapped between \(-\pi\) and \(\pi\). In a DFT plot, frequencies between \(0\) and \(N/2\) (resp. \(N/2\) and \(N-1\) correspond to digital frequencies smaller than \(\pi\) (resp. larger than \(\pi\)), in other words counterclockwise rotations (resp. clockwise rotations). Frequencies close to \(0\) and \(N-1\) corresponds to the low frequencies and those close to \(N/2\) to the high frequencies.</p>
+&amp;= \frac{1}{N} \sum_{k=0}^{N-1} X[k]\mathbf{w}^{(k)} \\
+&amp;= \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} nk}
+\end{align}
+\]</span></p>
+<p>In the most general case, the DFT coefficients \(X[k]\) are complex numbers and thus have a real and imaginary part. In order to interpret these coefficients, it is convenient to represent their magnitude \(|X[k]|\) and phase \(X[k]\), wrapped between \(-\) and \(\). In a DFT plot, frequencies between \(0\) and \(N/2\) (resp. \(N/2\) and \(N-1\) correspond to digital frequencies smaller than \(\) (resp. larger than \(\)), in other words counterclockwise rotations (resp. clockwise rotations). Frequencies close to \(0\) and \(N-1\) corresponds to the low frequencies and those close to \(N/2\) to the high frequencies.</p>
 <p>Finally, the DFT of a real signal is symmetric in magnitude, mathematically</p>
-<p>\(|X[k]| = |X[N-k]|, k = 1, …, \lfloor{N/2}\rfloor.\)</p>
+<p>\(|X[k]| = |X[N-k]|, k = 1, …, .\)</p>
 
 	
 	</div>
@@ -197,7 +201,7 @@ x[n]
 <p><strong>作者：<a target="_blank" rel="noopener" href="http://cns-alumni.bu.edu/~slehar/">Steven Lehar</a></strong></p>
 <p>slehar@cns.bu.edu</p>
 <p>傅里叶理论在数学上非常复杂，但在其背后有些相对容易理解的整体概念。你可以在网上找到很多关于傅里叶变换的数学公式，我在这里将只展示一些应用于空间图像的傅里叶变换的直观理解。</p>
-<hr>
+<hr />
 	
 	</div>
   <a type="button" href="/2017/12/27/2017/（译）傅里叶理论的直观理解/#more" class="btn btn-default more">Read More</a>
@@ -224,7 +228,9 @@ x[n]
 <p>前几天看了一个爬取12306来获得火车票信息的教程，发现12306官网的存储车票信息的 Json 数据格式已经变了，导致这篇教程的代码已经没法继续使用了，因此我针对新的格式重新进行了解析，最后达到了目的。在此记录一下整个过程。</p>
 </blockquote>
 <p>先看一下最终效果吧</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4933688-cfe43fa7204b40b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="最终效果"></p>
+<figure>
+<img src="http://upload-images.jianshu.io/upload_images/4933688-cfe43fa7204b40b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="最终效果" /><figcaption aria-hidden="true">最终效果</figcaption>
+</figure>
 	
 	</div>
   <a type="button" href="/2017/11/10/2017/Python3 实现火车票查询工具/#more" class="btn btn-default more">Read More</a>
@@ -254,22 +260,16 @@ x[n]
 <p><strong>闭操作：</strong>同样使图像的轮廓变得光滑，但与开操作相反，它能消除狭窄的间断和长细的鸿沟，消除小的孔洞，并填补轮廓线中的裂痕（先用B对A膨胀，然后用B对结果腐蚀）A·B=(A+B)-B</p>
 <p><strong>击中击不中变换：</strong>形状检测的一个基本工具</p>
 <p><strong>拉普拉斯算子优缺点：</strong></p>
-<p><strong>缺点：</strong><br>拉普拉斯算子对噪声具有敏感性；拉普拉斯算子的幅值产生双边缘；拉普拉斯算子不能检测边缘的方向</p>
-<p><strong>优点：</strong><br>可以利用零交叉的性质进行边缘定位；可以确定一个像素是在边缘暗的一边还是亮的一边</p>
-<p><strong>阈值处理算法：</strong></p>
-<ol>
+<p><strong>缺点：</strong>拉普拉斯算子对噪声具有敏感性；拉普拉斯算子的幅值产生双边缘；拉普拉斯算子不能检测边缘的方向<strong>优点：</strong>可以利用零交叉的性质进行边缘定位；可以确定一个像素是在边缘暗的一边还是亮的一边<strong>阈值处理算法：</strong></p>
+<ol type="1">
 <li>选择一个T的初始估计值</li>
-<li>用T分割图像，生成两组像素：G1由所有灰度值大 于T的    像素组成，而G2由所有灰度值小于或等于T的 像素组成</li>
-<li>对区域G1和G2中的所有像素计算平均灰度值µ1和µ2</li>
+<li>用T分割图像，生成两组像素：G1由所有灰度值大 于T的 像素组成，而G2由所有灰度值小于或等于T的 像素组成3. 对区域G1和G2中的所有像素计算平均灰度值µ1和µ2</li>
 <li>计算新的阈值 T = 1/2 (µ1 + µ2)</li>
 <li>重复步骤2到4，直到逐次迭代所得的T值之差小于事先定义的参数ΔT</li>
 </ol>
 <p><strong>区域增长算法：</strong></p>
-<ol>
-<li>根据图像的不同应用选择一个或一组种子，它或者是最亮或最暗的点，或者是位于点簇中心的点</li>
-<li>选择一个描述符（条件）</li>
-<li>从该种子开始向外扩张，首先把种子像素 加入结果集合，然后不断将与集合中各个 像素连通、且满足描述符的像素加入集合</li>
-<li>上一过程进行到不再有满足条件的新结点 加入集合为止</li>
+<ol type="1">
+<li>根据图像的不同应用选择一个或一组种子，它或者是最亮或最暗的点，或者是位于点簇中心的点2. 选择一个描述符（条件）3. 从该种子开始向外扩张，首先把种子像素 加入结果集合，然后不断将与集合中各个 像素连通、且满足描述符的像素加入集合4. 上一过程进行到不再有满足条件的新结点 加入集合为止</li>
 </ol>
 
 	
@@ -296,16 +296,23 @@ x[n]
 	
 		<p>在使用 Python 的过程中，免不了要用 pip 安装各种模块，但是由于官方 Pypi 经常被墙，导致下载速度过慢甚至出错，最好的办法是将自己使用 pip 源更换一下。以下是几个常用的国内源：</p>
 <blockquote>
-<p>阿里云<br><a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/pypi/simple/">http://mirrors.aliyun.com/pypi/simple/</a>  </p>
-<p>中国科技大学<br><a target="_blank" rel="noopener" href="https://pypi.mirrors.ustc.edu.cn/simple/">https://pypi.mirrors.ustc.edu.cn/simple/</a>  </p>
-<p>豆瓣<br><a target="_blank" rel="noopener" href="http://pypi.douban.com/simple/">http://pypi.douban.com/simple/</a>  </p>
-<p>清华大学<br><a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple/">https://pypi.tuna.tsinghua.edu.cn/simple/</a>  </p>
-<p>中国科学技术大学<br><a target="_blank" rel="noopener" href="http://pypi.mirrors.ustc.edu.cn/simple/">http://pypi.mirrors.ustc.edu.cn/simple/</a></p>
+<p>阿里云<br />
+<a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/pypi/simple/">http://mirrors.aliyun.com/pypi/simple/</a></p>
+<p>中国科技大学<br />
+<a target="_blank" rel="noopener" href="https://pypi.mirrors.ustc.edu.cn/simple/">https://pypi.mirrors.ustc.edu.cn/simple/</a></p>
+<p>豆瓣<br />
+<a target="_blank" rel="noopener" href="http://pypi.douban.com/simple/">http://pypi.douban.com/simple/</a></p>
+<p>清华大学<br />
+<a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple/">https://pypi.tuna.tsinghua.edu.cn/simple/</a></p>
+<p>中国科学技术大学<br />
+<a target="_blank" rel="noopener" href="http://pypi.mirrors.ustc.edu.cn/simple/">http://pypi.mirrors.ustc.edu.cn/simple/</a></p>
 </blockquote>
 <p>以下是更换方法：</p>
-<h3 id="临时使用"><a href="#临时使用" class="headerlink" title="临时使用"></a>临时使用</h3><p>在安装语句最后加上 -i 以及相应 URL 即可，比如：</p>
+<h3 id="临时使用">临时使用</h3>
+<p>在安装语句最后加上 -i 以及相应 URL 即可，比如：</p>
 <p><code>pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple/</code></p>
-<h3 id="一劳永逸"><a href="#一劳永逸" class="headerlink" title="一劳永逸"></a>一劳永逸</h3><p>进入目录 ~/.pip，编辑 pip.conf 文件：</p>
+<h3 id="一劳永逸">一劳永逸</h3>
+<p>进入目录 ~/.pip，编辑 pip.conf 文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[global]  </span><br><span class="line">index-url &#x3D; http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;pypi&#x2F;simple&#x2F;</span><br></pre></td></tr></table></figure>
 <p>最后面跟的是你选择的源，我这里是以阿里云的为例。</p>
 <p>如果你是 Mac 用户，那么你可能没有 .pip 文件夹，那就新建一个，然后再新建 pip.conf 文件，即在终端中分别输入以下三个语句，之后再将上面的内容写进 pip.conf 文件</p>
@@ -334,7 +341,8 @@ x[n]
   <div class="row">
 	
 	
-		<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>关于 canvas 的基本使用，可以参考以下两个网站：</p>
+		<h2 id="基本介绍">基本介绍</h2>
+<p>关于 canvas 的基本使用，可以参考以下两个网站：</p>
 <p><a target="_blank" rel="noopener" href="http://blog.csdn.net/iispring/article/details/49770651">Android Canvas绘图详解(图文) - 泡在网上的日子</a></p>
 <p><a target="_blank" rel="noopener" href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2012/1212/703.html">Android中Canvas绘图基础详解(附源码下载) - CSDN博客</a></p>
 <p>这里主要讲解如何将 canvas 实际运用到我们的项目中。</p>
@@ -511,45 +519,45 @@ x[n]
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
-		
-			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
 			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
 		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
-		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
-		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
-		
-			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
-		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
 		
 			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
 		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
 		
 			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
 		
-			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+		
+			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
 		
 			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
 		
-			<li><a href="/tags/计算广告/">计算广告<span>1</span></a></li>
-		
 			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
 		
-			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/tags/计算广告/">计算广告<span>1</span></a></li>
+		
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>

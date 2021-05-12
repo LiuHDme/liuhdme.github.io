@@ -128,9 +128,10 @@
 		</div>
 	
 	
-		<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
-<p><strong>论文地址</strong>：<a target="_blank" rel="noopener" href="http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf">http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</a></p>
-<p><strong>代码地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
+		<h2 id="介绍">介绍</h2>
+<p>Kipf 与 Welling 16 年发表了「Variational Graph Auto-Encoders」，提出了基于图的（变分）自编码器 <strong>Variational Graph Auto-Encoder（VGAE）</strong>。</p>
+<p><strong>论文地址</strong>：http://bayesiandeeplearning.org/2016/papers/BDL_16.pdf</p>
+<p><strong>代码地址</strong>：https://github.com/tkipf/gae</p>
 <p><strong>先介绍一下 intention 和用途</strong>。了解 embedding 概念的应该知道，获取一个合适的 embedding 来表示一张图中的节点不是一件容易的事，另外，如果我们能找到合适的 embedding，就能将它们用在上层任务中。VGAE 的用途之一就是通过 encoder-decoder 的结构来获取图中节点的 embedding。</p>
 <p><strong>VGAE 的思想和变分自编码器（VAE）很像</strong>：利用隐变量（latent variables），让模型学习出一些分布（distribution），再从这些分布中采样得到 latent representations（或者说 embedding），<strong>这个过程是 encode 阶段</strong>，然后再利用得到的 latent representations 重构（reconstruct）出原始的图，<strong>这个过程是 decode 阶段</strong>。只不过，VGAE 的 encoder 使用了 GCN，decoder 是简单的内积（inner product）形式。</p>
 <p><strong>下面具体讲解变分图自编码器（VGAE）。先讲 GAE，即图自编码器（没有变分）。</strong></p>
@@ -161,9 +162,11 @@
 	
 		<p>相对熵可以衡量两个分布之间的不相似性，即 P 和 Q 两个分布越相似，相对熵越小，否则越大。</p>
 <p>相对熵的公式是</p>
-<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}</script><p>显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。</p>
+<p><span class="math display">\[D_{KL}(\mathrm{P} || \mathrm{Q}) = \sum_{i} p_i \log{\frac{p_i}{q_i}}\]</span></p>
+<p>显然，当 P 和 Q 的分布完全相同时，log 里就是 1，所以每项都是 0，相对熵也为 0，印证了开头的那句话。</p>
 <p>关于相对熵有个不等式：</p>
-<script type="math/tex; mode=display">D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0</script><p>下面给出两种证明方法：</p>
+<p><span class="math display">\[D_{KL}(\mathrm{P} || \mathrm{Q}) \geq 0\]</span></p>
+<p>下面给出两种证明方法：</p>
 	
 	</div>
   <a type="button" href="/2019/12/14/2019/关于相对熵的推导证明和推论/#more" class="btn btn-default more">Read More</a>
@@ -211,7 +214,7 @@
 	
 	
 		<p>这篇文章讲解使用 TensorFlow 实现风格迁移。</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-08-063511.png" alt=""></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-08-063511.png" /></p>
 	
 	</div>
   <a type="button" href="/2019/02/02/2019/3 卷积神经网络/Week 4/neural_style_transfer_tensorflow/#more" class="btn btn-default more">Read More</a>
@@ -233,7 +236,10 @@
 	
 	
 		<blockquote>
-<p>这篇文章翻译自 <a target="_blank" rel="noopener" href="https://pytorch.org/">Pytorch</a> 官方教程 <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html">Transfer Learning Tutorial</a><br><strong>原作者：</strong><a target="_blank" rel="noopener" href="https://chsasank.github.io/">Sasank Chilamkurthy</a></p>
+<p>这篇文章翻译自 <a target="_blank" rel="noopener" href="https://pytorch.org/">Pytorch</a> 官方教程 <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html">Transfer Learning Tutorial</a><br />
+<strong>原作者：</strong><a target="_blank" rel="noopener" href="https://chsasank.github.io/">Sasank Chilamkurthy</a></p>
+</blockquote>
+<blockquote>
 <p><strong>Note:</strong> 点击<a href="#code">这里</a>下载完整示例代码</p>
 </blockquote>
 <p>在这篇教程中，你将会学到如何利用迁移学习来训练你的网络。你可以通过 <a target="_blank" rel="noopener" href="https://cs231n.github.io/transfer-learning/">cs231n notes</a> 了解更多关于迁移学习的信息。</p>
@@ -262,53 +268,52 @@
 	
 	
 		<p>今天是我的生日。最近不知不觉已经完成了 todo-list 中的一大半了，由于近期文章数量较多，在此做一个索引，方便日后查阅。</p>
-<div class="table-container">
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>优化算法</th>
 <th>卷积神经网络</th>
 <th>序列模型</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/03/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/1%20Mini-Batch%20%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">Mini-Batch 梯度下降</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/13/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/1%20CNN%20%E9%83%A8%E5%88%86%E7%90%86%E8%AE%BA/">CNN 部分理论</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/22/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/1%20%E4%BD%BF%E7%94%A8%20Numpy%20%E5%BB%BA%E7%AB%8B%20RNN/">使用 Numpy 建立 RNN</a></td>
 </tr>
-<tr>
+<tr class="even">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/04/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/2%20%E6%8C%87%E6%95%B0%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87/">指数加权平均</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/14/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/2%20%E4%BD%BF%E7%94%A8%20Numpy%20%E5%BB%BA%E7%AB%8B%20CNN/">使用 Numpy 建立 CNN</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/23/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/2%20%E7%94%A8%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%91%BD%E5%90%8D%E6%81%90%E9%BE%99/">用语言模型命名恐龙</a></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/05/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/3%20%E5%8A%A8%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">动量梯度下降算法</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/16/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/Transfer%20Learning%20%E8%AF%86%E5%88%AB%E5%8A%A8%E7%89%A9%E5%93%81%E7%A7%8D/">Transform Learning 识别狗猫品种</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/24/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%201/3%20%E7%94%A8%20LSTM%20%E7%94%9F%E6%88%90%E5%B0%8F%E6%AE%B5%E9%9F%B3%E4%B9%90/">用 LSTM 生成小段音乐</a></td>
 </tr>
-<tr>
+<tr class="even">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/06/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/4%20RMSprop/">RMSprop</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/17/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/1%20%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%85%B8%20CNN/">一些经典 CNN</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/27/2019/4%20%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/Week%203/1%20%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%9E%8B/">注意力模型</a></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/07/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/5%20Adam%20%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">Adam 优化算法</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/19/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/2%20Keras-Happy%20House/">Keras 实现 Happy House</a></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/08/2019/1%20%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/6%20%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%A1%B0%E5%87%8F/">学习率衰减</a></td>
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/20/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%202/3%20Keras%20%E5%AE%9E%E7%8E%B0%20ResNet/">Keras 实现 ResNet</a></td>
 <td></td>
 </tr>
-<tr>
-<td></td>
+<tr class="odd">
 <td><a target="_blank" rel="noopener" href="http://www.liuhdme.com/2019/01/16/2019/3%20%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Week%201/3%20TensorFlow%20%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB/">TensorFlow 实现手势识别</a></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-</div>
 <blockquote>
 <p>学如逆水行舟，不进则退。</p>
 </blockquote>
@@ -356,7 +361,7 @@
   <div class="row">
 	
 	
-		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" alt=""></p>
+		<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" /></p>
 	
 	</div>
   <a type="button" href="/2019/01/26/2019/4 序列模型/Week 3/2 LSTM/#more" class="btn btn-default more">Read More</a>
@@ -382,8 +387,7 @@
 </blockquote>
 <audio controls="controls" >
 <source src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-02-30s_trained_model.mp3" type="audio/mpeg" />
-                    Your browser does not support the audio element.
-</audio>
+<p>Your browser does not support the audio element. </audio></p>
 	
 	</div>
   <a type="button" href="/2019/01/24/2019/4 序列模型/Week 1/3 用 LSTM 生成小段音乐/#more" class="btn btn-default more">Read More</a>
@@ -500,45 +504,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/生活/">生活<span>3</span></a></li>
-		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
-			<li><a href="/tags/计算广告/">计算广告<span>1</span></a></li>
-		
-			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
-		
-			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
-		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
-		
 			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
 		
 			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
 		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+			<li><a href="/tags/计算广告/">计算广告<span>1</span></a></li>
 		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
-		
-			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
-		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
 		
 			<li><a href="/tags/Android/">Android<span>3</span></a></li>
 		
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
+		
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+		
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
+		
 			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+		
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+		
+			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
+		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
 		
 			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
 			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
 		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>
