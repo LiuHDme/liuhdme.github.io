@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>注意力模型 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="注意力模型是深度学习领域的一个非常重要的理论，这篇文章简要谈及我对注意力模型的理解。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="注意力模型"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> 注意力模型</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>注意力模型是深度学习领域的一个非常重要的理论，这篇文章简要谈及我对注意力模型的理解。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="注意力模型解决了什么问题">注意力模型解决了什么问题</h2>
+<p>以机器翻译为例，在之前的 Seq2Seq 模型中，我们的做法是先通过一个模型将整个待翻译的句子编码，再通过另一个模型对该编码进行解码，同时输出每一个翻译好的单词，但这不符合人的习惯。面对一个很长的句子时，人们并不是先记住整个句子，然后再逐词翻译的，相反，人们的注意力是会不断转移的，举例来说，当人们翻译句子的开头时，注意力集中在待翻译句子的开头部分，翻译句子结尾时，注意力集中在待翻译句子的结尾部分（不同的语言结构可能会有差异，但能保证的一点是注意力在发生转移），因此，若按照之前的方法，待翻译句子一旦很长，得到的结果便会很差，可以用一张图来描述：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fzhrd6ztmmj30m0088gls.jpg" /></p>
+<p>图中蓝线表示普通编码解码模型，绿线表示注意力模型，横轴为句子长度，竖轴为衡量翻译质量的一种分数，可以看到，随着句子变长，普通 Encoder-Decoder 模型的表现逐渐下降，而注意力模型的表现一直很稳定。</p>
+<h2 id="大致阐述">大致阐述</h2>
+<p>假设我们要把下面这句法语：Jane visite l'Afrique en septembre 翻译成英语：Jane visite Africa in September. 说句题外话，虽然我不懂法语，但是可以看出来这句话在句子结构上，英语和法语差不多，人们在翻译的时候，先看到开头的人名 Jane 然后翻译成英语 Jane，换句话说，当翻译第一个单词的时候，后面几个单词对于第一个单词的翻译的影响并不大，人们的注意力主要集中在第一个单词上，用一张图来表示就是这样的：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzhrqfb00ej31300jmjtr.jpg" /></p>
+<p>图中左上角的 \(y^{&lt;1&gt;}\) 就是翻译后的单词，这个翻译的结果取决于对法语句子中不同单词的注意力，这里用几个箭头来表示，每个箭头旁边有一个 \(\) 用来表示注意力，当然每个 \(\) 是不一样的，开头的 Jane 的注意力肯定是最大的。</p>
+<p>以此类推，生成英语的每个单词的时候，针对法语的每个单词都有一个注意力参数，这些参数往往都是不同的，代表着对句子不同部分的注意力不同。那么这些注意力参数怎么得到呢，这里的方法是再用一个神经网络用来学习这些参数，如下图所示：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzhs8gz648j30fa0c2js3.jpg" /></p>
+<p>图中下方的 \(s^{<t-1>}\) 由 Decoder 中当前结点的前一个结点传来，\(a<sup>{&lt;t</sup>{'}&gt;}\) 由 Encoder 中的某一个结点传来，将这两个值作为输入传入一个小型神经网络以得到一个输出，这个输出还不能当做注意力权重，因为所有的注意力权重加起来规定为 1，为了保证这一点，需要利用 <code>softmax()</code> 函数，即图中上方的式子，最终的结果才是法语句子中每个单词的注意力权重。</p>
+<h2 id="具体代码实现">具体代码实现</h2>
+<p>上面只是对注意力模型进行了大致阐述，很多地方的描述其实不够准确，而且还有很多没有讲到的地方，这些地方可以通过具体的代码实现来学习，参考另一篇文章。</p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/2c42aff0/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/48c60d0d/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-27 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/NLP/">NLP<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>

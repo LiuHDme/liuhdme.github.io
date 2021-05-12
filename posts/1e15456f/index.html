@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一些经典 CNN | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="在计算机视觉的发展过程中，出现了很多经典的卷积神经网络模型，它们对后来的研究有很大影响，这篇文章简要谈谈 LeNet-5、AlexNet 和 VGGNet.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="一些经典 CNN"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> 一些经典 CNN</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>在计算机视觉的发展过程中，出现了很多经典的卷积神经网络模型，它们对后来的研究有很大影响，这篇文章简要谈谈 LeNet-5、AlexNet 和 VGGNet.</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="lenet-5">LeNet-5</h3>
+<p>LeNet-5 是由 LeCun 在 1998 年的一篇论文中提出的，与今天的一些神经网络相比，LeNet-5 是一个小型神经网络，它只有大约 60000 个参数，而今天经常会有包含千万到亿量级参数的神经网络，我们先来看一下 LeNet-5 的模型：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-061526.png" /></p>
+<p>如图所示，输入是一张维度为 (32, 32, 1) 的图片，在这个例子中该图片是一张手写体数字的灰度图片，内容为数字 7，由于这是一张灰度图，因此通道数为 1，下面依次对该网络每层进行说明：</p>
+<ul>
+<li>第一层：
+<ul>
+<li>6 个大小为 5 × 5 的过滤器，Padding = 1，Stride = 1. 输出维度为 (28, 28, 6) 的图片。</li>
+<li>均值池化层，过滤器大小为 2 × 2，Stride = 2. 输出维度为 (14, 14, 6) 的图片。</li>
+</ul></li>
+<li>第二层：
+<ul>
+<li>6 个大小为 5 × 5 的过滤器，Padding = 1，Stride = 1. 输出维度为 (10, 10, 6) 的图片。</li>
+<li>均值池化层，过滤器大小为 2 × 2，Stride = 2. 输出维度为 (5, 5, 6) 的图片。</li>
+</ul></li>
+<li>第三层：全连接层，共 120 个结点</li>
+<li>第四层：全连接层，共 84 个结点</li>
+<li>第五层：输出层，输出预测值</li>
+</ul>
+<p><strong>Note:</strong> 由于池化层并不包含任何参数，因此将其与前一个卷积层共算作一层。</p>
+<p>这个网络可以完成手写体数字识别的任务，输入一张大小为 32 × 32 的灰度图，最终输出对图中数字的预测，其中池化层用的是均值池化，而目前更常用的最大池化，另外，现在输出层通常使用 softmax 函数，而当时使用的是另一种函数。</p>
+<p>该网络中用到结构在现今仍非常常用，即先使用一层或几层卷积层，再使用一层池化层，然后再使用一层或几层卷积层，再使用一层池化层，最后再使用几层全连接层，最后输出结果。这种结构方式在今天也非常常见。</p>
+<h3 id="alexnet">AlexNet</h3>
+<p>与 LeNet-5 只有大约 60000 个参数不同，AlexNet 有大约 6 千万个参数，不过这二者拥有很相似的结构，只是 AlexNet 拥有更多的隐藏神经元，在更大的数据上训练，这使得它有更好的性能，它的结构如下</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-064438.png" /></p>
+<ul>
+<li>第一层：
+<ul>
+<li>96 个大小为 11 × 11 的过滤器，Padding = 1，Stride = 4. 输出维度为 (55, 55, 96).</li>
+<li>最大池化层，过滤器大小为 3 × 3，Stride = 2. 输出维度为 (27, 27, 96).</li>
+</ul></li>
+<li>第二层：
+<ul>
+<li>256 个大小为 5 × 5 的过滤器，Padding = same，Stride = 1. 输出维度为 (27, 27, 256).</li>
+<li>最大池化层，过滤器大小为 3 × 3，Stride = 2. 输出维度为 (13, 13, 256).</li>
+</ul></li>
+<li>第三层：384 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 384).</li>
+<li>第四层：384 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 384).</li>
+<li>第五层：
+<ul>
+<li>256 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 256).</li>
+<li>最大池化层：过滤器大小为 3 × 3，Stride = 2. 输出维度为 (6, 6, 256).</li>
+</ul></li>
+<li>第六层：全连接层，共 4096 个结点</li>
+<li>第七层：全连接层，共 4096 个结点</li>
+<li>第八层：输出层，使用 softmax 输出预测类别</li>
+</ul>
+<p>另一个与 LeNet-5 不同之处是，AlexNet 的激活函数使用了 ReLU，而非 LeNet-5 使用的 sigmoid 或者 tanh，这也使得其性能更好一些。</p>
+<p>实际上上面列出的结构是原始 AlexNet 的简化，原始的 AlexNet 中还有局部响应归一层，但后来并不太常用，因此这里做了简化。</p>
+<h3 id="vgg-16">VGG-16</h3>
+<p>VGG-16 中的 16 是指该网络中有 16 层带有权重的层，这是一个很大的神经网络，这导致该网络中的参数多达 1 亿 3 千 8 百万个。但是 VGG 的结构非常统一，该网络中的所有卷积层的过滤器大小都是 3 × 3，Stride 都是 1，Padding 都是 same，而池化层过滤器的大小全为 2 × 2，Stride 全为 2。结构方面，总是现有几层卷积层，然后是池化层，再来几层卷积层，再来一个池化层。由于该网络层数很多，结构图稍微简化了一些：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-073535.png" /></p>
+<p>其中，</p>
+<ul>
+<li>[CONV 64] × 2 是指两层各有 64 个过滤器的卷积层</li>
+<li>POOL 指池化层</li>
+<li>FC 指全连接层</li>
+</ul>
+<p>可以看到，虽然 VGG-16 是一个比较大的网络，但是由于其结构统一，因此受到了许多研究者的青睐，另外还有 VGG-19，指拥有 19 层带有权重的层的 VGG，但由于其性能与 VGG-16 差不多，因此大多数人还是选择用 VGG-16。</p>
+<p>以上是对三个经典卷积神经网络的简单介绍，文末附上 AlexNet 和 VGG 的相关论文。</p>
+<p><a target="_blank" rel="noopener" href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf">[Krizhevsky et al., 2012. ImageNet classification with deep convolutional neural networks]</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1409.1556.pdf">[Simonyan &amp; Zisserman 2015. Very deep convolutional networks for large-scale image recognition]</a></p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/7e288e00/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/433c4202/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-17 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>
