@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>LSTM | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="LSTM"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> LSTM</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" /></p>
+<a id="more"></a>
+<h2 id="gated-recurrent-unit">Gated Recurrent Unit</h2>
+<p>GRU 和 LSTM 都可以很好的解决 RNN 中的梯度消失问题，而 GRU 与 LSTM 在某些方面很相似，为了阐述 LSTM，先阐述 GRU。</p>
+<p>下图所示是普通 RNN 单元</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-rnn_step_forward.png" /></p>
+<p>GRU 的 RNN 单元与其类似，但有所不同，其中对于 a 的计算分为三部：</p>
+<ol type="1">
+<li>计算 <span class="math inline">\(\tilde{a}^{\langle t \rangle} = tanh(w_a[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_a)\)</span></li>
+<li>计算 <span class="math inline">\(\Gamma_u = \sigma(w_u[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)\)</span></li>
+<li>最终 <span class="math inline">\(a^{\langle t \rangle} = \Gamma_u \cdot \tilde{a}^{\langle t \rangle} + (1-\Gamma_u) \cdot a^{\langle {t-1} \rangle}\)</span></li>
+</ol>
+<p>其中 <span class="math inline">\(\Gamma_u\)</span> 为 <em>update gate</em>，即更新门，其值域为 <span class="math inline">\([0, 1]\)</span>. 从上式可以看出，最终的 <span class="math inline">\(a^{\langle t \rangle}\)</span> 是当前激活值与一个时间步骤前的激活值的线性组合，通过这种方式，可以使得先前激活值有一定概率传播到当前激活值，即记住了句子之前的信息。然后用最终的 <span class="math inline">\(a^{\langle t \rangle}\)</span> 计算 <span class="math inline">\(y^{\langle t \rangle}\)</span>.</p>
+<p>另外为了与普通 RNN 单元进行区分，GRU 中的激活值一般以 c 表示，将上式中的 a 替换为 c 即可，下面将使用 c 阐述其他内容。</p>
+<p>目前为止介绍的 GRU 其实做了简化，完整的 GRU 还有一个相关门，即 relevant gate，用来确定 <span class="math inline">\(c^{\langle {t-1} \rangle}\)</span> 与 <span class="math inline">\(c^{\langle t \rangle}\)</span> 的相关程度，加入了更新门后对于 c 的计算过程如下。</p>
+<ol type="1">
+<li>计算 <span class="math inline">\(\Gamma_r = \sigma(w_r[c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_r)\)</span></li>
+<li>计算 <span class="math inline">\(\tilde{c}^{\langle{t}\rangle} = tanh(w_c[\Gamma_r \cdot c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)\)</span></li>
+<li>计算 <span class="math inline">\(\Gamma_u = \sigma(w_u[c^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)\)</span></li>
+<li>最终 <span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle {t-1} \rangle}\)</span></li>
+</ol>
+<p>其中第一步计算 <em>relevant gate</em>，第二步利用 <em>relevatn gate</em> 计算 <span class="math inline">\(\tilde{c}^{\langle t \rangle}\)</span>，其余步骤与之前相同。</p>
+<p>关于为什么要使用这样的 RNN 单元，Andrew NG 对此有下面这一番话：</p>
+<blockquote>
+<p>So why we use these architectures, why don’t we change them, how we know they will work, why not add another gate, why not use the simpler GRU instead of the full GRU; well researchers has experimented over years all the various types of these architectures with many many different versions and also addressing the vanishing gradient problem. They have found that full GRUs are one of the best RNN architectures to be used for many different problems. You can make your design but put in mind that GRUs and LSTMs are standards.</p>
+</blockquote>
+<h2 id="long-short-term-memory">Long Short Term Memory</h2>
+<p>GRU 在解决梯度消失问题上的表现很不错，但在 GRU 提出之前，LSTM 存在已久，而 LSTM 比起 GRU 使用得更加普遍。</p>
+<p>LSTM 与 GRU 十分相似。在 GRU 中，我们有 <em>update gate</em> 和 <em>relevant gate</em>，以及激活单元 c，而在 LSTM 中，没有_relevant gate_，但新增了 <em>forget gate</em> 和 <em>output gate</em>，以及激活单元 c 和 a，下面我们来详细阐述。</p>
+<p>在 GRU 中，我们使用 <em>update gate</em> 的来控制激活单元是否更新以及更新的程度，其目的是减少激活单元更新的次数或程度，好让之前的激活单元的值得到保留，换言之，记住句子前面部分的信息，这一点在 LSTM 中并没改变，只不过相比于 GRU 使用 <span class="math inline">\(1 - \Gamma_u\)</span> 来表示不更新的概率，LSTM 直接使用一个 <em>forget gate</em> 即 <span class="math inline">\(\Gamma_f\)</span> 来代替 <span class="math inline">\(1 - \Gamma_u\)</span>，下表可以清楚看出 GRU 与 LSTM 在计算 <span class="math inline">\(c^{\langle t \rangle}\)</span> 时的区别。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>GRU</th>
+<th>LSTM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle{t-1}\rangle}\)</span></td>
+<td><span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>另一个门，即 <em>output gate</em> 的作用是进一步控制激活单元更新的程度，在 GRU 中，上表算出的 <span class="math inline">\(c^{\langle t \rangle}\)</span> 就是激活单元，而在 LSTM 中还需进一步计算，再用一张表表示。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>GRU 的激活单元</th>
+<th>LSTM 的激活单元</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + (1-\Gamma_u) \cdot c^{\langle{t-1}\rangle}\)</span></td>
+<td><span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}\)</span><br><span class="math inline">\(a^{\langle t \rangle} = \Gamma_o \cdot tanh(c^{\langle t \rangle})\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>从表中可以看出，LSTM 的最终激活单元是 a，即 <span class="math inline">\(y^{\langle t \rangle}\)</span> 是通过 <span class="math inline">\(a^{\langle t \rangle}\)</span> 的计算得出的，<span class="math inline">\(c^{\langle t \rangle}\)</span> 只是中间变量，不过 <span class="math inline">\(c^{\langle t \rangle}\)</span> 和 <span class="math inline">\(a^{\langle t \rangle}\)</span> 都会传向下一个单元，一会会用一张图表示这个过程。</p>
+<p>介绍了 <em>forget gate</em> 和 <em>output gate</em> 的作用后，让我们把 LSTM 的激活单元计算过程中涉及的计算式完整写一遍：</p>
+<ol type="1">
+<li><span class="math inline">\(\tilde{c}^{\langle t \rangle} = tanh(w_c[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)\)</span></li>
+<li><span class="math inline">\(\Gamma_u = \sigma(w_u[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_u)\)</span></li>
+<li><span class="math inline">\(\Gamma_f = \sigma(w_f[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_f)\)</span></li>
+<li><span class="math inline">\(\Gamma_o = \sigma(w_o[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_o)\)</span></li>
+<li><span class="math inline">\(c^{\langle t \rangle} = \Gamma_u \cdot \tilde{c}^{\langle t \rangle} + \Gamma_f \cdot c^{\langle{t-1}\rangle}\)</span></li>
+<li><span class="math inline">\(a^{\langle t \rangle} = \Gamma_o \cdot tanh(c^{\langle t \rangle})\)</span></li>
+</ol>
+<p>计算顺序不一定按照上面的序号来。可以用一张图来表示 LSTM 的 RNN 单元的计算过程：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM.png" /></p>
+<p>从图中可以看出，<span class="math inline">\(c^{\langle t \rangle}\)</span> 和 <span class="math inline">\(a^{\langle t \rangle}\)</span> 都传向了下一个单元（这里说下一个单元有些不太准确，准确形容应该是 the next time step），但只有 <span class="math inline">\(a^{\langle t \rangle}\)</span> 参与了 <span class="math inline">\(y^{\langle t \rangle}\)</span> 的计算。</p>
+<p>下面这幅图展示了 LSTM 的前向传播过程。</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-13-LSTM_rnn.png" /></p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/83542179.html" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/d0753cbd.html" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-26 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/NLP/">NLP<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>

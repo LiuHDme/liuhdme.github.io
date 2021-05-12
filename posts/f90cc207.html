@@ -1,0 +1,462 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Machine Learning 第一周 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="昨天是教师节，正好完成了 Coursera 上的 Machine Learning 课程的最后一周作业，顺利拿到了证书。这门课程持续了两个多月，现在回忆刚开始学习的内容，发现对有些细节的记忆已经不是那么清晰了，幸亏 Coursera 提供了每周课程的参考文档，记录了每周课程的内容。为了保证课没白上，我打算再花两个多月的时间，每周认真读一篇文档，并把内容记录到网站中，供自己以及其他人有兴趣的人查看。我希望，从来没有接触过机器学习甚至是编程的人也可以轻松看懂我写的内容。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Machine Learning 第一周"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> Machine Learning 第一周</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>昨天是教师节，正好完成了 Coursera 上的 Machine Learning 课程的最后一周作业，顺利拿到了证书。这门课程持续了两个多月，现在回忆刚开始学习的内容，发现对有些细节的记忆已经不是那么清晰了，幸亏 Coursera 提供了每周课程的参考文档，记录了每周课程的内容。为了保证课没白上，我打算再花两个多月的时间，每周认真读一篇文档，并把内容记录到网站中，供自己以及其他人有兴趣的人查看。我希望，从来没有接触过机器学习甚至是编程的人也可以轻松看懂我写的内容。</p>
+</blockquote>
+<a id="more"></a>
+<hr />
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-9b2e608e66231898.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+#
+<p style="color:#3A5FCD">
+介绍
+</p>
+<h2 id="什么是机器学习"><small>什么是机器学习</small></h2>
+<p>关于机器学习的定义有两种。其中一种非正式的定义是由机器学习之父 —— Arthur Samuel 提出的，他形容机器学习是能让计算机不被明确编程而可以自主学习的研究领域。</p>
+<p>Tom Mitchell 提出了一种更现代的定义：如果一个计算机程序对于某项任务 T 的表现好坏程度 P 随着经验 E 的增多而提升，那么我们就可以认为这段程序在执行任务 T 以及被好坏程度 P 考量的过程中获得了经验 E，并从中进行了学习。</p>
+<blockquote>
+<p>比如对下象棋来说，</p>
+</blockquote>
+<blockquote>
+<p>E 就是一段程序下了很多盘象棋的经历。</p>
+</blockquote>
+<blockquote>
+<p>T 就是下象棋这件任务。</p>
+</blockquote>
+<blockquote>
+<p>P 就是这段程序能够赢得比赛胜利的可能性。</p>
+</blockquote>
+<p>那么机器学习就是说，这段程序通过不断的下象棋，获得越来越多的经验，并从中学习，自身的水平不断提高，使获胜的可能性越来越大（即任务完成的越来越好）。</p>
+<p>通常，任何一个机器学习问题都可以被分为监督学习或者无监督学习。</p>
+<h2 id="监督学习"><small>监督学习</small></h2>
+<p>在监督学习中，我们的数据集已经被贴上了标签，就是说，对于某个数据来说，我们知道它可能具有的含义有哪些。</p>
+<p>监督学习也可以分为“回归”和“分类”两类。对于回归问题，我们对计算机输入连续的数据，这些数据经过一系列函数就会得到一系列<b style="color:red">连续的</b>输出，然后通过一系列<b style="color:red">连续的</b>输出，我们就可以预测最后的结果。</p>
+<p>对于分类问题，同样是预测结果，但不同于回归问题，我们是通过<b style="color:red">不连续的</b>的输出来预测结果，换句话讲，我们的目标是把输入的数据分成几个不连续的类别。下面举几个简单的例子🌰：</p>
+<blockquote>
+<p><strong>Example 1</strong><br />
+通过房子大小来预测房价的过程中，由于房价是一种连续的输出，因此这是一个回归问题。</p>
+</blockquote>
+<blockquote>
+<p><strong>Example 2</strong><br />
+给定一张男人或女人的照片，判断他/她的年龄，由于年龄是连续的，因此这是一个回归问题。然而，如果目标不是判断年龄，而是判断这个人是在读高中还是大学，那么这就是一个分类问题了，因为很明显，读高中或者读大学在数学上没有连续性关系。</p>
+</blockquote>
+<h2 id="无监督学习"><small>无监督学习</small></h2>
+<p>与监督学习不同，在无监督学习中，我们的数据集中没有标签，就是说我们并不知道我们的输出意味着什么，但我们可以通过无监督学习来使一些杂乱无章的数据进行结构化，看看它们之中是否有某种没被发现的联系。</p>
+<p>举两个例子🌰：</p>
+<blockquote>
+<p>集群：收集 1000 篇文章，自动将它们分为几个不同的组，每组文章的字数或者页数都差不多。</p>
+<p>非集群：有一种可以把杂乱无章的数据自动结构化的算法 —— 鸡尾酒会算法（Cocktail Party Algorithm），它是从鸡尾酒会问题中引申出来的，它的本意是指在声音嘈杂的鸡尾酒会中，自动辨别出人的声音和音乐的声音。</p>
+<p><small><i>注：关于集群和非集群，后面的文章会有详细介绍。</i></small></p>
+</blockquote>
+#
+<p style="color:#3A5FCD">
+单变量线性回归
+</p>
+<p><small><i>注：以下内容有部分公式，感兴趣的可以仔细看看。</i></small></p>
+<h2 id="什么是单变量线性回归"><small>什么是单变量线性回归</small></h2>
+<p>从<b style="color:red">一个</b>输入 x 得到<b style="color:red">一个</b>输出 y，这就是单变量线性回归。实际上这在实际问题中很少遇到，这里只是为了方便阐述一些基本的概念。</p>
+<h2 id="假设函数hypothesis-function"><small>假设函数(Hypothesis Function)</small></h2>
+<p>我们的输入通过假设函数（如何获得一个好的假设函数正是我们的任务所在），才能得到输出，这里的输出只是一个预测值，并不一定等于真实值，我们正是通过得到一系列的预测值来对结果进行<b style="color:red">预测</b>。</p>
+<p>在单变量线性回归中，假设函数的形式为</p>
+<p><span class="math display">\[y = h_\theta(x) = \theta_0 + \theta_1x\]</span></p>
+<p>这其实就是一条直线的方程，我们一旦确定了 \(_0\) 和 \(_1\) 的值，就可以对每个输入 x 映射到一个唯一的输出 y 了。</p>
+<p>看一下下面这个例子：</p>
+<table>
+<thead>
+<tr class="header">
+<th>输入 x</th>
+<th>输出 y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>从以上四组数据可以看出，每输入一个 x，都可以唯一得到一个输出 y。但由于在实际问题中，数据集中的数据不可能正好拟合一条完美的线（在单变量线性回归中这条线是直线），因此我们的任务是通过已知的数据（即训练集）找到一条最合适的线，使其看起来可以刻画所有的数据，而找这条线的过程其实就是寻找最合适的 \(_0\) 和 \(_1\) 的过程。</p>
+<h2 id="损失函数cost-function"><small>损失函数(Cost Function)</small></h2>
+<p>通过假设函数得到的输出与真实结果肯定有误差，损失函数就是用来计算这个误差的大小的，对于每一个输入 x，都有一个输出 y 和对应的真实结果，相应的就产生了一个误差，损失函数计算了所有误差的和的平均值，它的一般形式如下：</p>
+<p><span class="math display">\[
+\begin{align\*}
+J(\theta_0, \theta_1) 
+&amp;= \frac {1}{2m} \sum_{i=1}^m  \left (\hat{y}_{i} - y_{i} \right)^2 \\
+&amp;= \frac {1}{2m} \sum_{i=1}^m \left(h_\theta (x_{i}) - y_{i} \right)^2
+\end{align\*}\]</span></p>
+<blockquote>
+<p>其中</p>
+</blockquote>
+<blockquote>
+<ol type="1">
+<li>m 是数据集的大小，即你有多少个输入 x；</li>
+<li>\(i \)；</li>
+<li>\(<em>i\) 和 \(h</em>(x_{i})\) 表示由假设函数得到的输出，\(y_{i}\) 表示真实结果；</li>
+<li>\(<em>i - y_i\) 和 \(h</em>(x_{i}) - y_{i}\) 表示预测得到的结果和真实结果之间的误差，最后我们会得到 m 组误差；</li>
+<li>我们把 m 组误差都平方，再加起来除以 m，就得到了所有误差的平均值；</li>
+<li>最后乘上了 \(\) 是为了方便后续步骤（梯度下降），只需记住损失函数的目标是得到所有误差的平均即可。</li>
+</ol>
+</blockquote>
+<p>实际上，损失函数有很多种形式，上面这种形式的损失函数也被称为“平方误差函数”或“均方误差”。</p>
+<p>回想一下上面提到的，我们希望能找到一条直线可以最好的拟合所有数据，那么如果真的有一条直线可以穿过所有数据，那这时的损失函数的值就为 0。你可能会觉得损失函数越小越好，但其实也不一定，后面的文章会讲到原因。</p>
+<h2 id="梯度下降gradient-descent"><small>梯度下降(Gradient Descent)</small></h2>
+<p>由于损失函数 \(J(_0, _1)\) 可以刻画假设函数预测结果的准确性，那么只要损失函数减小了，就可以认为假设函数的预测准确性提高了，那么我们的直接任务就是减小损失函数。</p>
+<p>在机器学习中，经常会用到图表的方式来加深我们对问题的理解。我们可以先考虑一下损失函数 \(J(_0, _1)\) 的图像该怎么画，由于目标是减小损失函数 \(J(_0, _1)\)，而损失函数 \(J(_0, _1)\) 的因变量是 \(_0\) 和 \(_1\)，那么我们可以以 \(_0\) 和 \(_1\) 为 x 轴和 y 轴，损失函数 \(J(_0, _1)\) 为 z 轴画出图像，只要不断地改变 \(_0\) 和 \(_1\)，就可以得到一副类似下面的图像</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-e2ea077ed334b078.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+<p>这幅图像就很好的刻画了损失函数 \(J(_0, _1)\) 在 \(_0\) 和 \(_1\) 取不同值时的结果。</p>
+<p>当损失函数的值位于最低点时，我们的目标就达到了，因为此时 \(J(_0, _1)\) 最小，所以假设函数的预测结果与实际结果的误差最小。</p>
+<p>梯度下降法就可以帮助我们找到最低点，为了方便起见，这里用一个二次函数做例子</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-6dcacd2cc5b828dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+<p>上面这幅图是个二次函数，横轴为 \(_1\)，纵轴为 \(J(_1)\)，其实这就是当参数只有一个时的损失函数，对于单变量线性回归，由于没有了 \(_0\)，这时的假设函数就为 \(h_(x_{i}) = _1x\)，但我们的关注点在损失函数 \(J(_1)\) 上。</p>
+<p>同样，我们的目标是减小损失函数，由图像可知，当 \(_1 = 1\) 时 \(J(_1)\) 最小，那么怎样才能时 \(_1\) 取到 1 这一点呢？</p>
+<p>由于我们的目标是找到图像中的最低点，那么就要使 \(_1\) 不断的靠近 \(_1 = 1\) 这个位置，一个办法就是让 \(_1\) 减去当前的导数值。比如，假如 \(_1 = 2\)，那么此时导数值大于 0，如果减去导数值，就会使 \(_1\) 减小，更靠近 \(_1 = 1\) 这个位置，假如 \(_1 = 0\)，那么此时导数值小于 0，如果减去导数值，就会使 \(_1\) 增大，同样更靠近 \(_1 = 1\) 这个位置。因此，只要一遍又一遍的让 \(_1\) 减去当前的导数值，最后达到损失函数最优解（即最低点），这就是<b style="color:red">梯度下降法</b>。</p>
+<p>再回到这幅图像</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4933688-e2ea077ed334b078.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+<p>与刚才的例子不同的是，这里多了一个参数 \(_0\)，但梯度下降的思想没有变，依然是两个参数分别减去它们当前的导数值，最后就会到达图像中最低的点，需要<b style="color:red">注意</b>的是，这幅图像中有两个看起来都很低的点，其中有一个是局部最优（即在该点在附近区域内最低），另一个是全局最优（即该点在整个图像中最低），如何避免陷入局部最优以后再详细说明。</p>
+<p>下面用公式来刻画梯度下降法</p>
+<p><span class="math display">\[\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta_0, \theta_1)\]</span></p>
+<p>这个式子中</p>
+<blockquote>
+<ol type="1">
+<li>\(_j\) 表示损失函数 \(J(_0, _1)\) 中的参数 \(_0\) 或 \(_1\)；</li>
+<li>\(:=\) 可以理解为把右边的式子的值赋给左边，即每次进行梯度下降时，\(\) 的值都减去当前的导数值；</li>
+<li>\(\) 表示对 \(_j\) 求导数；</li>
+<li>\(\) 表示学习率，用于控制 \(\) 每次减小的幅度的大小</li>
+</ol>
+</blockquote>
+<p>那么，只要不断地执行上面这个式子，就可以使 \(_0\) 和 \(_1\) 的值向最优解靠拢，并使损失函数达到最小值。</p>
+<p>下面对求导的过程进行推导，如果学过导数，就完全没问题，由于 \(_0\) 和 \(_1\) 的求导过程不同，因此分开推导</p>
+<p><span class="math display">\[\begin{align\*}
+&amp;\,\quad\theta_0 - \alpha \frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1) \\
+&amp;= \theta_0 - \alpha \frac{\partial}{\partial \theta_0} \frac{1}{2m} \sum_{i = 1}^{m} \left(h_\theta(x_i) - y_i \right) ^ 2 \\
+&amp;= \theta_0 - \alpha \frac{\partial}{\partial \theta_0} \frac{1}{2m} \sum_{i = 1}^{m} \left(\theta_0 + \theta_1x_i - y_i \right) ^ 2 \\
+&amp;= \theta_0 - \alpha \sum_{i = 1}^{m}  \frac{1}{2m} · 2 \left(\theta_0 + \theta_1x_i - y_i \right) \\
+&amp;= \theta_0 - \alpha \sum_{i = 1}^{m}  \frac{1}{m} \left(\theta_0 + \theta_1x_i - y_i \right) \\
+&amp;= \theta_0 - \alpha \frac{1}{m} \sum_{i = 1}^{m} \left(h_\theta(x) - y_i \right)
+\end{align\*}\]</span></p>
+<p><span class="math display">\[\begin{align\*}
+&amp;\,\quad\theta_1 - \alpha \frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1) \\
+&amp;= \theta_1 - \alpha \frac{\partial}{\partial \theta_1} \frac{1}{2m} \sum_{i = 1}^{m} \left(h_\theta(x_i) - y_i \right) ^ 2 \\
+&amp;= \theta_1 - \alpha \frac{\partial}{\partial \theta_1} \frac{1}{2m} \sum_{i = 1}^{m} \left(\theta_0 + \theta_1x_i - y_i \right) ^ 2 \\
+&amp;= \theta_1 - \alpha \sum_{i = 1}^{m}  \frac{1}{2m} · 2 \left(\theta_0 + \theta_1x_i - y_i \right)x_i \\
+&amp;= \theta_1 - \alpha \sum_{i = 1}^{m}  \frac{1}{m} \left((\theta_0 + \theta_1x_i - y_i )x_i\right) \\
+&amp;= \theta_1 - \alpha \frac{1}{m} \sum_{i = 1}^{m} \left((h_\theta(x) - y_i)x_i\right)
+\end{align\*}\]</span></p>
+<p>如果你一直看到了这里并且看懂了，应该就明白为什么损失函数的式子中有个 \(\) 了，因为 \(\) 可以消掉求导过程平方项的导数产生的 2 。</p>
+<p>那么，梯度下降法就可以归结为，重复以下步骤直到求得最优解： <span class="math display">\[
+\begin{align\*}
+  \theta_0 := &amp; \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m}(h_\theta(x_{i}) - y_{i}) \newline
+  \theta_1 := &amp; \theta_1 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m}\left((h_\theta(x_{i}) - y_{i}) x_{i}\right) \newline
+  \end{align\*}
+\]</span></p>
+<p>最后，找到了最优的 \(_0\) 和 \(_1\)，就得到了效果最好的假设函数。</p>
+#
+<p style="color:#3A5FCD">
+总结
+</p>
+<p>第一周的主要内容都呈现在了左侧的导航栏中，重点是通过单变量线性回归，引入了假设函数、损失函数和梯度下降的概念。在实际问题中，一般先会根据输入 x 的特征数 n，随机生成 n+1 个参数，来得到最初的假设函数，然后一步步通过梯度下降来减小损失函数，最终得到最佳的参数，即得到预测准确性最好的假设函数。</p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/c91a2edf.html" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/b4bc671e.html" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-09-11 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>

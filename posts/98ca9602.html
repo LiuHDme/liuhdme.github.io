@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>论文笔记：Explainable Reasoning over Knowledge Graphs for Recommendation | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="总结一下 AAAI&#39;19 的 Explainable Reasoning over Knowledge Graphs for Recommendation">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="论文笔记：Explainable Reasoning over Knowledge Graphs for Recommendation"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> 论文笔记：Explainable Reasoning over Knowledge Graphs for Recommendation</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>总结一下 AAAI'19 的 Explainable Reasoning over Knowledge Graphs for Recommendation</p>
+<a id="more"></a>
+<h2 id="summary">Summary</h2>
+<p>Propose <strong>Knowledge-aware Path Recurrent Network (KPRN)</strong> which can generate paths representations by composing the semantics of both entities and relations. Two main main keys:</p>
+<ul>
+<li>adopting LSTM to capture sequential dependencies</li>
+<li>adopting a weighted pooling operation to discriminate different contributions of different paths, increasing explainability.</li>
+</ul>
+<h2 id="research-objective">Research Objective</h2>
+<p>Contribute a KG based model to exploit knowledge-graph for recommendation and analyze the influence of different setting of the proposed model.</p>
+<h2 id="background-and-problems">Background and Problems</h2>
+<p>Recommender system incorporated with KG has attracted increasing attention these years, however existing efforts have not fully explored this connectivity to infer user preferences, especially in terms of modeling the sequential dependencies within and holistic semantics of a path. Following are two existing efforts:</p>
+<ul>
+<li><strong>Path-based models</strong> (Yu et al. 2014; 2013; Gao et al. 2018): introduce <strong>meta-paths</strong> to refine the similarities between users and items.
+<ul>
+<li>hardly specify the holistic semantics of paths, especially when similar entities but different relations are involved in a meta-path.</li>
+<li>fail to automatically uncover and reason on unseen connectivity patterns, since meta-paths requires <strong>domain knowledge</strong> to be predefined.</li>
+</ul></li>
+<li><strong>Knowledge graph embedding</strong> (KGE) (TransE (Bordes et al. 2013), TransR (Lin et al. 2015)): regularize the representations of items.
+<ul>
+<li>only considers direct relations between entities, rather than multiple-hop relation paths.</li>
+<li>the characterization of user-item connectivity is achieved in a rather implicit way, that is, to guide the representation learning, but not to infer a user’s preference.</li>
+</ul></li>
+</ul>
+<h2 id="methods">Method(s)</h2>
+<ul>
+<li>In terms of reasoning, the method should model sequential dependencies.</li>
+<li>In terms of explainability, the method should discriminate different contributions of different paths, when inferring user interests.</li>
+</ul>
+<p>Firstly, extract qualified paths between a user-item pair from KG, each of which consists of the related entities and relations. Then adopt a <strong>LSTM</strong> network to model the sequential dependencies. Thereafter, a pooling operation if performed to aggregate the representations of paths to obtain prediction signal of the user-item pair.</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-09-28-130645.png" /></p>
+<h2 id="evaluation">Evaluation</h2>
+<ul>
+<li>Dataset: MI (MovieLens-1M + IMDB) (Movie), KKBox (Music)</li>
+<li>Compare their proposed model’s performance with others’ on the above two datasets.</li>
+<li>Evaluation metrics: hit@K, ndcg@K, K={1, 2, …, 15}</li>
+<li>Use grid search to find learning rate and the coefficient of L2 regularization. (lr = {0.001, 0.002, 0.01, 0.02}, L2={10^−5, 10^−4, 10^−3, 10^−2})</li>
+<li>Explore the influence of relation in paths by discarding relation embedding to generate the input vector.</li>
+<li>Demonstrate reasoning capacity and explainability by visualizing a subgraph as an example.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<ul>
+<li>By adopting LSTM, the model can capture the sequential dependencies of elements and reason on paths to infer user preferences.</li>
+<li>By adopting a pooling operation, the model can discriminate different contributions of different paths when inferring user interests, which also benefits the explainability of the model.</li>
+<li>We can mimic the propagation process of user preferences within KG via <strong>Graph Neural Network</strong>, since extracting qualified paths is labor-intensive.</li>
+<li>We can adopt zero-shot learning to solve the cold start issues in the large domain, since KG can links multiple domains together with overlapped entities.</li>
+</ul>
+<h2 id="references">References</h2>
+<p>Bordes, A.; Usunier, N.; García-Durían, A.; Weston, J.; and Yakhnenko, O. 2013. Translating embeddings for modeling multi-relational data. In <em>NIPS</em>, 2787–2795.</p>
+<p>Gao, L.; Yang, H.; Wu, J.; Zhou, C.; Lu, W.; and Hu, Y. 2018. Recommendation with multi-source heterogeneous information. In <em>IJCAI</em>, 3378–3384.</p>
+<p>Lin, Y.; Liu, Z.; Sun, M.; Liu, Y.; and Zhu, X. 2015. Learn- ing entity and relation embeddings for knowledge graph completion. In <em>AAAI</em>, 2181–2187.</p>
+<p>Yu, X.; Ren, X.; Gu, Q.; Sun, Y.; and Han, J. 2013. Collab- orative filtering with entity similarity regularization in het- erogeneous information networks. <em>IJCAI</em> 27.</p>
+<p>Yu, X.; Ren, X.; Sun, Y.; Gu, Q.; Sturt, B.; Khandelwal, U.; Norick, B.; and Han, J. 2014. Personalized entity recom- mendation: a heterogeneous information network approach. In <em>WSDM</em>, 283–292.</p>
+<p><em><a target="_blank" rel="noopener" href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4470">link for this paper</a></em></p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/69e8b1de.html" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/e705253b.html" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-09-28 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Paper-Notes/">Paper Notes<span>1</span></a></li> <li><a href="/categories/Paper-Notes/Recommender-System/">Recommender System<span>1</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li> <li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li> <li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#research-objective"><span class="toc-article-text">Research Objective</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#background-and-problems"><span class="toc-article-text">Background and Problems</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#methods"><span class="toc-article-text">Method(s)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#evaluation"><span class="toc-article-text">Evaluation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#references"><span class="toc-article-text">References</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>

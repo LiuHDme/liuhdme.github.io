@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>TensorFlow 实现手势识别 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="这是 Coursera 的卷积神经网络课程的第一周编程作业 Part2">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="TensorFlow 实现手势识别"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> TensorFlow 实现手势识别</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>这是 Coursera 的卷积神经网络课程的第一周编程作业 Part2</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="convolutional-neural-networks-application">Convolutional Neural Networks: Application</h1>
+<p>Welcome to Course 4's second assignment! In this notebook, you will:</p>
+<ul>
+<li>Implement helper functions that you will use when implementing a TensorFlow model</li>
+<li>Implement a fully functioning ConvNet using TensorFlow</li>
+</ul>
+<p><strong>After this assignment you will be able to:</strong></p>
+<ul>
+<li>Build and train a ConvNet in TensorFlow for a classification problem</li>
+</ul>
+<p>We assume here that you are already familiar with TensorFlow. If you are not, please refer the <em>TensorFlow Tutorial</em> of the third week of Course 2 ("<em>Improving deep neural networks</em>").</p>
+<h2 id="tensorflow-model">1.0 - TensorFlow model</h2>
+<p>In the previous assignment, you built helper functions using numpy to understand the mechanics behind convolutional neural networks. Most practical applications of deep learning today are built using programming frameworks, which have many built-in functions you can simply call.</p>
+<p>As usual, we will start by loading in the packages.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> ndimage</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.framework <span class="keyword">import</span> ops</span><br><span class="line"><span class="keyword">from</span> cnn_utils <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line">np.random.seed(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>Run the next cell to load the "SIGNS" dataset you are going to use.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Loading the data (signs)</span></span><br><span class="line">X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()</span><br></pre></td></tr></table></figure>
+<p>As a reminder, the SIGNS dataset is a collection of 6 signs representing numbers from 0 to 5.</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzhu55wd4jj311s0k6t9t.jpg" /></p>
+<p>The next cell will show you an example of a labelled image in the dataset. Feel free to change the value of <code>index</code> below and re-run to see different examples.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Example of a picture</span></span><br><span class="line">index = <span class="number">99</span></span><br><span class="line">plt.imshow(X_train_orig[index])</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;y = &quot;</span> + <span class="built_in">str</span>(np.squeeze(Y_train_orig[:, index])))</span><br></pre></td></tr></table></figure>
+<pre><code>y = 5</code></pre>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzhu77plnoj3073070q2u.jpg" /></p>
+<p>In Course 2, you had built a fully-connected network for this dataset. But since this is an image dataset, it is more natural to apply a ConvNet to it.</p>
+<p>To get started, let's examine the shapes of your data.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">X_train = X_train_orig/<span class="number">255.</span></span><br><span class="line">X_test = X_test_orig/<span class="number">255.</span></span><br><span class="line">Y_train = convert_to_one_hot(Y_train_orig, <span class="number">6</span>).T</span><br><span class="line">Y_test = convert_to_one_hot(Y_test_orig, <span class="number">6</span>).T</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;number of training examples = &quot;</span> + <span class="built_in">str</span>(X_train.shape[<span class="number">0</span>]))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;number of test examples = &quot;</span> + <span class="built_in">str</span>(X_test.shape[<span class="number">0</span>]))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;X_train shape: &quot;</span> + <span class="built_in">str</span>(X_train.shape))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;Y_train shape: &quot;</span> + <span class="built_in">str</span>(Y_train.shape))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;X_test shape: &quot;</span> + <span class="built_in">str</span>(X_test.shape))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;Y_test shape: &quot;</span> + <span class="built_in">str</span>(Y_test.shape))</span><br><span class="line">conv_layers = &#123;&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>number of training examples = 1080
+number of test examples = 120
+X_train shape: (1080, 64, 64, 3)
+Y_train shape: (1080, 6)
+X_test shape: (120, 64, 64, 3)
+Y_test shape: (120, 6)</code></pre>
+<h3 id="create-placeholders">1.1 - Create placeholders</h3>
+<p>TensorFlow requires that you create placeholders for the input data that will be fed into the model when running the session.</p>
+<p><strong>Exercise</strong>: Implement the function below to create placeholders for the input image X and the output Y. You should not define the number of training examples for the moment. To do so, you could use "None" as the batch size, it will give you the flexibility to choose it later. Hence X should be of dimension <strong>[None, n_H0, n_W0, n_C0]</strong> and Y should be of dimension <strong>[None, n_y]</strong>. <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/placeholder">Hint</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: create_placeholders</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_placeholders</span>(<span class="params">n_H0, n_W0, n_C0, n_y</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Creates the placeholders for the tensorflow session.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    n_H0 -- scalar, height of an input image</span></span><br><span class="line"><span class="string">    n_W0 -- scalar, width of an input image</span></span><br><span class="line"><span class="string">    n_C0 -- scalar, number of channels of the input</span></span><br><span class="line"><span class="string">    n_y -- scalar, number of classes</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    X -- placeholder for the data input, of shape [None, n_H0, n_W0, n_C0] and dtype &quot;float&quot;</span></span><br><span class="line"><span class="string">    Y -- placeholder for the input labels, of shape [None, n_y] and dtype &quot;float&quot;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈2 lines)</span></span><br><span class="line">    X = tf.placeholder(tf.float32, (<span class="literal">None</span>, n_H0, n_W0, n_C0), name = <span class="string">&#x27;X&#x27;</span>)</span><br><span class="line">    Y = tf.placeholder(tf.float32, (<span class="literal">None</span>, n_y), name = <span class="string">&#x27;Y&#x27;</span>)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> X, Y</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X, Y = create_placeholders(<span class="number">64</span>, <span class="number">64</span>, <span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;X = &quot;</span> + <span class="built_in">str</span>(X))</span><br><span class="line"><span class="built_in">print</span> (<span class="string">&quot;Y = &quot;</span> + <span class="built_in">str</span>(Y))</span><br></pre></td></tr></table></figure>
+<pre><code>X = Tensor(&quot;X:0&quot;, shape=(?, 64, 64, 3), dtype=float32)
+Y = Tensor(&quot;Y:0&quot;, shape=(?, 6), dtype=float32)</code></pre>
+<strong>Expected Output</strong>
+<table>
+<tr>
+<td>
+X = Tensor("Placeholder:0", shape=(?, 64, 64, 3), dtype=float32)
+</td>
+</tr>
+<tr>
+<td>
+Y = Tensor("Placeholder_1:0", shape=(?, 6), dtype=float32)
+</td>
+</tr>
+</table>
+<h3 id="initialize-parameters">1.2 - Initialize parameters</h3>
+<p>You will initialize weights/filters <span class="math inline">\(W1\)</span> and <span class="math inline">\(W2\)</span> using <code>tf.contrib.layers.xavier_initializer(seed = 0)</code>. You don't need to worry about bias variables as you will soon see that TensorFlow functions take care of the bias. Note also that you will only initialize the weights/filters for the conv2d functions. TensorFlow initializes the layers for the fully connected part automatically. We will talk more about that later in this assignment.</p>
+<p><strong>Exercise:</strong> Implement initialize_parameters(). The dimensions for each group of filters are provided below. Reminder - to initialize a parameter <span class="math inline">\(W\)</span> of shape [1,2,3,4] in Tensorflow, use: <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">W = tf.get_variable(<span class="string">&quot;W&quot;</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>], initializer = ...)</span><br></pre></td></tr></table></figure> <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/get_variable">More Info</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: initialize_parameters</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_parameters</span>():</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Initializes weight parameters to build a neural network with tensorflow. The shapes are:</span></span><br><span class="line"><span class="string">                        W1 : [4, 4, 3, 8]</span></span><br><span class="line"><span class="string">                        W2 : [2, 2, 8, 16]</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    parameters -- a dictionary of tensors containing W1, W2</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    tf.set_random_seed(<span class="number">1</span>)                              <span class="comment"># so that your &quot;random&quot; numbers match ours</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment">### START CODE HERE ### (approx. 2 lines of code)</span></span><br><span class="line">    W1 = tf.get_variable(<span class="string">&quot;W1&quot;</span>, [<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">8</span>], initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">0</span>))</span><br><span class="line">    W2 = tf.get_variable(<span class="string">&quot;W2&quot;</span>, [<span class="number">2</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">16</span>], initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">0</span>))</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    parameters = &#123;<span class="string">&quot;W1&quot;</span>: W1,</span><br><span class="line">                  <span class="string">&quot;W2&quot;</span>: W2&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tf.reset_default_graph()</span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess_test:</span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    sess_test.run(init)</span><br><span class="line">    print(<span class="string">&quot;W1 = &quot;</span> + <span class="built_in">str</span>(parameters[<span class="string">&quot;W1&quot;</span>].<span class="built_in">eval</span>()[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]))</span><br><span class="line">    print(<span class="string">&quot;W2 = &quot;</span> + <span class="built_in">str</span>(parameters[<span class="string">&quot;W2&quot;</span>].<span class="built_in">eval</span>()[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>W1 = [ 0.00131723  0.14176141 -0.04434952  0.09197326  0.14984085 -0.03514394
+ -0.06847463  0.05245192]
+W2 = [-0.08566415  0.17750949  0.11974221  0.16773748 -0.0830943  -0.08058
+ -0.00577033 -0.14643836  0.24162132 -0.05857408 -0.19055021  0.1345228
+ -0.22779644 -0.1601823  -0.16117483 -0.10286498]</code></pre>
+** Expected Output:**
+<table>
+<pre><code>&lt;tr&gt;
+    &lt;td&gt;
+    W1 = 
+    &lt;/td&gt;
+    &lt;td&gt;</code></pre>
+[ 0.00131723 0.14176141 -0.04434952 0.09197326 0.14984085 -0.03514394 <br> -0.06847463 0.05245192]
+</td>
+<pre><code>&lt;/tr&gt;
+
+&lt;tr&gt;
+    &lt;td&gt;
+    W2 = 
+    &lt;/td&gt;
+    &lt;td&gt;</code></pre>
+[-0.08566415 0.17750949 0.11974221 0.16773748 -0.0830943 -0.08058 <br> -0.00577033 -0.14643836 0.24162132 -0.05857408 -0.19055021 0.1345228 <br> -0.22779644 -0.1601823 -0.16117483 -0.10286498]
+</td>
+<pre><code>&lt;/tr&gt;</code></pre>
+</table>
+<h3 id="forward-propagation">1.2 - Forward propagation</h3>
+<p>In TensorFlow, there are built-in functions that carry out the convolution steps for you.</p>
+<ul>
+<li><p><strong>tf.nn.conv2d(X,W1, strides = [1,s,s,1], padding = 'SAME'):</strong> given an input <span class="math inline">\(X\)</span> and a group of filters <span class="math inline">\(W1\)</span>, this function convolves <span class="math inline">\(W1\)</span>'s filters on X. The third input ([1,f,f,1]) represents the strides for each dimension of the input (m, n_H_prev, n_W_prev, n_C_prev). You can read the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/nn/conv2d">here</a></p></li>
+<li><p><strong>tf.nn.max_pool(A, ksize = [1,f,f,1], strides = [1,s,s,1], padding = 'SAME'):</strong> given an input A, this function uses a window of size (f, f) and strides of size (s, s) to carry out max pooling over each window. You can read the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/nn/max_pool">here</a></p></li>
+<li><p><strong>tf.nn.relu(Z1):</strong> computes the elementwise ReLU of Z1 (which can be any shape). You can read the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/nn/relu">here.</a></p></li>
+<li><p><strong>tf.contrib.layers.flatten(P)</strong>: given an input P, this function flattens each example into a 1D vector it while maintaining the batch-size. It returns a flattened tensor with shape [batch_size, k]. You can read the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/contrib/layers/flatten">here.</a></p></li>
+<li><p><strong>tf.contrib.layers.fully_connected(F, num_outputs):</strong> given a the flattened input F, it returns the output computed using a fully connected layer. You can read the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/contrib/layers/fully_connected">here.</a></p></li>
+</ul>
+<p>In the last function above (<code>tf.contrib.layers.fully_connected</code>), the fully connected layer automatically initializes weights in the graph and keeps on training them as you train the model. Hence, you did not need to initialize those weights when initializing the parameters.</p>
+<p><strong>Exercise</strong>:</p>
+<p>Implement the <code>forward_propagation</code> function below to build the following model: <code>CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; FLATTEN -&gt; FULLYCONNECTED</code>. You should use the functions above.</p>
+<p>In detail, we will use the following parameters for all the steps: - Conv2D: stride 1, padding is "SAME" - ReLU - Max pool: Use an 8 by 8 filter size and an 8 by 8 stride, padding is "SAME" - Conv2D: stride 1, padding is "SAME" - ReLU - Max pool: Use a 4 by 4 filter size and a 4 by 4 stride, padding is "SAME" - Flatten the previous output. - FULLYCONNECTED (FC) layer: Apply a fully connected layer without an non-linear activation function. Do not call the softmax here. This will result in 6 neurons in the output layer, which then get passed later to a softmax. In TensorFlow, the softmax and cost function are lumped together into a single function, which you'll call in a different function when computing the cost.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: forward_propagation</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_propagation</span>(<span class="params">X, parameters</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implements the forward propagation for the model:</span></span><br><span class="line"><span class="string">    CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; FLATTEN -&gt; FULLYCONNECTED</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    X -- input dataset placeholder, of shape (input size, number of examples)</span></span><br><span class="line"><span class="string">    parameters -- python dictionary containing your parameters &quot;W1&quot;, &quot;W2&quot;</span></span><br><span class="line"><span class="string">                  the shapes are given in initialize_parameters</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    Z3 -- the output of the last LINEAR unit</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Retrieve the parameters from the dictionary &quot;parameters&quot; </span></span><br><span class="line">    W1 = parameters[<span class="string">&#x27;W1&#x27;</span>]</span><br><span class="line">    W2 = parameters[<span class="string">&#x27;W2&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ###</span></span><br><span class="line">    <span class="comment"># CONV2D: stride of 1, padding &#x27;SAME&#x27;</span></span><br><span class="line">    Z1 = tf.nn.conv2d(X, W1, strides = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>], padding = <span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line">    <span class="comment"># RELU</span></span><br><span class="line">    A1 = tf.nn.relu(Z1)</span><br><span class="line">    <span class="comment"># MAXPOOL: window 8x8, sride 8, padding &#x27;SAME&#x27;</span></span><br><span class="line">    P1 = tf.nn.max_pool(A1, ksize = [<span class="number">1</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">1</span>], strides = [<span class="number">1</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">1</span>], padding = <span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line">    <span class="comment"># CONV2D: filters W2, stride 1, padding &#x27;SAME&#x27;</span></span><br><span class="line">    Z2 = tf.nn.conv2d(P1, W2, strides = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>], padding = <span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line">    <span class="comment"># RELU</span></span><br><span class="line">    A2 = tf.nn.relu(Z2)</span><br><span class="line">    <span class="comment"># MAXPOOL: window 4x4, stride 4, padding &#x27;SAME&#x27;</span></span><br><span class="line">    P2 = tf.nn.max_pool(A2, ksize = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">1</span>], strides = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">1</span>], padding = <span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line">    <span class="comment"># FLATTEN</span></span><br><span class="line">    P2 = tf.contrib.layers.flatten(P2)</span><br><span class="line">    <span class="comment"># FULLY-CONNECTED without non-linear activation function (not not call softmax).</span></span><br><span class="line">    <span class="comment"># 6 neurons in output layer. Hint: one of the arguments should be &quot;activation_fn=None&quot; </span></span><br><span class="line">    Z3 = tf.contrib.layers.fully_connected(P2, <span class="number">6</span>, activation_fn = <span class="literal">None</span>)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Z3</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">tf.reset_default_graph()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    np.random.seed(<span class="number">1</span>)</span><br><span class="line">    X, Y = create_placeholders(<span class="number">64</span>, <span class="number">64</span>, <span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    Z3 = forward_propagation(X, parameters)</span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init)</span><br><span class="line">    a = sess.run(Z3, &#123;X: np.random.randn(<span class="number">2</span>,<span class="number">64</span>,<span class="number">64</span>,<span class="number">3</span>), Y: np.random.randn(<span class="number">2</span>,<span class="number">6</span>)&#125;)</span><br><span class="line">    print(<span class="string">&quot;Z3 = &quot;</span> + <span class="built_in">str</span>(a))</span><br></pre></td></tr></table></figure>
+<pre><code>Z3 = [[-0.44670227 -1.57208765 -1.53049231 -2.31013036 -1.29104376  0.46852064]
+ [-0.17601591 -1.57972014 -1.4737016  -2.61672091 -1.00810647  0.5747785 ]]</code></pre>
+<strong>Expected Output</strong>:
+<table>
+<td>
+Z3 =
+</td>
+<td>
+[[-0.44670227 -1.57208765 -1.53049231 -2.31013036 -1.29104376 0.46852064] <br> [-0.17601591 -1.57972014 -1.4737016 -2.61672091 -1.00810647 0.5747785 ]]
+</td>
+</table>
+<h3 id="compute-cost">1.3 - Compute cost</h3>
+<p>Implement the compute cost function below. You might find these two functions helpful:</p>
+<ul>
+<li><strong>tf.nn.softmax_cross_entropy_with_logits(logits = Z3, labels = Y):</strong> computes the softmax entropy loss. This function both computes the softmax activation function as well as the resulting loss. You can check the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/nn/softmax_cross_entropy_with_logits">here.</a></li>
+<li><strong>tf.reduce_mean:</strong> computes the mean of elements across dimensions of a tensor. Use this to sum the losses over all the examples to get the overall cost. You can check the full documentation <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/reduce_mean">here.</a></li>
+</ul>
+<p>** Exercise**: Compute the cost below using the function above.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: compute_cost </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_cost</span>(<span class="params">Z3, Y</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Computes the cost</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    Z3 -- output of forward propagation (output of the last LINEAR unit), of shape (6, number of examples)</span></span><br><span class="line"><span class="string">    Y -- &quot;true&quot; labels vector placeholder, same shape as Z3</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    cost - Tensor of the cost function</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line of code)</span></span><br><span class="line">    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=Z3, labels=Y))</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> cost</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">tf.reset_default_graph()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    np.random.seed(<span class="number">1</span>)</span><br><span class="line">    X, Y = create_placeholders(<span class="number">64</span>, <span class="number">64</span>, <span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    Z3 = forward_propagation(X, parameters)</span><br><span class="line">    cost = compute_cost(Z3, Y)</span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init)</span><br><span class="line">    a = sess.run(cost, &#123;X: np.random.randn(<span class="number">4</span>,<span class="number">64</span>,<span class="number">64</span>,<span class="number">3</span>), Y: np.random.randn(<span class="number">4</span>,<span class="number">6</span>)&#125;)</span><br><span class="line">    print(<span class="string">&quot;cost = &quot;</span> + <span class="built_in">str</span>(a))</span><br></pre></td></tr></table></figure>
+<pre><code>cost = 2.91034</code></pre>
+<strong>Expected Output</strong>:
+<table>
+<td>
+cost =
+</td>
+<td>
+2.91034
+</td>
+</table>
+<h2 id="model">1.4 Model</h2>
+<p>Finally you will merge the helper functions you implemented above to build a model. You will train it on the SIGNS dataset.</p>
+<p>You have implemented <code>random_mini_batches()</code> in the Optimization programming assignment of course 2. Remember that this function returns a list of mini-batches.</p>
+<p><strong>Exercise</strong>: Complete the function below.</p>
+<p>The model below should:</p>
+<ul>
+<li>create placeholders</li>
+<li>initialize parameters</li>
+<li>forward propagate</li>
+<li>compute the cost</li>
+<li>create an optimizer</li>
+</ul>
+<p>Finally you will create a session and run a for loop for num_epochs, get the mini-batches, and then for each mini-batch you will optimize the function. <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/global_variables_initializer">Hint for initializing the variables</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: model</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span>(<span class="params">X_train, Y_train, X_test, Y_test, learning_rate = <span class="number">0.009</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">          num_epochs = <span class="number">100</span>, minibatch_size = <span class="number">64</span>, print_cost = <span class="literal">True</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implements a three-layer ConvNet in Tensorflow:</span></span><br><span class="line"><span class="string">    CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; FLATTEN -&gt; FULLYCONNECTED</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    X_train -- training set, of shape (None, 64, 64, 3)</span></span><br><span class="line"><span class="string">    Y_train -- test set, of shape (None, n_y = 6)</span></span><br><span class="line"><span class="string">    X_test -- training set, of shape (None, 64, 64, 3)</span></span><br><span class="line"><span class="string">    Y_test -- test set, of shape (None, n_y = 6)</span></span><br><span class="line"><span class="string">    learning_rate -- learning rate of the optimization</span></span><br><span class="line"><span class="string">    num_epochs -- number of epochs of the optimization loop</span></span><br><span class="line"><span class="string">    minibatch_size -- size of a minibatch</span></span><br><span class="line"><span class="string">    print_cost -- True to print the cost every 100 epochs</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    train_accuracy -- real number, accuracy on the train set (X_train)</span></span><br><span class="line"><span class="string">    test_accuracy -- real number, testing accuracy on the test set (X_test)</span></span><br><span class="line"><span class="string">    parameters -- parameters learnt by the model. They can then be used to predict.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    ops.reset_default_graph()                         <span class="comment"># to be able to rerun the model without overwriting tf variables</span></span><br><span class="line">    tf.set_random_seed(<span class="number">1</span>)                             <span class="comment"># to keep results consistent (tensorflow seed)</span></span><br><span class="line">    seed = <span class="number">3</span>                                          <span class="comment"># to keep results consistent (numpy seed)</span></span><br><span class="line">    (m, n_H0, n_W0, n_C0) = X_train.shape             </span><br><span class="line">    n_y = Y_train.shape[<span class="number">1</span>]                            </span><br><span class="line">    costs = []                                        <span class="comment"># To keep track of the cost</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Create Placeholders of the correct shape</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">    X, Y = create_placeholders(n_H0, n_W0, n_C0, n_y)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize parameters</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Forward propagation: Build the forward propagation in the tensorflow graph</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">    Z3 = forward_propagation(X, parameters)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Cost function: Add cost function to tensorflow graph</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">    cost = compute_cost(Z3, Y)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Backpropagation: Define the tensorflow optimizer. Use an AdamOptimizer that minimizes the cost.</span></span><br><span class="line">    <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize all the variables globally</span></span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">     </span><br><span class="line">    <span class="comment"># Start the session to compute the tensorflow graph</span></span><br><span class="line">    <span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Run the initialization</span></span><br><span class="line">        sess.run(init)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Do the training loop</span></span><br><span class="line">        <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line"></span><br><span class="line">            minibatch_cost = <span class="number">0.</span></span><br><span class="line">            num_minibatches = <span class="built_in">int</span>(m / minibatch_size) <span class="comment"># number of minibatches of size minibatch_size in the train set</span></span><br><span class="line">            seed = seed + <span class="number">1</span></span><br><span class="line">            minibatches = random_mini_batches(X_train, Y_train, minibatch_size, seed)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> minibatch <span class="keyword">in</span> minibatches:</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Select a minibatch</span></span><br><span class="line">                (minibatch_X, minibatch_Y) = minibatch</span><br><span class="line">                <span class="comment"># IMPORTANT: The line that runs the graph on a minibatch.</span></span><br><span class="line">                <span class="comment"># Run the session to execute the optimizer and the cost, the feedict should contain a minibatch for (X,Y).</span></span><br><span class="line">                <span class="comment">### START CODE HERE ### (1 line)</span></span><br><span class="line">                _ , temp_cost = sess.run([optimizer, cost], feed_dict = &#123;X:minibatch_X, Y:minibatch_Y&#125;)</span><br><span class="line">                <span class="comment">### END CODE HERE ###</span></span><br><span class="line">                </span><br><span class="line">                minibatch_cost += temp_cost / num_minibatches</span><br><span class="line">                </span><br><span class="line"></span><br><span class="line">            <span class="comment"># Print the cost every epoch</span></span><br><span class="line">            <span class="keyword">if</span> print_cost == <span class="literal">True</span> <span class="keyword">and</span> epoch % <span class="number">5</span> == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span> (<span class="string">&quot;Cost after epoch %i: %f&quot;</span> % (epoch, minibatch_cost))</span><br><span class="line">            <span class="keyword">if</span> print_cost == <span class="literal">True</span> <span class="keyword">and</span> epoch % <span class="number">1</span> == <span class="number">0</span>:</span><br><span class="line">                costs.append(minibatch_cost)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># plot the cost</span></span><br><span class="line">        plt.plot(np.squeeze(costs))</span><br><span class="line">        plt.ylabel(<span class="string">&#x27;cost&#x27;</span>)</span><br><span class="line">        plt.xlabel(<span class="string">&#x27;iterations (per tens)&#x27;</span>)</span><br><span class="line">        plt.title(<span class="string">&quot;Learning rate =&quot;</span> + <span class="built_in">str</span>(learning_rate))</span><br><span class="line">        plt.show()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Calculate the correct predictions</span></span><br><span class="line">        predict_op = tf.argmax(Z3, <span class="number">1</span>)</span><br><span class="line">        correct_prediction = tf.equal(predict_op, tf.argmax(Y, <span class="number">1</span>))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Calculate accuracy on the test set</span></span><br><span class="line">        accuracy = tf.reduce_mean(tf.cast(correct_prediction, <span class="string">&quot;float&quot;</span>))</span><br><span class="line">        print(accuracy)</span><br><span class="line">        train_accuracy = accuracy.<span class="built_in">eval</span>(&#123;X: X_train, Y: Y_train&#125;)</span><br><span class="line">        test_accuracy = accuracy.<span class="built_in">eval</span>(&#123;X: X_test, Y: Y_test&#125;)</span><br><span class="line">        print(<span class="string">&quot;Train Accuracy:&quot;</span>, train_accuracy)</span><br><span class="line">        print(<span class="string">&quot;Test Accuracy:&quot;</span>, test_accuracy)</span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> train_accuracy, test_accuracy, parameters</span><br></pre></td></tr></table></figure>
+<p>Run the following cell to train your model for 100 epochs. Check if your cost after epoch 0 and 5 matches our output. If not, stop the cell and go back to your code!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_, _, parameters = model(X_train, Y_train, X_test, Y_test)</span><br></pre></td></tr></table></figure>
+<pre><code>Cost after epoch 0: 1.917929
+Cost after epoch 5: 1.506757
+Cost after epoch 10: 0.955359
+Cost after epoch 15: 0.845802
+Cost after epoch 20: 0.701174
+Cost after epoch 25: 0.571977
+Cost after epoch 30: 0.518435
+Cost after epoch 35: 0.495806
+Cost after epoch 40: 0.429827
+Cost after epoch 45: 0.407291
+Cost after epoch 50: 0.366394
+Cost after epoch 55: 0.376922
+Cost after epoch 60: 0.299491
+Cost after epoch 65: 0.338870
+Cost after epoch 70: 0.316400
+Cost after epoch 75: 0.310413
+Cost after epoch 80: 0.249549
+Cost after epoch 85: 0.243457
+Cost after epoch 90: 0.200031
+Cost after epoch 95: 0.175452</code></pre>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzhuwonvrlj30b007qt8n.jpg" /></p>
+<pre><code>Tensor(&quot;Mean_1:0&quot;, shape=(), dtype=float32)
+Train Accuracy: 0.940741
+Test Accuracy: 0.783333</code></pre>
+<strong>Expected output</strong>: although it may not match perfectly, your expected output should be close to ours and your cost value should decrease.
+<table>
+<tr>
+<td>
+<strong>Cost after epoch 0 =</strong>
+</td>
+<td>
+1.917929
+</td>
+</tr>
+<tr>
+<td>
+<strong>Cost after epoch 5 =</strong>
+</td>
+<td>
+1.506757
+</td>
+</tr>
+<tr>
+<td>
+<strong>Train Accuracy =</strong>
+</td>
+<td>
+0.940741
+</td>
+</tr>
+<tr>
+<td>
+<strong>Test Accuracy =</strong>
+</td>
+<td>
+0.783333
+</td>
+</tr>
+</table>
+<p>Congratulations! You have finised the assignment and built a model that recognizes SIGN language with almost 80% accuracy on the test set. If you wish, feel free to play around with this dataset further. You can actually improve its accuracy by spending more time tuning the hyperparameters, or using regularization (as this model clearly has a high variance).</p>
+<p>Once again, here's a thumbs up for your work!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fname = <span class="string">&quot;images/thumbs_up.jpg&quot;</span></span><br><span class="line">image = np.array(ndimage.imread(fname, flatten=<span class="literal">False</span>))</span><br><span class="line">my_image = scipy.misc.imresize(image, size=(<span class="number">64</span>,<span class="number">64</span>))</span><br><span class="line">plt.imshow(my_image)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7fd6345b2fd0&gt;</code></pre>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzhux9z66kj3073070dfr.jpg" /></p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/433c4202.html" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/c80a1ed2.html" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-16 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/Computer-Vision/">Computer Vision<span>8</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>

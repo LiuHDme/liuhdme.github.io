@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>动量梯度下降算法 | LiuHDme</title>
+  <meta name="author" content="LiuHDme">
+  
+  <meta name="description" content="上篇文章介绍了指数加权平均，这篇文章介绍在此基础上介绍一下动量梯度下降算法。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="动量梯度下降算法"/>
+  <meta property="og:site_name" content="LiuHDme"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight-default.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/comment.css" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  
+  <!-- analytics -->
+  
+
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">LiuHDme</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="所有文章">
+			  <i class="fa fa-archive"></i>归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="所有标签">
+			  <i class="fa fa-tags"></i>标签
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/photos" title="">
+			  <i class="fa fa-camera"></i>相册
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="个人简介">
+			  <i class="fa fa-user"></i>关于
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+    <div class="content">
+      
+
+
+	
+		<div class="page-header page-header-inverse ">		
+			<h1 class="title title-inverse "> 动量梯度下降算法</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <blockquote>
+<p>上篇文章介绍了指数加权平均，这篇文章介绍在此基础上介绍一下动量梯度下降算法。</p>
+</blockquote>
+<a id="more"></a>
+<p>所谓动量梯度下降算法，简言之就计算梯度的指数加权平均，然后使用这个梯度来更新权重，下面我们来详细解释这句话。</p>
+<p>我们在使用梯度下降算法更新权重时，希望损失函数能减小直到最优值。我们可以在一副等高线图中，画出损失函数随着迭代次数增加而减小的路径，即如下图所示：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-30-104854.png" /></p>
+<p>图中红点为最优点，蓝线为损失函数的减小路径，从图中左侧出发，逐渐靠近最优点。不过我们可以发现，这条路径看起来十分曲折，虽然整体趋势是向右的，但在竖直方向有太多波动，这直接造成了两个负面影响：</p>
+<ol type="1">
+<li>增加了梯度下降的次数，增加了训练时间</li>
+<li>无法使用较大的学习率</li>
+</ol>
+<p>如果使用了较大的学习率，可能会出现下图中紫线的情况：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-30-105539.png" /></p>
+<p>即虽然增大了向右的步伐，同时也增大了上下的步伐，导致损失函数值反而越来越大，因此为了避免振荡过大，我们只能选择较小的学习率。</p>
+<p>为了使其步伐能在水平方向更大，而在竖直方向更小，可以使用之前提到的指数滑动平均。</p>
+<p>我们说过，运用了指数滑动平均后，<span class="math inline">\(v_t\)</span> 相当于粗略计算了前 <span class="math inline">\(\frac{1}{1 - \beta}\)</span> 个数据的平均值，如果我们对导数进行指数滑动平均操作，就会有以下结果：</p>
+<ul>
+<li>竖直方向的振动几乎消失</li>
+<li>水平方向的步伐逐渐加大</li>
+</ul>
+<p>即如下图红线所示</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-074100.png" /></p>
+<p>这正好是我们想看到的结果，为什么会这样呢？下面来分析一下。观察上图中的蓝线，我们发现竖直方向的振动大致可以抵消，即每两次上下方向的振动长度大致相等，因此如果对其去平均值，结果就会很接近 0，这就是“竖直方向的振动几乎消失”的原因，而蓝线水平方向的路径都是向右的，对其取平均值不会使其减小，而是随着已经行进的路径增多而变大，这就是“水平方向的步伐逐渐加大”的原因。综上，得到上图中的红线。</p>
+<p>算法描述如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第 t 次迭代：</span><br><span class="line">	在当前的 mini-batch 上计算 dW, db</span><br><span class="line">	v_dW &#x3D; β * v_dW + (1 - β) * dW</span><br><span class="line">	v_db &#x3D; β * v_db + (1 - β) * db</span><br><span class="line">	W -&#x3D; α * v_dW, b -&#x3D; α * v_db</span><br></pre></td></tr></table></figure>
+<p>上面的描述中，<span class="math inline">\(\alpha\)</span> 和 <span class="math inline">\(\beta\)</span> 都是需要调整的超参数，<span class="math inline">\(\beta\)</span> 通常会取 0.9 左右。</p>
+<p>以上就是对动量梯度下降算法的简单介绍，它几乎总是要优于不适用动量的梯度下降算法，不过除此外，还有一些其他的方法也能加速你的训练速度，接下来几篇文章会谈谈 RMSprop 和 Adam 梯度下降算法以及学习率衰减。</p>
+	  
+	</div>
+
+	<!-- recommended posts -->
+	
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/posts/6b7991bf.html" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/posts/a291b4f3.html" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">Comments</h2>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-05 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/技术/">技术<span>35</span></a></li> <li><a href="/categories/技术/Machine-Learning/">Machine Learning<span>27</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/categories/技术/Machine-Learning/Deep-Learning/优化算法/">优化算法<span>6</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+    </ul>
+	</div>
+	
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+
+
+      
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+        tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+  </script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i=0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+  </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </div>
+  </div>
+  <div class="container-narrow">
+    <footer> <p>
+  &copy; 2021 LiuHDme
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+  </div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- syntax highlighting -->
+
+
+</body>
+</html>
