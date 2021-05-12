@@ -122,29 +122,19 @@
 </blockquote>
 <a id="more"></a>
 <p>仍然使用上篇文章中的图：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-084515.png" /></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-31-084515.png" alt=""></p>
 <p>在此，我们假设 W 为水平方向的参数，b 为竖直方向的参数。从上图可以看出，更新 W 时的步伐过小，而更新 b 的步伐过大，这是 dW 过小和 db 过大造成的，如果我们可以增大 dW 和减小 db，就可以使上图蓝线更快地向右行进，而减少上下振动。下面就来实现这个目的。</p>
 <p>回忆一下，在动量梯度下降算法中，算法描述如下：</p>
 <blockquote>
-<p>第 t 次迭代：<br />
-        在当前的 mini-batch 上计算 dW, db<br />
-        <span class="math inline">\(v_{dW} = β · v_{dW} + (1 - β) · dW\)</span><br />
-        <span class="math inline">\(v_{db} = β · v_{db} + (1 - β) · db\)</span><br />
-        <span class="math inline">\(W := W - α · v_{dW}\)</span><br />
-        <span class="math inline">\(b := b - α · v_{db}\)</span></p>
+<p>第 t 次迭代：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在当前的 mini-batch 上计算 dW, db<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$v<em>{dW} = β · v</em>{dW} + (1 - β) · dW$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$v<em>{db} = β · v</em>{db} + (1 - β) · db$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$W := W - α · v<em>{dW}$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$b := b - α · v</em>{db}$</p>
 </blockquote>
 <p>RMSprop 的算法描述与其十分相似：</p>
 <blockquote>
-<p>第 t 次迭代：<br />
-        在当前的 mini-batch 上计算 dW, db<br />
-        <span class="math inline">\(s_{dW} = β · s_{dW} + (1 - β) · dW^2\)</span><br />
-        <span class="math inline">\(s_{db} = β · s_{db} + (1 - β) · db^2\)</span><br />
-        <span class="math inline">\(W := W - α · \cfrac{dW}{\sqrt{s_{dW}}}\)</span><br />
-        <span class="math inline">\(b := b - α · \cfrac{db}{\sqrt{s_{db}}}\)</span></p>
+<p>第 t 次迭代：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在当前的 mini-batch 上计算 dW, db<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$s<em>{dW} = β · s</em>{dW} + (1 - β) · dW^2$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$s<em>{db} = β · s</em>{db} + (1 - β) · db^2$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$W := W - α · \cfrac{dW}{\sqrt{s<em>{dW}}}$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$b := b - α · \cfrac{db}{\sqrt{s</em>{db}}}$</p>
 </blockquote>
 <p><strong>Note:</strong> 为了区分清楚，RMSprop 中使用指数滑动平均时用的是 S 而不是 V。</p>
-<p>从 RMSprop 的算法描述可以看到，计算滑动指数平均时，<span class="math inline">\((1 - \beta)\)</span> 后面的项是 <span class="math inline">\(dW^2\)</span> 和 <span class="math inline">\(db^2\)</span>，如此一来，假如 dW 本身较小（比如小于 1），平方后就会更小，<span class="math inline">\(s_{dW}\)</span> 也会变小；如果 db 较大（比如大于 1），平方后就会更大，<span class="math inline">\(s_{db}\)</span> 也会更大。即我们让小的更小，大的更大，这么做是为了更新权重时做准备。</p>
-<p>观察更新 W 的式子，我们发现 dW 下面有一个 <span class="math inline">\(\sqrt{s_{dW}}\)</span>，由于在前面的操作中，我们把 <span class="math inline">\(s_{dW}\)</span> 变得很小，因此这里 dW 除以一个很小的数就会变大，相当于加大了更新 W 的步伐。对于 b，则相当于减小了在 b 方向上的步伐。最终的效果就是，水平方向前进更快，而竖直方向的振荡变小。</p>
+<p>从 RMSprop 的算法描述可以看到，计算滑动指数平均时，$(1 - \beta)$ 后面的项是 $dW^2$ 和 $db^2$，如此一来，假如 dW 本身较小（比如小于 1），平方后就会更小，$s<em>{dW}$ 也会变小；如果 db 较大（比如大于 1），平方后就会更大，$s</em>{db}$ 也会更大。即我们让小的更小，大的更大，这么做是为了更新权重时做准备。</p>
+<p>观察更新 W 的式子，我们发现 dW 下面有一个 $\sqrt{s<em>{dW}}$，由于在前面的操作中，我们把 $s</em>{dW}$ 变得很小，因此这里 dW 除以一个很小的数就会变大，相当于加大了更新 W 的步伐。对于 b，则相当于减小了在 b 方向上的步伐。最终的效果就是，水平方向前进更快，而竖直方向的振荡变小。</p>
 <p>这便是 RMSprop 算法，当然在实践中我们不可能只有两个参数，但原理对于更多的参数也是一样的，即增大过小的导数，减小过大的导数。</p>
 <p>顺便一提，RMSprop 翻译成中文是均方根传递。</p>
 <p>现在我们介绍了动量梯度下降算法和 RMSprop，如果将二者结合起来会怎么样呢？下篇文章就来介绍一下 Adam 梯度下降算法。</p>

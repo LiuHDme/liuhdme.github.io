@@ -6,10 +6,7 @@
   <title>(译) Pytorch 教程：迁移学习 | LiuHDme</title>
   <meta name="author" content="LiuHDme">
   
-  <meta name="description" content="这篇文章翻译自 Pytorch 官方教程 Transfer Learning Tutorial
-原作者：Sasank Chilamkurthy
-
-
+  <meta name="description" content="这篇文章翻译自 Pytorch 官方教程 Transfer Learning Tutorial原作者：Sasank Chilamkurthy
 Note: 点击这里下载完整示例代码
 
 在这篇教程中，你将会学到如何利用迁移学习来训练你的网络。你可以通过 cs231n notes 了解更多关于迁移学习的信息。
@@ -127,10 +124,7 @@ Note: 点击这里下载完整示例代码
 	  		
 
 	  <blockquote>
-<p>这篇文章翻译自 <a target="_blank" rel="noopener" href="https://pytorch.org/">Pytorch</a> 官方教程 <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html">Transfer Learning Tutorial</a><br />
-<strong>原作者：</strong><a target="_blank" rel="noopener" href="https://chsasank.github.io/">Sasank Chilamkurthy</a></p>
-</blockquote>
-<blockquote>
+<p>这篇文章翻译自 <a target="_blank" rel="noopener" href="https://pytorch.org/">Pytorch</a> 官方教程 <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html">Transfer Learning Tutorial</a><br><strong>原作者：</strong><a target="_blank" rel="noopener" href="https://chsasank.github.io/">Sasank Chilamkurthy</a></p>
 <p><strong>Note:</strong> 点击<a href="#code">这里</a>下载完整示例代码</p>
 </blockquote>
 <p>在这篇教程中，你将会学到如何利用迁移学习来训练你的网络。你可以通过 <a target="_blank" rel="noopener" href="https://cs231n.github.io/transfer-learning/">cs231n notes</a> 了解更多关于迁移学习的信息。</p>
@@ -145,330 +139,95 @@ Note: 点击这里下载完整示例代码
 <li><strong>固定特征提取器：</strong>除了最后的全连接层，我们会冻结网络中其余部分的参数，最后的全连接层中的参数会重新随机初始化，只有该层中的参数会在训练中更新。</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># License: BSD</span></span><br><span class="line"><span class="comment"># Author: Sasank Chilamkurthy</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function, division</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torch.optim <span class="keyword">import</span> lr_scheduler</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, models, transforms</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line">plt.ion()   <span class="comment"># 交互模式</span></span><br></pre></td></tr></table></figure>
-<h2 id="读取数据">读取数据</h2>
-<p>我们将使用 <code>torchvision</code> 和 <code>torch.utils.data</code> 两个 packages 来读取数据。</p>
+<h2 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h2><p>我们将使用 <code>torchvision</code> 和 <code>torch.utils.data</code> 两个 packages 来读取数据。</p>
 <p>我们今天的目标是建立一个可以分辨<strong>蚂蚁</strong>和<strong>蜜蜂</strong>的分类器，但是我们只有蚂蚁和蜜蜂的图片各约 120 张用于训练，75 张用于验证集。通常来说，如果要从头训练一个模型，这个数据集是非常小的。因此我们要利用迁移学习。</p>
 <p>这个数据集是 ImageNet 的一个很小的子集。</p>
 <p><strong>Note:</strong> 从 <a target="_blank" rel="noopener" href="https://download.pytorch.org/tutorial/hymenoptera_data.zip">这里</a> 下载数据并将其解压到当前文件夹。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对训练集使用 data augmentation 和 normalization</span></span><br><span class="line"><span class="comment"># 对验证集只使用 normalization</span></span><br><span class="line">data_transforms = &#123;</span><br><span class="line">    <span class="string">&#x27;train&#x27;</span>: transforms.Compose([</span><br><span class="line">        transforms.RandomResizedCrop(<span class="number">224</span>  ),</span><br><span class="line">        transforms.RandomHorizontalFlip(),</span><br><span class="line">        transforms.ToTensor(),</span><br><span class="line">        transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>  , <span class="number">0.225</span>])</span><br><span class="line">    ]),</span><br><span class="line">    <span class="string">&#x27;val&#x27;</span>: transforms.Compose([</span><br><span class="line">        transforms.Resize(<span class="number">256</span>),</span><br><span class="line">        transforms.CenterCrop(<span class="number">224</span>  ),</span><br><span class="line">        transforms.ToTensor(),</span><br><span class="line">        transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>  , <span class="number">0.225</span>])</span><br><span class="line">    ]),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data_dir = <span class="string">&#x27;data/hymenoptera_data&#x27;</span></span><br><span class="line">image_datasets = &#123;x: datasets.ImageFolder(os.path.join(data_dir, x),</span><br><span class="line">                                          data_transforms[x])</span><br><span class="line">                  <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>]&#125;</span><br><span class="line">dataloaders = &#123;x: torch.utils.data.DataLoader(image_datasets[x], batch_size=<span class="number">4</span>,</span><br><span class="line">                                             shuffle=<span class="literal">True</span>, num_workers=<span class="number">4</span>)</span><br><span class="line">              <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>]&#125;</span><br><span class="line">dataset_sizes = &#123;x: <span class="built_in">len</span>(image_datasets[x]) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>]&#125;</span><br><span class="line">class_names = image_datasets[<span class="string">&#x27;train&#x27;</span>].classes</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda:0&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="可视化一些图像">可视化一些图像</h3>
-<p>为了理解 data augmentation，我们来看看一些图像。</p>
+<h3 id="可视化一些图像"><a href="#可视化一些图像" class="headerlink" title="可视化一些图像"></a>可视化一些图像</h3><p>为了理解 data augmentation，我们来看看一些图像。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imshow</span>(<span class="params">inp, title=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Imshow for Tensor.&quot;&quot;&quot;</span></span><br><span class="line">    inp = inp.numpy().transpose((<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">    mean = np.array([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">    std = np.array([<span class="number">0.229</span>, <span class="number">0.224</span>  , <span class="number">0.225</span>])</span><br><span class="line">    inp = std * inp + mean</span><br><span class="line">    inp = np.clip(inp, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    plt.imshow(inp)</span><br><span class="line">    <span class="keyword">if</span> title <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        plt.title(title)</span><br><span class="line">    plt.pause(<span class="number">0.001</span>)  <span class="comment"># pause a bit so that plots are updated</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取训练数据中的一个 batch</span></span><br><span class="line">inputs, classes = <span class="built_in">next</span>(<span class="built_in">iter</span>(dataloaders[<span class="string">&#x27;train&#x27;</span>]))</span><br><span class="line"></span><br><span class="line">out = torchvision.utils.make_grid(inputs)</span><br><span class="line"></span><br><span class="line">imshow(out, title=[class_names[x] <span class="keyword">for</span> x <span class="keyword">in</span> classes])</span><br></pre></td></tr></table></figure>
-<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_001.png" /></p>
-<h2 id="训练模型">训练模型</h2>
-<p>现在，为了训练模型，我们应该写一些通用函数。在这里我们将阐述以下两点</p>
+<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_001.png" alt=""></p>
+<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><p>现在，为了训练模型，我们应该写一些通用函数。在这里我们将阐述以下两点</p>
 <ul>
 <li>Scheduling 学习率</li>
 <li>保存最好的模型</li>
 </ul>
 <p>下面参数中的 <code>scheduler</code> 是<code>torch.optim.lr_scheduler</code> 包中的 LR scheduler 对象</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_model</span>(<span class="params">model, criterion, optimizer, scheduler, num_&gt; Epochs=<span class="number">25</span></span>):</span></span><br><span class="line">    since = time.time()</span><br><span class="line"></span><br><span class="line">    best_model_wts = copy.deepcopy(model.state_dict())</span><br><span class="line">    best_acc = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> &gt; Epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_&gt; Epochs):</span><br><span class="line">        print(<span class="string">&#x27;&gt; Epoch &#123;&#125;/&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(&gt; Epoch, num_&gt; Epochs - <span class="number">1</span>))</span><br><span class="line">        print(<span class="string">&#x27;-&#x27;</span> * <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 每次遍历都要经过训练集和验证集</span></span><br><span class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> [<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>]:</span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&#x27;train&#x27;</span>:</span><br><span class="line">                scheduler.step()</span><br><span class="line">                model.train()  <span class="comment"># 设置模型为训练模式</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                model.<span class="built_in">eval</span>()   <span class="comment"># 设置模型为验证模式</span></span><br><span class="line"></span><br><span class="line">            running_loss = <span class="number">0.0</span></span><br><span class="line">            running_corrects = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 迭代</span></span><br><span class="line">            <span class="keyword">for</span> inputs, labels <span class="keyword">in</span> dataloaders[phase]:</span><br><span class="line">                inputs = inputs.to(device)</span><br><span class="line">                labels = labels.to(device)</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 清零梯度</span></span><br><span class="line">                optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 前向传播</span></span><br><span class="line">                <span class="comment"># 只在训练时计算梯度</span></span><br><span class="line">                <span class="keyword">with</span> torch.set_grad_enabled(phase == <span class="string">&#x27;train&#x27;</span>):</span><br><span class="line">                    outputs = model(inputs)</span><br><span class="line">                    _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)</span><br><span class="line">                    loss = criterion(outputs, labels)</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># 只有在训练时才进行反向传播和参数更新</span></span><br><span class="line">                    <span class="keyword">if</span> phase == <span class="string">&#x27;train&#x27;</span>:</span><br><span class="line">                        loss.backward()</span><br><span class="line">                        optimizer.step()</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 统计</span></span><br><span class="line">                running_loss += loss.item() * inputs.size(<span class="number">0</span>)</span><br><span class="line">                running_corrects += torch.<span class="built_in">sum</span>(preds == labels.data)</span><br><span class="line"></span><br><span class="line">            &gt; Epoch_loss = running_loss / dataset_sizes[phase]</span><br><span class="line">            &gt; Epoch_acc = running_corrects.double() / dataset_sizes[phase]</span><br><span class="line"></span><br><span class="line">            print(<span class="string">&#x27;&#123;&#125; Loss: &#123;:.4f&#125; Acc: &#123;:.4f&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                phase, &gt; Epoch_loss, &gt; Epoch_acc))</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 找到最好的模型</span></span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">&#x27;val&#x27;</span> <span class="keyword">and</span> &gt; Epoch_acc &gt; best_acc:</span><br><span class="line">                best_acc = &gt; Epoch_acc</span><br><span class="line">                best_model_wts = copy.deepcopy(model.state_dict())</span><br><span class="line"></span><br><span class="line">        print()</span><br><span class="line"></span><br><span class="line">    time_elapsed = time.time() - since</span><br><span class="line">    print(<span class="string">&#x27;Training complete in &#123;:.0f&#125;m &#123;:.0f&#125;s&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">        time_elapsed // <span class="number">60</span>, time_elapsed % <span class="number">60</span>))</span><br><span class="line">    print(<span class="string">&#x27;Best val Acc: &#123;:4f&#125;&#x27;</span>.<span class="built_in">format</span>(best_acc))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 读取最好模型</span></span><br><span class="line">    model.load_state_dict(best_model_wts)</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
-<h3 id="观察模型给出的预测">观察模型给出的预测</h3>
-<p>这是一个用于展示预测结果的通用函数</p>
+<h3 id="观察模型给出的预测"><a href="#观察模型给出的预测" class="headerlink" title="观察模型给出的预测"></a>观察模型给出的预测</h3><p>这是一个用于展示预测结果的通用函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">visualize_model</span>(<span class="params">model, num_images=<span class="number">6</span></span>):</span></span><br><span class="line">    was_training = model.training</span><br><span class="line">    model.<span class="built_in">eval</span>()</span><br><span class="line">    images_so_far = <span class="number">0</span></span><br><span class="line">    fig = plt.figure()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> i, (inputs, labels) <span class="keyword">in</span> <span class="built_in">enumerate</span>(dataloaders[<span class="string">&#x27;val&#x27;</span>]):</span><br><span class="line">            inputs = inputs.to(device)</span><br><span class="line">            labels = labels.to(device)</span><br><span class="line"></span><br><span class="line">            outputs = model(inputs)</span><br><span class="line">            _, preds = torch.<span class="built_in">max</span>(outputs, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(inputs.size()[<span class="number">0</span>]):</span><br><span class="line">                images_so_far += <span class="number">1</span></span><br><span class="line">                ax = plt.subplot(num_images//<span class="number">2</span>, <span class="number">2</span>, images_so_far)</span><br><span class="line">                ax.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">                ax.set_title(<span class="string">&#x27;predicted: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(class_names[preds[j]]))</span><br><span class="line">                imshow(inputs.cpu().data[j])</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> images_so_far == num_images:</span><br><span class="line">                    model.train(mode=was_training)</span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">        model.train(mode=was_training)</span><br></pre></td></tr></table></figure>
-<h2 id="网络调优">网络调优</h2>
-<p>读取一个预训练网络并重置最后的全连接层</p>
+<h2 id="网络调优"><a href="#网络调优" class="headerlink" title="网络调优"></a>网络调优</h2><p>读取一个预训练网络并重置最后的全连接层</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">model_ft = models.resnet18(pretrained=<span class="literal">True</span>)</span><br><span class="line">num_ftrs = model_ft.fc.in_features</span><br><span class="line">model_ft.fc = nn.Linear(num_ftrs, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">model_ft = model_ft.to(device)</span><br><span class="line"></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里所有参数都会更新</span></span><br><span class="line">optimizer_ft = optim.SGD(model_ft.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 学习率每 7 次迭代以 0.1 为因子衰减</span></span><br><span class="line">exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="训练与验证">训练与验证</h3>
-<p>在 CPU 上训练会花费大约 15-25 分钟，而在 GPU 上则要不了一分钟。</p>
+<h3 id="训练与验证"><a href="#训练与验证" class="headerlink" title="训练与验证"></a>训练与验证</h3><p>在 CPU 上训练会花费大约 15-25 分钟，而在 GPU 上则要不了一分钟。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model_ft = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,</span><br><span class="line">                       num_&gt; Epochs=<span class="number">25</span>)</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <blockquote>
-<p>Epoch 0/24<br />
-——————<br />
-train Loss: 0.5900 Acc: 0.7131<br />
-val Loss: 0.2508 Acc: 0.9020</p>
-</blockquote>
-<blockquote>
-<p>Epoch 1/24<br />
-——————<br />
-train Loss: 0.6034 Acc: 0.7828<br />
-val Loss: 0.3181 Acc: 0.8627</p>
-</blockquote>
-<blockquote>
-<p>Epoch 2/24<br />
-——————<br />
-train Loss: 0.6150 Acc: 0.7582<br />
-val Loss: 0.4903 Acc: 0.8366</p>
-</blockquote>
-<blockquote>
-<p>Epoch 3/24<br />
-——————<br />
-train Loss: 0.6650 Acc: 0.7377<br />
-val Loss: 0.6294 Acc: 0.7582</p>
-</blockquote>
-<blockquote>
-<p>Epoch 4/24<br />
-——————<br />
-train Loss: 0.4935 Acc: 0.7828<br />
-val Loss: 0.2644 Acc: 0.8889</p>
-</blockquote>
-<blockquote>
-<p>Epoch 5/24<br />
-——————<br />
-train Loss: 0.3841 Acc: 0.8238<br />
-val Loss: 0.24 08 Acc: 0.9216</p>
-</blockquote>
-<blockquote>
-<p>Epoch 6/24<br />
-——————<br />
-train Loss: 0.5352 Acc: 0.8156<br />
-val Loss: 0.2250 Acc: 0.9150</p>
-</blockquote>
-<blockquote>
-<p>Epoch 7/24<br />
-——————<br />
-train Loss: 0.2252 Acc: 0.9385<br />
-val Loss: 0.1917 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 8/24<br />
-——————<br />
-train Loss: 0.3395 Acc: 0.8197<br />
-val Loss: 0.1738 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 9/24<br />
-——————<br />
-train Loss: 0.3363 Acc: 0.8607<br />
-val Loss: 0.2522 Acc: 0.9216</p>
-</blockquote>
-<blockquote>
-<p>Epoch 10/24<br />
-——————<br />
-train Loss: 0.2878 Acc: 0.8607<br />
-val Loss: 0.1787 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 11/24<br />
-——————<br />
-train Loss: 0.2831 Acc: 0.8770<br />
-val Loss: 0.1805 Acc: 0.9346</p>
-</blockquote>
-<blockquote>
-<p>Epoch 12/24<br />
-——————<br />
-train Loss: 0.2290 Acc: 0.9016<br />
-val Loss: 0.1898 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 13/24<br />
-——————<br />
-train Loss: 0.24 94 Acc: 0.9016<br />
-val Loss: 0.1729 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 14/24<br />
-——————<br />
-train Loss: 0.3435 Acc: 0.8689<br />
-val Loss: 0.1736 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 15/24<br />
-——————<br />
-train Loss: 0.2274 Acc: 0.9057<br />
-val Loss: 0.1692 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 16/24<br />
-——————<br />
-train Loss: 0.3154 Acc: 0.8689<br />
-val Loss: 0.1742 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 17/24<br />
-——————<br />
-train Loss: 0.2749 Acc: 0.8893<br />
-val Loss: 0.1826 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 18/24<br />
-——————<br />
-train Loss: 0.2673 Acc: 0.8770<br />
-val Loss: 0.1731 Acc: 0.9281</p>
-</blockquote>
-<blockquote>
-<p>Epoch 19/24<br />
-——————<br />
-train Loss: 0.2865 Acc: 0.8730<br />
-val Loss: 0.1867 Acc: 0.9346</p>
-</blockquote>
-<blockquote>
-<p>Epoch 20/24<br />
-——————<br />
-train Loss: 0.3061 Acc: 0.8648<br />
-val Loss: 0.1966 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 21/24<br />
-——————<br />
-train Loss: 0.2638 Acc: 0.9016<br />
-val Loss: 0.1973 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 22/24<br />
-——————<br />
-train Loss: 0.2602 Acc: 0.8893<br />
-val Loss: 0.1769 Acc: 0.9281</p>
-</blockquote>
-<blockquote>
-<p>Epoch 23/24<br />
-——————<br />
-train Loss: 0.2817 Acc: 0.9016<br />
-val Loss: 0.1756 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 24 /24<br />
-——————<br />
-train Loss: 0.2959 Acc: 0.8730<br />
-val Loss: 0.1790 Acc: 0.9281</p>
-</blockquote>
-<blockquote>
-<p>Training complete in 1m 8s<br />
-Best val Acc: 0.95424 8</p>
+<p>Epoch 0/24<br>——————<br>train Loss: 0.5900 Acc: 0.7131<br>val Loss: 0.2508 Acc: 0.9020</p>
+<p>Epoch 1/24<br>——————<br>train Loss: 0.6034 Acc: 0.7828<br>val Loss: 0.3181 Acc: 0.8627  </p>
+<p>Epoch 2/24<br>——————<br>train Loss: 0.6150 Acc: 0.7582<br>val Loss: 0.4903 Acc: 0.8366  </p>
+<p>Epoch 3/24<br>——————<br>train Loss: 0.6650 Acc: 0.7377<br>val Loss: 0.6294 Acc: 0.7582  </p>
+<p>Epoch 4/24<br>——————<br>train Loss: 0.4935 Acc: 0.7828<br>val Loss: 0.2644 Acc: 0.8889  </p>
+<p>Epoch 5/24<br>——————<br>train Loss: 0.3841 Acc: 0.8238<br>val Loss: 0.24  08 Acc: 0.9216  </p>
+<p>Epoch 6/24<br>——————<br>train Loss: 0.5352 Acc: 0.8156<br>val Loss: 0.2250 Acc: 0.9150  </p>
+<p>Epoch 7/24<br>——————<br>train Loss: 0.2252 Acc: 0.9385<br>val Loss: 0.1917 Acc: 0.9477  </p>
+<p>Epoch 8/24<br>——————<br>train Loss: 0.3395 Acc: 0.8197<br>val Loss: 0.1738 Acc: 0.9477  </p>
+<p>Epoch 9/24<br>——————<br>train Loss: 0.3363 Acc: 0.8607<br>val Loss: 0.2522 Acc: 0.9216  </p>
+<p>Epoch 10/24<br>——————<br>train Loss: 0.2878 Acc: 0.8607<br>val Loss: 0.1787 Acc: 0.9412  </p>
+<p>Epoch 11/24<br>——————<br>train Loss: 0.2831 Acc: 0.8770<br>val Loss: 0.1805 Acc: 0.9346  </p>
+<p>Epoch 12/24<br>——————<br>train Loss: 0.2290 Acc: 0.9016<br>val Loss: 0.1898 Acc: 0.9412  </p>
+<p>Epoch 13/24<br>——————<br>train Loss: 0.24  94 Acc: 0.9016<br>val Loss: 0.1729 Acc: 0.9412  </p>
+<p>Epoch 14/24<br>——————<br>train Loss: 0.3435 Acc: 0.8689<br>val Loss: 0.1736 Acc: 0.9412  </p>
+<p>Epoch 15/24<br>——————<br>train Loss: 0.2274 Acc: 0.9057<br>val Loss: 0.1692 Acc: 0.9542  </p>
+<p>Epoch 16/24<br>——————<br>train Loss: 0.3154 Acc: 0.8689<br>val Loss: 0.1742 Acc: 0.9412  </p>
+<p>Epoch 17/24<br>——————<br>train Loss: 0.2749 Acc: 0.8893<br>val Loss: 0.1826 Acc: 0.9412  </p>
+<p>Epoch 18/24<br>——————<br>train Loss: 0.2673 Acc: 0.8770<br>val Loss: 0.1731 Acc: 0.9281  </p>
+<p>Epoch 19/24<br>——————<br>train Loss: 0.2865 Acc: 0.8730<br>val Loss: 0.1867 Acc: 0.9346  </p>
+<p>Epoch 20/24<br>——————<br>train Loss: 0.3061 Acc: 0.8648<br>val Loss: 0.1966 Acc: 0.9477  </p>
+<p>Epoch 21/24<br>——————<br>train Loss: 0.2638 Acc: 0.9016<br>val Loss: 0.1973 Acc: 0.9477  </p>
+<p>Epoch 22/24<br>——————<br>train Loss: 0.2602 Acc: 0.8893<br>val Loss: 0.1769 Acc: 0.9281  </p>
+<p>Epoch 23/24<br>——————<br>train Loss: 0.2817 Acc: 0.9016<br>val Loss: 0.1756 Acc: 0.9412  </p>
+<p>Epoch 24  /24<br>——————<br>train Loss: 0.2959 Acc: 0.8730<br>val Loss: 0.1790 Acc: 0.9281</p>
+<p>Training complete in 1m 8s<br>Best val Acc: 0.95424  8</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visualize_model(model_ft)</span><br></pre></td></tr></table></figure>
-<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_002.png" /></p>
-<h2 id="固定特征提取器">固定特征提取器</h2>
-<p>现在，除了最后的全连接层，我们要冻结网络中其余部分的所有参数。我们使用 <code>requires_grad = False</code> 来冻结参数，<code>bachward()</code> 便不会计算这些参数的梯度。</p>
+<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_002.png" alt=""></p>
+<h2 id="固定特征提取器"><a href="#固定特征提取器" class="headerlink" title="固定特征提取器"></a>固定特征提取器</h2><p>现在，除了最后的全连接层，我们要冻结网络中其余部分的所有参数。我们使用 <code>requires_grad = False</code> 来冻结参数，<code>bachward()</code> 便不会计算这些参数的梯度。</p>
 <p>你可以在 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/notes/autograd.html#excluding-subgraphs-from-backward">这里</a> 读到更多信息。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">model_conv = torchvision.models.resnet18(pretrained=<span class="literal">True</span>)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> model_conv.parameters():</span><br><span class="line">    param.requires_grad = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新构建模块中的参数的 requires_grad 默认为 True</span></span><br><span class="line">num_ftrs = model_conv.fc.in_features</span><br><span class="line">model_conv.fc = nn.Linear(num_ftrs, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">model_conv = model_conv.to(device)</span><br><span class="line"></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 现在只有最后的全连接层的参数会更新</span></span><br><span class="line">optimizer_conv = optim.SGD(model_conv.fc.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 学习率每 7 次迭代以 0.1 为因子衰减</span></span><br><span class="line">exp_lr_scheduler = lr_scheduler.StepLR(optimizer_conv, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="训练与验证-1">训练与验证</h3>
-<p>在 CPU 上，这会花费约之前一半的时间，因为大多数参数的梯度不用计算了，不过这些参数仍然会参与前向传播。</p>
+<h3 id="训练与验证-1"><a href="#训练与验证-1" class="headerlink" title="训练与验证"></a>训练与验证</h3><p>在 CPU 上，这会花费约之前一半的时间，因为大多数参数的梯度不用计算了，不过这些参数仍然会参与前向传播。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model_conv = train_model(model_conv, criterion, optimizer_conv,</span><br><span class="line">                         exp_lr_scheduler, num_&gt; Epochs=<span class="number">25</span>)</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <blockquote>
-<p>Epoch 0/24 ——————<br />
-train Loss: 0.6463 Acc: 0.6803<br />
-val Loss: 0.1949 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 1/24 ——————<br />
-train Loss: 0.4923 Acc: 0.8033<br />
-val Loss: 0.1696 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 2/24 ——————<br />
-train Loss: 0.4234 Acc: 0.8115<br />
-val Loss: 0.4379 Acc: 0.7712</p>
-</blockquote>
-<blockquote>
-<p>Epoch 3/24 ——————<br />
-train Loss: 0.5606 Acc: 0.7582<br />
-val Loss: 0.6383 Acc: 0.7451</p>
-</blockquote>
-<blockquote>
-<p>Epoch 4/24 ——————<br />
-train Loss: 0.7560 Acc: 0.7295<br />
-val Loss: 0.1888 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 5/24 ——————<br />
-train Loss: 0.4316 Acc: 0.8197<br />
-val Loss: 0.1999 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 6/24 ——————<br />
-train Loss: 0.7722 Acc: 0.7131<br />
-val Loss: 0.1975 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 7/24 ——————<br />
-train Loss: 0.3685 Acc: 0.8607<br />
-val Loss: 0.2000 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 8/24 ——————<br />
-train Loss: 0.2968 Acc: 0.8811<br />
-val Loss: 0.1916 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 9/24 ——————<br />
-train Loss: 0.3396 Acc: 0.8525<br />
-val Loss: 0.2165 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 10/24 ——————<br />
-train Loss: 0.3885 Acc: 0.8320<br />
-val Loss: 0.2109 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 11/24 ——————<br />
-train Loss: 0.4107 Acc: 0.8156<br />
-val Loss: 0.1881 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 12/24 ——————<br />
-train Loss: 0.3249 Acc: 0.8730<br />
-val Loss: 0.1747 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 13/24 ——————<br />
-train Loss: 0.3439 Acc: 0.8525<br />
-val Loss: 0.1950 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 14/24 ——————<br />
-train Loss: 0.3641 Acc: 0.8443<br />
-val Loss: 0.1992 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 15/24 ——————<br />
-train Loss: 0.3272 Acc: 0.8443<br />
-val Loss: 0.2320 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 16/24 ——————<br />
-train Loss: 0.3102 Acc: 0.8730<br />
-val Loss: 0.1867 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 17/24 ——————<br />
-train Loss: 0.4226 Acc: 0.8238<br />
-val Loss: 0.1872 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 18/24 ——————<br />
-train Loss: 0.3452 Acc: 0.8443<br />
-val Loss: 0.1812 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Epoch 19/24 ——————<br />
-train Loss: 0.3697 Acc: 0.8525<br />
-val Loss: 0.1890 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 20/24 ——————<br />
-train Loss: 0.3078 Acc: 0.8607<br />
-val Loss: 0.1976 Acc: 0.9608</p>
-</blockquote>
-<blockquote>
-<p>Epoch 21/24 ——————<br />
-train Loss: 0.3161 Acc: 0.8770<br />
-val Loss: 0.1982 Acc: 0.9412</p>
-</blockquote>
-<blockquote>
-<p>Epoch 22/24 ——————<br />
-train Loss: 0.3749 Acc: 0.8320<br />
-val Loss: 0.2035 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 23/24 ——————<br />
-train Loss: 0.3298 Acc: 0.8525<br />
-val Loss: 0.1855 Acc: 0.9477</p>
-</blockquote>
-<blockquote>
-<p>Epoch 24/24 ——————<br />
-train Loss: 0.3597 Acc: 0.8402<br />
-val Loss: 0.1878 Acc: 0.9542</p>
-</blockquote>
-<blockquote>
-<p>Training complete in 0m 34s<br />
-Best val Acc: 0.960784</p>
+<p>Epoch 0/24<br>——————<br>train Loss: 0.6463 Acc: 0.6803<br>val Loss: 0.1949 Acc: 0.9477  </p>
+<p>Epoch 1/24<br>——————<br>train Loss: 0.4923 Acc: 0.8033<br>val Loss: 0.1696 Acc: 0.9477  </p>
+<p>Epoch 2/24<br>——————<br>train Loss: 0.4234 Acc: 0.8115<br>val Loss: 0.4379 Acc: 0.7712  </p>
+<p>Epoch 3/24<br>——————<br>train Loss: 0.5606 Acc: 0.7582<br>val Loss: 0.6383 Acc: 0.7451  </p>
+<p>Epoch 4/24<br>——————<br>train Loss: 0.7560 Acc: 0.7295<br>val Loss: 0.1888 Acc: 0.9412  </p>
+<p>Epoch 5/24<br>——————<br>train Loss: 0.4316 Acc: 0.8197<br>val Loss: 0.1999 Acc: 0.9477  </p>
+<p>Epoch 6/24<br>——————<br>train Loss: 0.7722 Acc: 0.7131<br>val Loss: 0.1975 Acc: 0.9477  </p>
+<p>Epoch 7/24<br>——————<br>train Loss: 0.3685 Acc: 0.8607<br>val Loss: 0.2000 Acc: 0.9477  </p>
+<p>Epoch 8/24<br>——————<br>train Loss: 0.2968 Acc: 0.8811<br>val Loss: 0.1916 Acc: 0.9477  </p>
+<p>Epoch 9/24<br>——————<br>train Loss: 0.3396 Acc: 0.8525<br>val Loss: 0.2165 Acc: 0.9542  </p>
+<p>Epoch 10/24<br>——————<br>train Loss: 0.3885 Acc: 0.8320<br>val Loss: 0.2109 Acc: 0.9542  </p>
+<p>Epoch 11/24<br>——————<br>train Loss: 0.4107 Acc: 0.8156<br>val Loss: 0.1881 Acc: 0.9477  </p>
+<p>Epoch 12/24<br>——————<br>train Loss: 0.3249 Acc: 0.8730<br>val Loss: 0.1747 Acc: 0.9542  </p>
+<p>Epoch 13/24<br>——————<br>train Loss: 0.3439 Acc: 0.8525<br>val Loss: 0.1950 Acc: 0.9477  </p>
+<p>Epoch 14/24<br>——————<br>train Loss: 0.3641 Acc: 0.8443<br>val Loss: 0.1992 Acc: 0.9412  </p>
+<p>Epoch 15/24<br>——————<br>train Loss: 0.3272 Acc: 0.8443<br>val Loss: 0.2320 Acc: 0.9412  </p>
+<p>Epoch 16/24<br>——————<br>train Loss: 0.3102 Acc: 0.8730<br>val Loss: 0.1867 Acc: 0.9477  </p>
+<p>Epoch 17/24<br>——————<br>train Loss: 0.4226 Acc: 0.8238<br>val Loss: 0.1872 Acc: 0.9542  </p>
+<p>Epoch 18/24<br>——————<br>train Loss: 0.3452 Acc: 0.8443<br>val Loss: 0.1812 Acc: 0.9542  </p>
+<p>Epoch 19/24<br>——————<br>train Loss: 0.3697 Acc: 0.8525<br>val Loss: 0.1890 Acc: 0.9477  </p>
+<p>Epoch 20/24<br>——————<br>train Loss: 0.3078 Acc: 0.8607<br>val Loss: 0.1976 Acc: 0.9608  </p>
+<p>Epoch 21/24<br>——————<br>train Loss: 0.3161 Acc: 0.8770<br>val Loss: 0.1982 Acc: 0.9412  </p>
+<p>Epoch 22/24<br>——————<br>train Loss: 0.3749 Acc: 0.8320<br>val Loss: 0.2035 Acc: 0.9477  </p>
+<p>Epoch 23/24<br>——————<br>train Loss: 0.3298 Acc: 0.8525<br>val Loss: 0.1855 Acc: 0.9477  </p>
+<p>Epoch 24/24<br>——————<br>train Loss: 0.3597 Acc: 0.8402<br>val Loss: 0.1878 Acc: 0.9542  </p>
+<p>Training complete in 0m 34s<br>Best val Acc: 0.960784</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">visualize_model(model_conv)</span><br><span class="line"></span><br><span class="line">plt.ioff()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_003.png" /></p>
-<hr />
+<p><img src="https://pytorch.org/tutorials/_images/sphx_glr_transfer_learning_tutorial_003.png" alt=""></p>
+<hr>
 <p><span id="code"></p>
 <p><a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/_downloads/07d5af1ef41e43c07f848afaf5a1c3cc/transfer_learning_tutorial.py">下载 Python 源代码：transfer_learning_tutorial.py</a></p>
 <p><a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/_downloads/62840b1eece760d5e42593187847261f/transfer_learning_tutorial.ipynb">下载 Jupyter Notebook: transfer_learning_tutorial.ipynb</a></p>
@@ -549,7 +308,7 @@ Best val Acc: 0.960784</p>
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li> <li><a href="/tags/译文/">译文<span>2</span></a></li>
+  <li><a href="/tags/译文/">译文<span>2</span></a></li> <li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
     </ul>
 	</div>
 	

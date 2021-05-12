@@ -120,24 +120,20 @@ The DFT ">
 
 	  <p>In this lesson, we have studied in greater details the discrete Fourier transform (DFT), the Fourier analysis tool for finite-length signals.</p>
 <p>The DFT is just a simple change of basis. The analysis formula (moving from the time to the frequency domain) is given by the inner product of the signal with the Fourier basis vector,</p>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 \begin{align} 
 X[k] 
-&amp;= \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \\
-&amp;= \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} nk}
-\end{align}.
-\]</span></p>
-<p>The synthesis formula (moving from the frequency to the time domain) is a linear combination of the basis functions, scaled by the coefficients we found in the analysis formula,</p>
-<p><span class="math display">\[
+&= \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \\
+&= \sum_{n=0}^{N-1} x[n] e^{-j \frac{2\pi}{N} nk}
+\end{align}.</script><p>The synthesis formula (moving from the frequency to the time domain) is a linear combination of the basis functions, scaled by the coefficients we found in the analysis formula,</p>
+<script type="math/tex; mode=display">
 \begin{align} 
 x[n]
-&amp;= \frac{1}{N} \sum_{k=0}^{N-1} X[k]\mathbf{w}^{(k)} \\
-&amp;= \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} nk}
-\end{align}
-\]</span></p>
-<p>In the most general case, the DFT coefficients \(X[k]\) are complex numbers and thus have a real and imaginary part. In order to interpret these coefficients, it is convenient to represent their magnitude \(|X[k]|\) and phase \(X[k]\), wrapped between \(-\) and \(\). In a DFT plot, frequencies between \(0\) and \(N/2\) (resp. \(N/2\) and \(N-1\) correspond to digital frequencies smaller than \(\) (resp. larger than \(\)), in other words counterclockwise rotations (resp. clockwise rotations). Frequencies close to \(0\) and \(N-1\) corresponds to the low frequencies and those close to \(N/2\) to the high frequencies.</p>
+&= \frac{1}{N} \sum_{k=0}^{N-1} X[k]\mathbf{w}^{(k)} \\
+&= \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j \frac{2\pi}{N} nk}
+\end{align}</script><p>In the most general case, the DFT coefficients \(X[k]\) are complex numbers and thus have a real and imaginary part. In order to interpret these coefficients, it is convenient to represent their magnitude \(|X[k]|\) and phase \(\angle X[k]\), wrapped between \(-\pi\) and \(\pi\). In a DFT plot, frequencies between \(0\) and \(N/2\) (resp. \(N/2\) and \(N-1\) correspond to digital frequencies smaller than \(\pi\) (resp. larger than \(\pi\)), in other words counterclockwise rotations (resp. clockwise rotations). Frequencies close to \(0\) and \(N-1\) corresponds to the low frequencies and those close to \(N/2\) to the high frequencies.</p>
 <p>Finally, the DFT of a real signal is symmetric in magnitude, mathematically</p>
-<p>\(|X[k]| = |X[N-k]|, k = 1, …, .\)</p>
+<p>\(|X[k]| = |X[N-k]|, k = 1, …, \lfloor{N/2}\rfloor.\)</p>
 	  
 	</div>
 
