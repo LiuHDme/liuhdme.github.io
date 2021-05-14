@@ -125,23 +125,16 @@
 	
 		<p>在使用 Python 的过程中，免不了要用 pip 安装各种模块，但是由于官方 Pypi 经常被墙，导致下载速度过慢甚至出错，最好的办法是将自己使用 pip 源更换一下。以下是几个常用的国内源：</p>
 <blockquote>
-<p>阿里云<br />
-<a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/pypi/simple/">http://mirrors.aliyun.com/pypi/simple/</a></p>
-<p>中国科技大学<br />
-<a target="_blank" rel="noopener" href="https://pypi.mirrors.ustc.edu.cn/simple/">https://pypi.mirrors.ustc.edu.cn/simple/</a></p>
-<p>豆瓣<br />
-<a target="_blank" rel="noopener" href="http://pypi.douban.com/simple/">http://pypi.douban.com/simple/</a></p>
-<p>清华大学<br />
-<a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple/">https://pypi.tuna.tsinghua.edu.cn/simple/</a></p>
-<p>中国科学技术大学<br />
-<a target="_blank" rel="noopener" href="http://pypi.mirrors.ustc.edu.cn/simple/">http://pypi.mirrors.ustc.edu.cn/simple/</a></p>
+<p>阿里云<br><a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/pypi/simple/">http://mirrors.aliyun.com/pypi/simple/</a>  </p>
+<p>中国科技大学<br><a target="_blank" rel="noopener" href="https://pypi.mirrors.ustc.edu.cn/simple/">https://pypi.mirrors.ustc.edu.cn/simple/</a>  </p>
+<p>豆瓣<br><a target="_blank" rel="noopener" href="http://pypi.douban.com/simple/">http://pypi.douban.com/simple/</a>  </p>
+<p>清华大学<br><a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple/">https://pypi.tuna.tsinghua.edu.cn/simple/</a>  </p>
+<p>中国科学技术大学<br><a target="_blank" rel="noopener" href="http://pypi.mirrors.ustc.edu.cn/simple/">http://pypi.mirrors.ustc.edu.cn/simple/</a></p>
 </blockquote>
 <p>以下是更换方法：</p>
-<h3 id="临时使用">临时使用</h3>
-<p>在安装语句最后加上 -i 以及相应 URL 即可，比如：</p>
+<h3 id="临时使用"><a href="#临时使用" class="headerlink" title="临时使用"></a>临时使用</h3><p>在安装语句最后加上 -i 以及相应 URL 即可，比如：</p>
 <p><code>pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple/</code></p>
-<h3 id="一劳永逸">一劳永逸</h3>
-<p>进入目录 ~/.pip，编辑 pip.conf 文件：</p>
+<h3 id="一劳永逸"><a href="#一劳永逸" class="headerlink" title="一劳永逸"></a>一劳永逸</h3><p>进入目录 ~/.pip，编辑 pip.conf 文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[global]  </span><br><span class="line">index-url &#x3D; http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;pypi&#x2F;simple&#x2F;</span><br></pre></td></tr></table></figure>
 <p>最后面跟的是你选择的源，我这里是以阿里云的为例。</p>
 <p>如果你是 Mac 用户，那么你可能没有 .pip 文件夹，那就新建一个，然后再新建 pip.conf 文件，即在终端中分别输入以下三个语句，之后再将上面的内容写进 pip.conf 文件</p>
@@ -220,7 +213,7 @@
 		
 			<li><a href="/categories/考试/">考试<span>1</span></a></li>
 		
-			<li><a href="/categories/计算广告/">计算广告<span>1</span></a></li>
+			<li><a href="/categories/计算广告/">计算广告<span>2</span></a></li>
 		
 		</ul>
 	</div>
@@ -231,45 +224,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Android/">Android<span>3</span></a></li>
-		
-			<li><a href="/tags/计算广告/">计算广告<span>1</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
-		
-			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
-		
-			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
-		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
-		
-			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
-		
 			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
 		
+			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+		
+			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
+		
+			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+		
+			<li><a href="/tags/计算广告/">计算广告<span>2</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
 			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
 		
 			<li><a href="/tags/生活/">生活<span>3</span></a></li>
 		
 			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
 		
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
 			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
-		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
-		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
-		
-			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
-		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
 			<li><a href="/tags/Python/">Python<span>1</span></a></li>
 		
-			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
-			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
+		
+			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
+		
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>
@@ -285,6 +278,10 @@
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/posts/18719/"  title="《计算广告》第六章笔记" ><i class="fa fa-file-o"></i>程序化交易广告</a>
+      </li>
+    
+      <li>
         <a href="/posts/33750/"  title="《计算广告》第五章笔记" ><i class="fa fa-file-o"></i>搜索广告与竞价广告</a>
       </li>
     
@@ -298,10 +295,6 @@
     
       <li>
         <a href="/posts/69e8b1de/" ><i class="fa fa-file-o"></i>scipy 稀疏矩阵小结</a>
-      </li>
-    
-      <li>
-        <a href="/posts/98ca9602/" ><i class="fa fa-file-o"></i>论文笔记：Explainable Reasoning ...</a>
       </li>
     
   </ul>
@@ -375,35 +368,55 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

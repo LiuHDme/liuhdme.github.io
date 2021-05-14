@@ -10,7 +10,7 @@
 
 
 
-Your browser does not support the audio element.">
+                    Your browser does not support the audio element.">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -126,12 +126,12 @@ Your browser does not support the audio element.">
 </blockquote>
 <audio controls="controls" >
 <source src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-02-30s_trained_model.mp3" type="audio/mpeg" />
-<p>Your browser does not support the audio element. </audio></p>
+                    Your browser does not support the audio element.
+</audio>
+
 <a id="more"></a>
-<h3 id="导入所需的包">导入所需的包</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> music21 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> grammar <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> preprocess <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> music_utils <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> data_utils <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model, Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense, Activation, Dropout, Input, LSTM, Reshape, Lambda, RepeatVector</span><br><span class="line"><span class="keyword">from</span> keras.initializers <span class="keyword">import</span> glorot_uniform</span><br><span class="line"><span class="keyword">from</span> keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> Adam</span><br></pre></td></tr></table></figure>
-<h3 id="读入数据">读入数据</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X, Y, n_values, indices_values = load_music_utils() <span class="comment"># 读入数据</span></span><br><span class="line">n_a = <span class="number">64</span>  <span class="comment"># 隐藏层节点数</span></span><br></pre></td></tr></table></figure>
+<h3 id="导入所需的包"><a href="#导入所需的包" class="headerlink" title="导入所需的包"></a>导入所需的包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> music21 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> grammar <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> preprocess <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> music_utils <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> data_utils <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model, Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense, Activation, Dropout, Input, LSTM, Reshape, Lambda, RepeatVector</span><br><span class="line"><span class="keyword">from</span> keras.initializers <span class="keyword">import</span> glorot_uniform</span><br><span class="line"><span class="keyword">from</span> keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> Adam</span><br></pre></td></tr></table></figure>
+<h3 id="读入数据"><a href="#读入数据" class="headerlink" title="读入数据"></a>读入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X, Y, n_values, indices_values = load_music_utils() <span class="comment"># 读入数据</span></span><br><span class="line">n_a = <span class="number">64</span>  <span class="comment"># 隐藏层节点数</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>X.shape: (60, 30, 78)</li>
 <li>训练样本数: 60</li>
@@ -140,26 +140,21 @@ Your browser does not support the audio element.">
 <li>Y.shape: (30, 60, 78)</li>
 </ul>
 <p>Y 和 X 的 shape 不一样是为了更方便地将其喂入 LSTM。</p>
-<h3 id="创建层对象">创建层对象</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 层对象</span></span><br><span class="line">reshapor = Reshape((<span class="number">1</span>, <span class="number">78</span>))</span><br><span class="line">LSTM_cell = LSTM(n_a, return_state = <span class="literal">True</span>)</span><br><span class="line">densor = Dense(n_values, activation=<span class="string">&#x27;softmax&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="定义模型">定义模型</h3>
-<p>模型结构如图所示</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-134954.jpg" /></p>
+<h3 id="创建层对象"><a href="#创建层对象" class="headerlink" title="创建层对象"></a>创建层对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 层对象</span></span><br><span class="line">reshapor = Reshape((<span class="number">1</span>, <span class="number">78</span>))</span><br><span class="line">LSTM_cell = LSTM(n_a, return_state = <span class="literal">True</span>)</span><br><span class="line">densor = Dense(n_values, activation=<span class="string">&#x27;softmax&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h3><p>模型结构如图所示</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-134954.jpg" alt=""></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">djmodel</span>(<span class="params">Tx, n_a, n_values</span>):</span></span><br><span class="line">    X = Input(shape=(Tx, n_values))</span><br><span class="line">    a0 = Input(shape=(n_a,), name=<span class="string">&#x27;a0&#x27;</span>)</span><br><span class="line">    c0 = Input(shape=(n_a,), name=<span class="string">&#x27;c0&#x27;</span>)</span><br><span class="line">    a = a0</span><br><span class="line">    c = c0</span><br><span class="line"></span><br><span class="line">    outputs = <span class="built_in">list</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(Tx):</span><br><span class="line">        x = Lambda(<span class="keyword">lambda</span> x: X[:, t, :])(X)</span><br><span class="line">        x = reshapor(x)</span><br><span class="line">        a, _, c = LSTM_cell(x, initial_state=[a, c])</span><br><span class="line">        out = densor(a)</span><br><span class="line">        outputs.append(out)</span><br><span class="line"></span><br><span class="line">    model = Model(inputs=[X, a0, c0], outputs=outputs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line">    </span><br><span class="line">model = Model(Tx = <span class="number">30</span>, n_a = <span class="number">64</span>, n_values = <span class="number">78</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="配置训练模型">配置、训练模型</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 Adam 优化算法</span></span><br><span class="line">opt = Adam(lr=<span class="number">0.01</span>, beta_1=<span class="number">0.9</span>, beta_2=<span class="number">0.999</span>, decay=<span class="number">0.01</span>)</span><br><span class="line">model.<span class="built_in">compile</span>(optimizer=opt, loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">m = <span class="number">60</span></span><br><span class="line"><span class="comment"># 初始化为 0</span></span><br><span class="line">a0 = np.zeros((m, n_a))</span><br><span class="line">c0 = np.zeros((m, n_a))</span><br><span class="line"><span class="comment"># 训练 100 epochs</span></span><br><span class="line">model.fit([X, a0, c0], <span class="built_in">list</span>(Y), epochs=<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="定义音乐生成模型">定义音乐生成模型</h3>
-<p>模型结构如图所示</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-135100.jpg" /></p>
+<h3 id="配置、训练模型"><a href="#配置、训练模型" class="headerlink" title="配置、训练模型"></a>配置、训练模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 Adam 优化算法</span></span><br><span class="line">opt = Adam(lr=<span class="number">0.01</span>, beta_1=<span class="number">0.9</span>, beta_2=<span class="number">0.999</span>, decay=<span class="number">0.01</span>)</span><br><span class="line">model.<span class="built_in">compile</span>(optimizer=opt, loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">m = <span class="number">60</span></span><br><span class="line"><span class="comment"># 初始化为 0</span></span><br><span class="line">a0 = np.zeros((m, n_a))</span><br><span class="line">c0 = np.zeros((m, n_a))</span><br><span class="line"><span class="comment"># 训练 100 epochs</span></span><br><span class="line">model.fit([X, a0, c0], <span class="built_in">list</span>(Y), epochs=<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="定义音乐生成模型"><a href="#定义音乐生成模型" class="headerlink" title="定义音乐生成模型"></a>定义音乐生成模型</h3><p>模型结构如图所示</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-135100.jpg" alt=""></p>
 <p>\(x^{＜t＞} = y^{＜t-1＞}\)</p>
-<p>\(x^{&lt;1&gt;}, a_0, c_0\) 均初始化为 0</p>
+<p>\(x^{<1>}, a_0, c_0\) 均初始化为 0</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">music_inference_model</span>(<span class="params">LSTM_cell, densor, n_values = <span class="number">78</span>, n_a = <span class="number">64</span>, Ty = <span class="number">100</span></span>):</span></span><br><span class="line">    x0 = Input(shape=(<span class="number">1</span>, n_values))</span><br><span class="line">    a0 = Input(shape=(n_a,), name=<span class="string">&#x27;a0&#x27;</span>)</span><br><span class="line">    c0 = Input(shape=(n_a,), name=<span class="string">&#x27;c0&#x27;</span>)</span><br><span class="line">    a = a0</span><br><span class="line">    c = c0</span><br><span class="line">    x = x0</span><br><span class="line"></span><br><span class="line">    outputs = <span class="built_in">list</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(Ty):</span><br><span class="line">        a, _, c = LSTM_cell(x, initial_state=[a, c])</span><br><span class="line">        out = densor(a)</span><br><span class="line">        outputs.append(out)</span><br><span class="line">        x = Lambda(one_hot)(out)</span><br><span class="line"></span><br><span class="line">    inference_model = Model(inputs=[x0, a0, c0], outputs=outputs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> inference_model</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用训练好的 LSTM_cell 和 densor 层对象</span></span><br><span class="line">inference_model = music_inference_model(LSTM_cell, densor, n_values = <span class="number">78</span>, n_a = <span class="number">64</span>, Ty = <span class="number">50</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化为 0</span></span><br><span class="line">x_initializer = np.zeros((<span class="number">1</span>, <span class="number">1</span>, <span class="number">78</span>))</span><br><span class="line">a_initializer = np.zeros((<span class="number">1</span>, n_a))</span><br><span class="line">c_initializer = np.zeros((<span class="number">1</span>, n_a))</span><br></pre></td></tr></table></figure>
-<h3 id="生成音乐">生成音乐</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict_and_sample</span>(<span class="params">inference_model, x_initializer, a_initializer, c_initializer</span>):</span></span><br><span class="line">    pred = inference_model.predict([x_initializer, a_initializer, c_initializer])</span><br><span class="line">    indices = np.argmax(np.array(pred), axis=-<span class="number">1</span>)</span><br><span class="line">    results = to_categorical(indices)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> results, indices</span><br><span class="line"></span><br><span class="line">results, indices = predict_and_sample(inference_model, x_initializer, a_initializer, c_initializer)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成音乐</span></span><br><span class="line">out_stream = generate_music(inference_model)</span><br></pre></td></tr></table></figure>
+<h3 id="生成音乐"><a href="#生成音乐" class="headerlink" title="生成音乐"></a>生成音乐</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict_and_sample</span>(<span class="params">inference_model, x_initializer, a_initializer, c_initializer</span>):</span></span><br><span class="line">    pred = inference_model.predict([x_initializer, a_initializer, c_initializer])</span><br><span class="line">    indices = np.argmax(np.array(pred), axis=-<span class="number">1</span>)</span><br><span class="line">    results = to_categorical(indices)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> results, indices</span><br><span class="line"></span><br><span class="line">results, indices = predict_and_sample(inference_model, x_initializer, a_initializer, c_initializer)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成音乐</span></span><br><span class="line">out_stream = generate_music(inference_model)</span><br></pre></td></tr></table></figure>
 <audio controls="controls" >
 <source src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-02-30s_trained_model.mp3" type="audio/mpeg" />
-<p>Your browser does not support the audio element. </audio></p>
-	  
+                    Your browser does not support the audio element.
+</audio>	  
 	</div>
 
 	<!-- recommended posts -->
@@ -304,35 +299,55 @@ Your browser does not support the audio element.">
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

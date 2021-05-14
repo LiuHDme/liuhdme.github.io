@@ -121,49 +121,58 @@
 <p>这是序列模型课程第一周的编程作业 Part 1</p>
 </blockquote>
 <a id="more"></a>
-<h1 id="building-your-recurrent-neural-network---step-by-step">Building your Recurrent Neural Network - Step by Step</h1>
-<p>Welcome to Course 5's first assignment! In this assignment, you will implement your first Recurrent Neural Network in numpy.</p>
-<p>Recurrent Neural Networks (RNN) are very effective for Natural Language Processing and other sequence tasks because they have "memory". They can read inputs <span class="math inline">\(x^{\langle t \rangle}\)</span> (such as words) one at a time, and remember some information/context through the hidden layer activations that get passed from one time-step to the next. This allows a uni-directional RNN to take information from the past to process later inputs. A bidirection RNN can take context from both the past and the future.</p>
-<p><strong>Notation</strong>: - Superscript <span class="math inline">\([l]\)</span> denotes an object associated with the <span class="math inline">\(l^{th}\)</span> layer. - Example: <span class="math inline">\(a^{[4]}\)</span> is the <span class="math inline">\(4^{th}\)</span> layer activation. <span class="math inline">\(W^{[5]}\)</span> and <span class="math inline">\(b^{[5]}\)</span> are the <span class="math inline">\(5^{th}\)</span> layer parameters.</p>
+<h1 id="Building-your-Recurrent-Neural-Network-Step-by-Step"><a href="#Building-your-Recurrent-Neural-Network-Step-by-Step" class="headerlink" title="Building your Recurrent Neural Network - Step by Step"></a>Building your Recurrent Neural Network - Step by Step</h1><p>Welcome to Course 5’s first assignment! In this assignment, you will implement your first Recurrent Neural Network in numpy.</p>
+<p>Recurrent Neural Networks (RNN) are very effective for Natural Language Processing and other sequence tasks because they have “memory”. They can read inputs $x^{\langle t \rangle}$ (such as words) one at a time, and remember some information/context through the hidden layer activations that get passed from one time-step to the next. This allows a uni-directional RNN to take information from the past to process later inputs. A bidirection RNN can take context from both the past and the future. </p>
+<p><strong>Notation</strong>:</p>
 <ul>
-<li>Superscript <span class="math inline">\((i)\)</span> denotes an object associated with the <span class="math inline">\(i^{th}\)</span> example.
+<li><p>Superscript $[l]$ denotes an object associated with the $l^{th}$ layer. </p>
 <ul>
-<li>Example: <span class="math inline">\(x^{(i)}\)</span> is the <span class="math inline">\(i^{th}\)</span> training example input.</li>
-</ul></li>
-<li>Superscript <span class="math inline">\(\langle t \rangle\)</span> denotes an object at the <span class="math inline">\(t^{th}\)</span> time-step.
-<ul>
-<li>Example: <span class="math inline">\(x^{\langle t \rangle}\)</span> is the input x at the <span class="math inline">\(t^{th}\)</span> time-step. <span class="math inline">\(x^{(i)\langle t \rangle}\)</span> is the input at the <span class="math inline">\(t^{th}\)</span> timestep of example <span class="math inline">\(i\)</span>.</li>
-</ul></li>
-<li>Lowerscript <span class="math inline">\(i\)</span> denotes the <span class="math inline">\(i^{th}\)</span> entry of a vector.
-<ul>
-<li>Example: <span class="math inline">\(a^{[l]}_i\)</span> denotes the <span class="math inline">\(i^{th}\)</span> entry of the activations in layer <span class="math inline">\(l\)</span>.</li>
-</ul></li>
+<li>Example: $a^{[4]}$ is the $4^{th}$ layer activation. $W^{[5]}$ and $b^{[5]}$ are the $5^{th}$ layer parameters.</li>
 </ul>
-<p>We assume that you are already familiar with <code>numpy</code> and/or have completed the previous courses of the specialization. Let's get started!</p>
-<p>Let's first import all the packages that you will need during this assignment.</p>
+</li>
+<li><p>Superscript $(i)$ denotes an object associated with the $i^{th}$ example. </p>
+<ul>
+<li>Example: $x^{(i)}$ is the $i^{th}$ training example input.</li>
+</ul>
+</li>
+<li><p>Superscript $\langle t \rangle$ denotes an object at the $t^{th}$ time-step. </p>
+<ul>
+<li>Example: $x^{\langle t \rangle}$ is the input x at the $t^{th}$ time-step. $x^{(i)\langle t \rangle}$ is the input at the $t^{th}$ timestep of example $i$.</li>
+</ul>
+</li>
+<li><p>Lowerscript $i$ denotes the $i^{th}$ entry of a vector.</p>
+<ul>
+<li>Example: $a^{[l]}_i$ denotes the $i^{th}$ entry of the activations in layer $l$.</li>
+</ul>
+</li>
+</ul>
+<p>We assume that you are already familiar with <code>numpy</code> and/or have completed the previous courses of the specialization. Let’s get started!</p>
+<p>Let’s first import all the packages that you will need during this assignment.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> rnn_utils <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
-<h2 id="forward-propagation-for-the-basic-recurrent-neural-network">1 - Forward propagation for the basic Recurrent Neural Network</h2>
-<p>Later this week, you will generate music using an RNN. The basic RNN that you will implement has the structure below. In this example, <span class="math inline">\(T_x = T_y\)</span>.</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132425.jpg" />
-<caption>
-<center>
-<strong>Figure 1</strong>: Basic RNN model
-</center>
-</caption>
-<p>Here's how you can implement an RNN:</p>
-<p><strong>Steps</strong>: 1. Implement the calculations needed for one time-step of the RNN. 2. Implement a loop over <span class="math inline">\(T_x\)</span> time-steps in order to process all the inputs, one at a time.</p>
-<p>Let's go!</p>
-<h2 id="rnn-cell">1.1 - RNN cell</h2>
-<p>A Recurrent neural network can be seen as the repetition of a single cell. You are first going to implement the computations for a single time-step. The following figure describes the operations for a single time-step of an RNN cell.</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132453.jpg" />
-<caption>
-<center>
-<strong>Figure 2</strong>: Basic RNN cell. Takes as input <span class="math inline">\(x^{\langle t \rangle}\)</span> (current input) and <span class="math inline">\(a^{\langle t - 1\rangle}\)</span> (previous hidden state containing information from the past), and outputs <span class="math inline">\(a^{\langle t \rangle}\)</span> which is given to the next RNN cell and also used to predict <span class="math inline">\(y^{\langle t \rangle}\)</span>
-</center>
-</caption>
+<h2 id="1-Forward-propagation-for-the-basic-Recurrent-Neural-Network"><a href="#1-Forward-propagation-for-the-basic-Recurrent-Neural-Network" class="headerlink" title="1 - Forward propagation for the basic Recurrent Neural Network"></a>1 - Forward propagation for the basic Recurrent Neural Network</h2><p>Later this week, you will generate music using an RNN. The basic RNN that you will implement has the structure below. In this example, $T_x = T_y$. </p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132425.jpg" alt=""></p>
+<caption><center> **Figure 1**: Basic RNN model </center></caption>
+
+<p>Here’s how you can implement an RNN: </p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Implement the calculations needed for one time-step of the RNN.</li>
+<li>Implement a loop over $T_x$ time-steps in order to process all the inputs, one at a time. </li>
+</ol>
+<p>Let’s go!</p>
+<h2 id="1-1-RNN-cell"><a href="#1-1-RNN-cell" class="headerlink" title="1.1 - RNN cell"></a>1.1 - RNN cell</h2><p>A Recurrent neural network can be seen as the repetition of a single cell. You are first going to implement the computations for a single time-step. The following figure describes the operations for a single time-step of an RNN cell. </p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132453.jpg" alt=""></p>
+<caption><center> **Figure 2**: Basic RNN cell. Takes as input $x^{\langle t \rangle}$ (current input) and $a^{\langle t - 1\rangle}$ (previous hidden state containing information from the past), and outputs $a^{\langle t \rangle}$ which is given to the next RNN cell and also used to predict $y^{\langle t \rangle}$ </center></caption>
+
 <p><strong>Exercise</strong>: Implement the RNN-cell described in Figure (2).</p>
-<p><strong>Instructions</strong>: 1. Compute the hidden state with tanh activation: <span class="math inline">\(a^{\langle t \rangle} = \tanh(W_{aa} a^{\langle t-1 \rangle} + W_{ax} x^{\langle t \rangle} + b_a)\)</span>. 2. Using your new hidden state <span class="math inline">\(a^{\langle t \rangle}\)</span>, compute the prediction <span class="math inline">\(\hat{y}^{\langle t \rangle} = softmax(W_{ya} a^{\langle t \rangle} + b_y)\)</span>. We provided you a function: <code>softmax</code>. 3. Store <span class="math inline">\((a^{\langle t \rangle}, a^{\langle t-1 \rangle}, x^{\langle t \rangle}, parameters)\)</span> in cache 4. Return <span class="math inline">\(a^{\langle t \rangle}\)</span> , <span class="math inline">\(y^{\langle t \rangle}\)</span> and cache</p>
-<p>We will vectorize over <span class="math inline">\(m\)</span> examples. Thus, <span class="math inline">\(x^{\langle t \rangle}\)</span> will have dimension <span class="math inline">\((n_x,m)\)</span>, and <span class="math inline">\(a^{\langle t \rangle}\)</span> will have dimension <span class="math inline">\((n_a,m)\)</span>.</p>
+<p><strong>Instructions</strong>:</p>
+<ol>
+<li>Compute the hidden state with tanh activation: $a^{\langle t \rangle} = \tanh(W<em>{aa} a^{\langle t-1 \rangle} + W</em>{ax} x^{\langle t \rangle} + b_a)$.</li>
+<li>Using your new hidden state $a^{\langle t \rangle}$, compute the prediction $\hat{y}^{\langle t \rangle} = softmax(W_{ya} a^{\langle t \rangle} + b_y)$. We provided you a function: <code>softmax</code>.</li>
+<li>Store $(a^{\langle t \rangle}, a^{\langle t-1 \rangle}, x^{\langle t \rangle}, parameters)$ in cache</li>
+<li>Return $a^{\langle t \rangle}$ , $y^{\langle t \rangle}$ and cache</li>
+</ol>
+<p>We will vectorize over $m$ examples. Thus, $x^{\langle t \rangle}$ will have dimension $(n_x,m)$, and $a^{\langle t \rangle}$ will have dimension $(n_a,m)$. </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: rnn_cell_forward</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rnn_cell_forward</span>(<span class="params">xt, a_prev, parameters</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implements a single forward step of the RNN-cell as described in Figure (2)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    xt -- your input data at timestep &quot;t&quot;, numpy array of shape (n_x, m).</span></span><br><span class="line"><span class="string">    a_prev -- Hidden state at timestep &quot;t-1&quot;, numpy array of shape (n_a, m)</span></span><br><span class="line"><span class="string">    parameters -- python dictionary containing:</span></span><br><span class="line"><span class="string">                        Wax -- Weight matrix multiplying the input, numpy array of shape (n_a, n_x)</span></span><br><span class="line"><span class="string">                        Waa -- Weight matrix multiplying the hidden state, numpy array of shape (n_a, n_a)</span></span><br><span class="line"><span class="string">                        Wya -- Weight matrix relating the hidden-state to the output, numpy array of shape (n_y, n_a)</span></span><br><span class="line"><span class="string">                        ba --  Bias, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        by -- Bias relating the hidden-state to the output, numpy array of shape (n_y, 1)</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    a_next -- next hidden state, of shape (n_a, m)</span></span><br><span class="line"><span class="string">    yt_pred -- prediction at timestep &quot;t&quot;, numpy array of shape (n_y, m)</span></span><br><span class="line"><span class="string">    cache -- tuple of values needed for the backward pass, contains (a_next, a_prev, xt, parameters)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Retrieve parameters from &quot;parameters&quot;</span></span><br><span class="line">    Wax = parameters[<span class="string">&quot;Wax&quot;</span>]</span><br><span class="line">    Waa = parameters[<span class="string">&quot;Waa&quot;</span>]</span><br><span class="line">    Wya = parameters[<span class="string">&quot;Wya&quot;</span>]</span><br><span class="line">    ba = parameters[<span class="string">&quot;ba&quot;</span>]</span><br><span class="line">    by = parameters[<span class="string">&quot;by&quot;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ### (≈2 lines)</span></span><br><span class="line">    <span class="comment"># compute next activation state using the formula given above</span></span><br><span class="line">    a_next = np.tanh(np.dot(Waa, a_prev) + np.dot(Wax, xt) + ba)</span><br><span class="line">    <span class="comment"># compute output of the current cell using the formula given above</span></span><br><span class="line">    yt_pred = softmax(np.dot(Wya, a_next) + by)   </span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># store values you need for backward propagation in cache</span></span><br><span class="line">    cache = (a_next, a_prev, xt, parameters)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> a_next, yt_pred, cache</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">1</span>)</span><br><span class="line">xt = np.random.randn(<span class="number">3</span>,<span class="number">10</span>)</span><br><span class="line">a_prev = np.random.randn(<span class="number">5</span>,<span class="number">10</span>)</span><br><span class="line">Waa = np.random.randn(<span class="number">5</span>,<span class="number">5</span>)</span><br><span class="line">Wax = np.random.randn(<span class="number">5</span>,<span class="number">3</span>)</span><br><span class="line">Wya = np.random.randn(<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line">ba = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">by = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line">parameters = &#123;<span class="string">&quot;Waa&quot;</span>: Waa, <span class="string">&quot;Wax&quot;</span>: Wax, <span class="string">&quot;Wya&quot;</span>: Wya, <span class="string">&quot;ba&quot;</span>: ba, <span class="string">&quot;by&quot;</span>: by&#125;</span><br><span class="line"></span><br><span class="line">a_next, yt_pred, cache = rnn_cell_forward(xt, a_prev, parameters)</span><br><span class="line">print(<span class="string">&quot;a_next[4] = &quot;</span>, a_next[<span class="number">4</span>])</span><br><span class="line">print(<span class="string">&quot;a_next.shape = &quot;</span>, a_next.shape)</span><br><span class="line">print(<span class="string">&quot;yt_pred[1] =&quot;</span>, yt_pred[<span class="number">1</span>])</span><br><span class="line">print(<span class="string">&quot;yt_pred.shape = &quot;</span>, yt_pred.shape)</span><br></pre></td></tr></table></figure>
 <pre><code>a_next[4] =  [ 0.59584544  0.18141802  0.61311866  0.99808218  0.85016201  0.99980978
@@ -171,53 +180,66 @@
 a_next.shape =  (5, 10)
 yt_pred[1] = [ 0.9888161   0.01682021  0.21140899  0.36817467  0.98988387  0.88945212
   0.36920224  0.9966312   0.9982559   0.17746526]
-yt_pred.shape =  (2, 10)</code></pre>
-<p><strong>Expected Output</strong>:</p>
+yt_pred.shape =  (2, 10)
+</code></pre><p><strong>Expected Output</strong>: </p>
 <table>
-<tr>
-<td>
-<strong>a_next[4]</strong>:
-</td>
-<td>
-[ 0.59584544 0.18141802 0.61311866 0.99808218 0.85016201 0.99980978 -0.18887155 0.99815551 0.6531151 0.82872037]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **a_next.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (5, 10)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **yt[1]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [ 0.9888161   0.01682021  0.21140899  0.36817467  0.98988387  0.88945212</code></pre>
-0.36920224 0.9966312 0.9982559 0.17746526]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **yt.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (2, 10)
-    &lt;/td&gt;
-&lt;/tr&gt;</code></pre>
+    <tr>
+        <td>
+            **a_next[4]**:
+        </td>
+        <td>
+           [ 0.59584544  0.18141802  0.61311866  0.99808218  0.85016201  0.99980978
+ -0.18887155  0.99815551  0.6531151   0.82872037]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **a_next.shape**:
+        </td>
+        <td>
+           (5, 10)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **yt[1]**:
+        </td>
+        <td>
+           [ 0.9888161   0.01682021  0.21140899  0.36817467  0.98988387  0.88945212
+  0.36920224  0.9966312   0.9982559   0.17746526]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **yt.shape**:
+        </td>
+        <td>
+           (2, 10)
+        </td>
+    </tr>
+
 </table>
-<h2 id="rnn-forward-pass">1.2 - RNN forward pass</h2>
-<p>You can see an RNN as the repetition of the cell you've just built. If your input sequence of data is carried over 10 time steps, then you will copy the RNN cell 10 times. Each cell takes as input the hidden state from the previous cell (<span class="math inline">\(a^{\langle t-1 \rangle}\)</span>) and the current time-step's input data (<span class="math inline">\(x^{\langle t \rangle}\)</span>). It outputs a hidden state (<span class="math inline">\(a^{\langle t \rangle}\)</span>) and a prediction (<span class="math inline">\(y^{\langle t \rangle}\)</span>) for this time-step.</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132608.jpg" />
-<caption>
-<center>
-<strong>Figure 3</strong>: Basic RNN. The input sequence <span class="math inline">\(x = (x^{\langle 1 \rangle}, x^{\langle 2 \rangle}, ..., x^{\langle T_x \rangle})\)</span> is carried over <span class="math inline">\(T_x\)</span> time steps. The network outputs <span class="math inline">\(y = (y^{\langle 1 \rangle}, y^{\langle 2 \rangle}, ..., y^{\langle T_x \rangle})\)</span>.
-</center>
-</caption>
+
+<h2 id="1-2-RNN-forward-pass"><a href="#1-2-RNN-forward-pass" class="headerlink" title="1.2 - RNN forward pass"></a>1.2 - RNN forward pass</h2><p>You can see an RNN as the repetition of the cell you’ve just built. If your input sequence of data is carried over 10 time steps, then you will copy the RNN cell 10 times. Each cell takes as input the hidden state from the previous cell ($a^{\langle t-1 \rangle}$) and the current time-step’s input data ($x^{\langle t \rangle}$). It outputs a hidden state ($a^{\langle t \rangle}$) and a prediction ($y^{\langle t \rangle}$) for this time-step.</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132608.jpg" alt=""></p>
+<caption><center> **Figure 3**: Basic RNN. The input sequence $x = (x^{\langle 1 \rangle}, x^{\langle 2 \rangle}, ..., x^{\langle T_x \rangle})$  is carried over $T_x$ time steps. The network outputs $y = (y^{\langle 1 \rangle}, y^{\langle 2 \rangle}, ..., y^{\langle T_x \rangle})$. </center></caption>
+
+
+
 <p><strong>Exercise</strong>: Code the forward propagation of the RNN described in Figure (3).</p>
-<p><strong>Instructions</strong>: 1. Create a vector of zeros (<span class="math inline">\(a\)</span>) that will store all the hidden states computed by the RNN. 2. Initialize the "next" hidden state as <span class="math inline">\(a_0\)</span> (initial hidden state). 3. Start looping over each time step, your incremental index is <span class="math inline">\(t\)</span> : - Update the "next" hidden state and the cache by running <code>rnn_cell_forward</code> - Store the "next" hidden state in <span class="math inline">\(a\)</span> (<span class="math inline">\(t^{th}\)</span> position) - Store the prediction in y - Add the cache to the list of caches 4. Return <span class="math inline">\(a\)</span>, <span class="math inline">\(y\)</span> and caches</p>
+<p><strong>Instructions</strong>:</p>
+<ol>
+<li>Create a vector of zeros ($a$) that will store all the hidden states computed by the RNN.</li>
+<li>Initialize the “next” hidden state as $a_0$ (initial hidden state).</li>
+<li>Start looping over each time step, your incremental index is $t$ :<ul>
+<li>Update the “next” hidden state and the cache by running <code>rnn_cell_forward</code></li>
+<li>Store the “next” hidden state in $a$ ($t^{th}$ position) </li>
+<li>Store the prediction in y</li>
+<li>Add the cache to the list of caches</li>
+</ul>
+</li>
+<li>Return $a$, $y$ and caches</li>
+</ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: rnn_forward</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rnn_forward</span>(<span class="params">x, a0, parameters</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implement the forward propagation of the recurrent neural network described in Figure (3).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    x -- Input data for every time-step, of shape (n_x, m, T_x).</span></span><br><span class="line"><span class="string">    a0 -- Initial hidden state, of shape (n_a, m)</span></span><br><span class="line"><span class="string">    parameters -- python dictionary containing:</span></span><br><span class="line"><span class="string">                        Waa -- Weight matrix multiplying the hidden state, numpy array of shape (n_a, n_a)</span></span><br><span class="line"><span class="string">                        Wax -- Weight matrix multiplying the input, numpy array of shape (n_a, n_x)</span></span><br><span class="line"><span class="string">                        Wya -- Weight matrix relating the hidden-state to the output, numpy array of shape (n_y, n_a)</span></span><br><span class="line"><span class="string">                        ba --  Bias numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        by -- Bias relating the hidden-state to the output, numpy array of shape (n_y, 1)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    a -- Hidden states for every time-step, numpy array of shape (n_a, m, T_x)</span></span><br><span class="line"><span class="string">    y_pred -- Predictions for every time-step, numpy array of shape (n_y, m, T_x)</span></span><br><span class="line"><span class="string">    caches -- tuple of values needed for the backward pass, contains (list of caches, x)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize &quot;caches&quot; which will contain the list of all caches</span></span><br><span class="line">    caches = []</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Retrieve dimensions from shapes of x and parameters[&quot;Wya&quot;]</span></span><br><span class="line">    n_x, m, T_x = x.shape</span><br><span class="line">    n_y, n_a = parameters[<span class="string">&quot;Wya&quot;</span>].shape</span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># initialize &quot;a&quot; and &quot;y&quot; with zeros (≈2 lines)</span></span><br><span class="line">    a = np.zeros((n_a, m, T_x))</span><br><span class="line">    y_pred = np.zeros((n_y, m, T_x))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize a_next (≈1 line)</span></span><br><span class="line">    a_next = a0</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># loop over all time-steps</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T_x):</span><br><span class="line">        <span class="comment"># Update next hidden state, compute the prediction, get the cache (≈1 line)</span></span><br><span class="line">        a_next, yt_pred, cache = rnn_cell_forward(x[:,:,t], a_next, parameters)</span><br><span class="line">        <span class="comment"># Save the value of the new &quot;next&quot; hidden state in a (≈1 line)</span></span><br><span class="line">        a[:,:,t] = a_next</span><br><span class="line">        <span class="comment"># Save the value of the prediction in y (≈1 line)</span></span><br><span class="line">        y_pred[:,:,t] = yt_pred</span><br><span class="line">        <span class="comment"># Append &quot;cache&quot; to &quot;caches&quot; (≈1 line)</span></span><br><span class="line">        caches.append(cache)</span><br><span class="line">        </span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># store values needed for backward propagation in cache</span></span><br><span class="line">    caches = (caches, x)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> a, y_pred, caches</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">1</span>)</span><br><span class="line">x = np.random.randn(<span class="number">3</span>,<span class="number">10</span>,<span class="number">4</span>)</span><br><span class="line">a0 = np.random.randn(<span class="number">5</span>,<span class="number">10</span>)</span><br><span class="line">Waa = np.random.randn(<span class="number">5</span>,<span class="number">5</span>)</span><br><span class="line">Wax = np.random.randn(<span class="number">5</span>,<span class="number">3</span>)</span><br><span class="line">Wya = np.random.randn(<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line">ba = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">by = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line">parameters = &#123;<span class="string">&quot;Waa&quot;</span>: Waa, <span class="string">&quot;Wax&quot;</span>: Wax, <span class="string">&quot;Wya&quot;</span>: Wya, <span class="string">&quot;ba&quot;</span>: ba, <span class="string">&quot;by&quot;</span>: by&#125;</span><br><span class="line"></span><br><span class="line">a, y_pred, caches = rnn_forward(x, a0, parameters)</span><br><span class="line">print(<span class="string">&quot;a[4][1] = &quot;</span>, a[<span class="number">4</span>][<span class="number">1</span>])</span><br><span class="line">print(<span class="string">&quot;a.shape = &quot;</span>, a.shape)</span><br><span class="line">print(<span class="string">&quot;y_pred[1][3] =&quot;</span>, y_pred[<span class="number">1</span>][<span class="number">3</span>])</span><br><span class="line">print(<span class="string">&quot;y_pred.shape = &quot;</span>, y_pred.shape)</span><br><span class="line">print(<span class="string">&quot;caches[1][1][3] =&quot;</span>, caches[<span class="number">1</span>][<span class="number">1</span>][<span class="number">3</span>])</span><br><span class="line">print(<span class="string">&quot;len(caches) = &quot;</span>, <span class="built_in">len</span>(caches))</span><br></pre></td></tr></table></figure>
 <pre><code>a[4][1] =  [-0.99999375  0.77911235 -0.99861469 -0.99833267]
@@ -225,90 +247,82 @@ a.shape =  (5, 10, 4)
 y_pred[1][3] = [ 0.79560373  0.86224861  0.11118257  0.81515947]
 y_pred.shape =  (2, 10, 4)
 caches[1][1][3] = [-1.1425182  -0.34934272 -0.20889423  0.58662319]
-len(caches) =  2</code></pre>
-<p><strong>Expected Output</strong>:</p>
+len(caches) =  2
+</code></pre><p><strong>Expected Output</strong>:</p>
 <table>
-<tr>
-<td>
-<strong>a[4][1]</strong>:
-</td>
-<td>
-[-0.99999375 0.77911235 -0.99861469 -0.99833267]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **a.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (5, 10, 4)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **y[1][3]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [ 0.79560373  0.86224861  0.11118257  0.81515947]
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **y.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (2, 10, 4)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **cache[1][1][3]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [-1.1425182  -0.34934272 -0.20889423  0.58662319]
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **len(cache)**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       2
-    &lt;/td&gt;
-&lt;/tr&gt;</code></pre>
+    <tr>
+        <td>
+            **a[4][1]**:
+        </td>
+        <td>
+           [-0.99999375  0.77911235 -0.99861469 -0.99833267]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **a.shape**:
+        </td>
+        <td>
+           (5, 10, 4)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **y[1][3]**:
+        </td>
+        <td>
+           [ 0.79560373  0.86224861  0.11118257  0.81515947]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **y.shape**:
+        </td>
+        <td>
+           (2, 10, 4)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **cache[1][1][3]**:
+        </td>
+        <td>
+           [-1.1425182  -0.34934272 -0.20889423  0.58662319]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **len(cache)**:
+        </td>
+        <td>
+           2
+        </td>
+    </tr>
+
 </table>
-<p>Congratulations! You've successfully built the forward propagation of a recurrent neural network from scratch. This will work well enough for some applications, but it suffers from vanishing gradient problems. So it works best when each output <span class="math inline">\(y^{\langle t \rangle}\)</span> can be estimated using mainly "local" context (meaning information from inputs <span class="math inline">\(x^{\langle t&#39; \rangle}\)</span> where <span class="math inline">\(t&#39;\)</span> is not too far from <span class="math inline">\(t\)</span>).</p>
-<p>In the next part, you will build a more complex LSTM model, which is better at addressing vanishing gradients. The LSTM will be better able to remember a piece of information and keep it saved for many timesteps.</p>
-<h2 id="long-short-term-memory-lstm-network">2 - Long Short-Term Memory (LSTM) network</h2>
-<p>This following figure shows the operations of an LSTM-cell.</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132723.jpg" />
-<caption>
-<center>
-<strong>Figure 4</strong>: LSTM-cell. This tracks and updates a "cell state" or memory variable <span class="math inline">\(c^{\langle t \rangle}\)</span> at every time-step, which can be different from <span class="math inline">\(a^{\langle t \rangle}\)</span>.
-</center>
-</caption>
-<p>Similar to the RNN example above, you will start by implementing the LSTM cell for a single time-step. Then you can iteratively call it from inside a for-loop to have it process an input with <span class="math inline">\(T_x\)</span> time-steps.</p>
-<h3 id="about-the-gates">About the gates</h3>
-<h4 id="forget-gate">- Forget gate</h4>
-<p>For the sake of this illustration, lets assume we are reading words in a piece of text, and want use an LSTM to keep track of grammatical structures, such as whether the subject is singular or plural. If the subject changes from a singular word to a plural word, we need to find a way to get rid of our previously stored memory value of the singular/plural state. In an LSTM, the forget gate lets us do this:</p>
-<p><span class="math display">\[\Gamma_f^{\langle t \rangle} = \sigma(W_f[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_f)\tag{1} \]</span></p>
-<p>Here, <span class="math inline">\(W_f\)</span> are weights that govern the forget gate's behavior. We concatenate <span class="math inline">\([a^{\langle t-1 \rangle}, x^{\langle t \rangle}]\)</span> and multiply by <span class="math inline">\(W_f\)</span>. The equation above results in a vector <span class="math inline">\(\Gamma_f^{\langle t \rangle}\)</span> with values between 0 and 1. This forget gate vector will be multiplied element-wise by the previous cell state <span class="math inline">\(c^{\langle t-1 \rangle}\)</span>. So if one of the values of <span class="math inline">\(\Gamma_f^{\langle t \rangle}\)</span> is 0 (or close to 0) then it means that the LSTM should remove that piece of information (e.g. the singular subject) in the corresponding component of <span class="math inline">\(c^{\langle t-1 \rangle}\)</span>. If one of the values is 1, then it will keep the information.</p>
-<h4 id="update-gate">- Update gate</h4>
-<p>Once we forget that the subject being discussed is singular, we need to find a way to update it to reflect that the new subject is now plural. Here is the formulat for the update gate:</p>
-<p><span class="math display">\[\Gamma_u^{\langle t \rangle} = \sigma(W_u[a^{\langle t-1 \rangle}, x^{\{t\}}] + b_u)\tag{2} \]</span></p>
-<p>Similar to the forget gate, here <span class="math inline">\(\Gamma_u^{\langle t \rangle}\)</span> is again a vector of values between 0 and 1. This will be multiplied element-wise with <span class="math inline">\(\tilde{c}^{\langle t \rangle}\)</span>, in order to compute <span class="math inline">\(c^{\langle t \rangle}\)</span>.</p>
-<h4 id="updating-the-cell">- Updating the cell</h4>
-<p>To update the new subject we need to create a new vector of numbers that we can add to our previous cell state. The equation we use is:</p>
-<p><span class="math display">\[ \tilde{c}^{\langle t \rangle} = \tanh(W_c[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)\tag{3} \]</span></p>
-<p>Finally, the new cell state is:</p>
-<p><span class="math display">\[ c^{\langle t \rangle} = \Gamma_f^{\langle t \rangle}* c^{\langle t-1 \rangle} + \Gamma_u^{\langle t \rangle} *\tilde{c}^{\langle t \rangle} \tag{4} \]</span></p>
-<h4 id="output-gate">- Output gate</h4>
-<p>To decide which outputs we will use, we will use the following two formulas:</p>
-<p><span class="math display">\[ \Gamma_o^{\langle t \rangle}=  \sigma(W_o[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_o)\tag{5}\]</span> <span class="math display">\[ a^{\langle t \rangle} = \Gamma_o^{\langle t \rangle}* \tanh(c^{\langle t \rangle})\tag{6} \]</span></p>
-<p>Where in equation 5 you decide what to output using a sigmoid function and in equation 6 you multiply that by the <span class="math inline">\(\tanh\)</span> of the previous state.</p>
-<h3 id="lstm-cell">2.1 - LSTM cell</h3>
-<p><strong>Exercise</strong>: Implement the LSTM cell described in the Figure (3).</p>
-<p><strong>Instructions</strong>: 1. Concatenate <span class="math inline">\(a^{\langle t-1 \rangle}\)</span> and <span class="math inline">\(x^{\langle t \rangle}\)</span> in a single matrix: <span class="math inline">\(concat = \begin{bmatrix} a^{\langle t-1 \rangle} \\ x^{\langle t \rangle} \end{bmatrix}\)</span> 2. Compute all the formulas 1-6. You can use <code>sigmoid()</code> (provided) and <code>np.tanh()</code>. 3. Compute the prediction <span class="math inline">\(y^{\langle t \rangle}\)</span>. You can use <code>softmax()</code> (provided).</p>
+
+<p>Congratulations! You’ve successfully built the forward propagation of a recurrent neural network from scratch. This will work well enough for some applications, but it suffers from vanishing gradient problems. So it works best when each output $y^{\langle t \rangle}$ can be estimated using mainly “local” context (meaning information from inputs $x^{\langle t’ \rangle}$ where $t’$ is not too far from $t$). </p>
+<p>In the next part, you will build a more complex LSTM model, which is better at addressing vanishing gradients. The LSTM will be better able to remember a piece of information and keep it saved for many timesteps. </p>
+<h2 id="2-Long-Short-Term-Memory-LSTM-network"><a href="#2-Long-Short-Term-Memory-LSTM-network" class="headerlink" title="2 - Long Short-Term Memory (LSTM) network"></a>2 - Long Short-Term Memory (LSTM) network</h2><p>This following figure shows the operations of an LSTM-cell.</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132723.jpg" alt=""></p>
+<caption><center> **Figure 4**: LSTM-cell. This tracks and updates a "cell state" or memory variable $c^{\langle t \rangle}$ at every time-step, which can be different from $a^{\langle t \rangle}$. </center></caption>
+
+<p>Similar to the RNN example above, you will start by implementing the LSTM cell for a single time-step. Then you can iteratively call it from inside a for-loop to have it process an input with $T_x$ time-steps. </p>
+<h3 id="About-the-gates"><a href="#About-the-gates" class="headerlink" title="About the gates"></a>About the gates</h3><h4 id="Forget-gate"><a href="#Forget-gate" class="headerlink" title="- Forget gate"></a>- Forget gate</h4><p>For the sake of this illustration, lets assume we are reading words in a piece of text, and want use an LSTM to keep track of grammatical structures, such as whether the subject is singular or plural. If the subject changes from a singular word to a plural word, we need to find a way to get rid of our previously stored memory value of the singular/plural state. In an LSTM, the forget gate lets us do this: </p>
+<script type="math/tex; mode=display">\Gamma_f^{\langle t \rangle} = \sigma(W_f[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_f)\tag{1}</script><p>Here, $W_f$ are weights that govern the forget gate’s behavior. We concatenate $[a^{\langle t-1 \rangle}, x^{\langle t \rangle}]$ and multiply by $W_f$. The equation above results in a vector $\Gamma_f^{\langle t \rangle}$ with values between 0 and 1. This forget gate vector will be multiplied element-wise by the previous cell state $c^{\langle t-1 \rangle}$. So if one of the values of $\Gamma_f^{\langle t \rangle}$ is 0 (or close to 0) then it means that the LSTM should remove that piece of information (e.g. the singular subject) in the corresponding component of $c^{\langle t-1 \rangle}$. If one of the values is 1, then it will keep the information. </p>
+<h4 id="Update-gate"><a href="#Update-gate" class="headerlink" title="- Update gate"></a>- Update gate</h4><p>Once we forget that the subject being discussed is singular, we need to find a way to update it to reflect that the new subject is now plural. Here is the formulat for the update gate: </p>
+<script type="math/tex; mode=display">\Gamma_u^{\langle t \rangle} = \sigma(W_u[a^{\langle t-1 \rangle}, x^{\{t\}}] + b_u)\tag{2}</script><p>Similar to the forget gate, here $\Gamma_u^{\langle t \rangle}$ is again a vector of values between 0 and 1. This will be multiplied element-wise with $\tilde{c}^{\langle t \rangle}$, in order to compute $c^{\langle t \rangle}$.</p>
+<h4 id="Updating-the-cell"><a href="#Updating-the-cell" class="headerlink" title="- Updating the cell"></a>- Updating the cell</h4><p>To update the new subject we need to create a new vector of numbers that we can add to our previous cell state. The equation we use is: </p>
+<script type="math/tex; mode=display">\tilde{c}^{\langle t \rangle} = \tanh(W_c[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_c)\tag{3}</script><p>Finally, the new cell state is: </p>
+<script type="math/tex; mode=display">c^{\langle t \rangle} = \Gamma_f^{\langle t \rangle}* c^{\langle t-1 \rangle} + \Gamma_u^{\langle t \rangle} *\tilde{c}^{\langle t \rangle} \tag{4}</script><h4 id="Output-gate"><a href="#Output-gate" class="headerlink" title="- Output gate"></a>- Output gate</h4><p>To decide which outputs we will use, we will use the following two formulas: </p>
+<script type="math/tex; mode=display">\Gamma_o^{\langle t \rangle}=  \sigma(W_o[a^{\langle t-1 \rangle}, x^{\langle t \rangle}] + b_o)\tag{5}</script><script type="math/tex; mode=display">a^{\langle t \rangle} = \Gamma_o^{\langle t \rangle}* \tanh(c^{\langle t \rangle})\tag{6}</script><p>Where in equation 5 you decide what to output using a sigmoid function and in equation 6 you multiply that by the $\tanh$ of the previous state. </p>
+<h3 id="2-1-LSTM-cell"><a href="#2-1-LSTM-cell" class="headerlink" title="2.1 - LSTM cell"></a>2.1 - LSTM cell</h3><p><strong>Exercise</strong>: Implement the LSTM cell described in the Figure (3).</p>
+<p><strong>Instructions</strong>:</p>
+<ol>
+<li>Concatenate $a^{\langle t-1 \rangle}$ and $x^{\langle t \rangle}$ in a single matrix: $concat = \begin{bmatrix} a^{\langle t-1 \rangle} \ x^{\langle t \rangle} \end{bmatrix}$</li>
+<li>Compute all the formulas 1-6. You can use <code>sigmoid()</code> (provided) and <code>np.tanh()</code>.</li>
+<li>Compute the prediction $y^{\langle t \rangle}$. You can use <code>softmax()</code> (provided).</li>
+</ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: lstm_cell_forward</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lstm_cell_forward</span>(<span class="params">xt, a_prev, c_prev, parameters</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implement a single forward step of the LSTM-cell as described in Figure (4)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    xt -- your input data at timestep &quot;t&quot;, numpy array of shape (n_x, m).</span></span><br><span class="line"><span class="string">    a_prev -- Hidden state at timestep &quot;t-1&quot;, numpy array of shape (n_a, m)</span></span><br><span class="line"><span class="string">    c_prev -- Memory state at timestep &quot;t-1&quot;, numpy array of shape (n_a, m)</span></span><br><span class="line"><span class="string">    parameters -- python dictionary containing:</span></span><br><span class="line"><span class="string">                        Wf -- Weight matrix of the forget gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bf -- Bias of the forget gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wi -- Weight matrix of the update gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bi -- Bias of the update gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wc -- Weight matrix of the first &quot;tanh&quot;, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bc --  Bias of the first &quot;tanh&quot;, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wo -- Weight matrix of the output gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bo --  Bias of the output gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wy -- Weight matrix relating the hidden-state to the output, numpy array of shape (n_y, n_a)</span></span><br><span class="line"><span class="string">                        by -- Bias relating the hidden-state to the output, numpy array of shape (n_y, 1)</span></span><br><span class="line"><span class="string">                        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    a_next -- next hidden state, of shape (n_a, m)</span></span><br><span class="line"><span class="string">    c_next -- next memory state, of shape (n_a, m)</span></span><br><span class="line"><span class="string">    yt_pred -- prediction at timestep &quot;t&quot;, numpy array of shape (n_y, m)</span></span><br><span class="line"><span class="string">    cache -- tuple of values needed for the backward pass, contains (a_next, c_next, a_prev, c_prev, xt, parameters)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Note: ft/it/ot stand for the forget/update/output gates, cct stands for the candidate value (c tilde),</span></span><br><span class="line"><span class="string">          c stands for the memory value</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Retrieve parameters from &quot;parameters&quot;</span></span><br><span class="line">    Wf = parameters[<span class="string">&quot;Wf&quot;</span>]</span><br><span class="line">    bf = parameters[<span class="string">&quot;bf&quot;</span>]</span><br><span class="line">    Wi = parameters[<span class="string">&quot;Wi&quot;</span>]</span><br><span class="line">    bi = parameters[<span class="string">&quot;bi&quot;</span>]</span><br><span class="line">    Wc = parameters[<span class="string">&quot;Wc&quot;</span>]</span><br><span class="line">    bc = parameters[<span class="string">&quot;bc&quot;</span>]</span><br><span class="line">    Wo = parameters[<span class="string">&quot;Wo&quot;</span>]</span><br><span class="line">    bo = parameters[<span class="string">&quot;bo&quot;</span>]</span><br><span class="line">    Wy = parameters[<span class="string">&quot;Wy&quot;</span>]</span><br><span class="line">    by = parameters[<span class="string">&quot;by&quot;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Retrieve dimensions from shapes of xt and Wy</span></span><br><span class="line">    n_x, m = xt.shape</span><br><span class="line">    n_y, n_a = Wy.shape</span><br><span class="line"></span><br><span class="line">    <span class="comment">### START CODE HERE ###</span></span><br><span class="line">    <span class="comment"># Concatenate a_prev and xt (≈3 lines)</span></span><br><span class="line">    concat = np.zeros((n_a + n_x, m))</span><br><span class="line">    concat[: n_a, :] = a_prev</span><br><span class="line">    concat[n_a :, :] = xt</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute values for ft, it, cct, c_next, ot, a_next using the formulas given figure (4) (≈6 lines)</span></span><br><span class="line">    ft = sigmoid(np.dot(Wf, concat) + bf)</span><br><span class="line">    it = sigmoid(np.dot(Wi, concat) + bi)</span><br><span class="line">    cct = np.tanh(np.dot(Wc, concat) + bc)</span><br><span class="line">    c_next = ft * c_prev + it * cct</span><br><span class="line">    ot = sigmoid(np.dot(Wo, concat) + bo)</span><br><span class="line">    a_next = ot * np.tanh(c_next)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Compute prediction of the LSTM cell (≈1 line)</span></span><br><span class="line">    yt_pred = softmax(np.dot(Wy, a_next) + by)</span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># store values needed for backward propagation in cache</span></span><br><span class="line">    cache = (a_next, c_next, a_prev, c_prev, ft, it, cct, ot, xt, parameters)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> a_next, c_next, yt_pred, cache</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">1</span>)</span><br><span class="line">xt = np.random.randn(<span class="number">3</span>,<span class="number">10</span>)</span><br><span class="line">a_prev = np.random.randn(<span class="number">5</span>,<span class="number">10</span>)</span><br><span class="line">c_prev = np.random.randn(<span class="number">5</span>,<span class="number">10</span>)</span><br><span class="line">Wf = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bf = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wi = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bi = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wo = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bo = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wc = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bc = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wy = np.random.randn(<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line">by = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">parameters = &#123;<span class="string">&quot;Wf&quot;</span>: Wf, <span class="string">&quot;Wi&quot;</span>: Wi, <span class="string">&quot;Wo&quot;</span>: Wo, <span class="string">&quot;Wc&quot;</span>: Wc, <span class="string">&quot;Wy&quot;</span>: Wy, <span class="string">&quot;bf&quot;</span>: bf, <span class="string">&quot;bi&quot;</span>: bi, <span class="string">&quot;bo&quot;</span>: bo, <span class="string">&quot;bc&quot;</span>: bc, <span class="string">&quot;by&quot;</span>: by&#125;</span><br><span class="line"></span><br><span class="line">a_next, c_next, yt, cache = lstm_cell_forward(xt, a_prev, c_prev, parameters)</span><br><span class="line">print(<span class="string">&quot;a_next[4] = &quot;</span>, a_next[<span class="number">4</span>])</span><br><span class="line">print(<span class="string">&quot;a_next.shape = &quot;</span>, c_next.shape)</span><br><span class="line">print(<span class="string">&quot;c_next[2] = &quot;</span>, c_next[<span class="number">2</span>])</span><br><span class="line">print(<span class="string">&quot;c_next.shape = &quot;</span>, c_next.shape)</span><br><span class="line">print(<span class="string">&quot;yt[1] =&quot;</span>, yt[<span class="number">1</span>])</span><br><span class="line">print(<span class="string">&quot;yt.shape = &quot;</span>, yt.shape)</span><br><span class="line">print(<span class="string">&quot;cache[1][3] =&quot;</span>, cache[<span class="number">1</span>][<span class="number">3</span>])</span><br><span class="line">print(<span class="string">&quot;len(cache) = &quot;</span>, <span class="built_in">len</span>(cache))</span><br></pre></td></tr></table></figure>
 <pre><code>a_next[4] =  [-0.66408471  0.0036921   0.02088357  0.22834167 -0.85575339  0.00138482
@@ -322,87 +336,86 @@ yt[1] = [ 0.79913913  0.15986619  0.22412122  0.15606108  0.97057211  0.31146381
 yt.shape =  (2, 10)
 cache[1][3] = [-0.16263996  1.03729328  0.72938082 -0.54101719  0.02752074 -0.30821874
   0.07651101 -1.03752894  1.41219977 -0.37647422]
-len(cache) =  10</code></pre>
-<p><strong>Expected Output</strong>:</p>
+len(cache) =  10
+</code></pre><p><strong>Expected Output</strong>:</p>
 <table>
-<tr>
-<td>
-<strong>a_next[4]</strong>:
-</td>
-<td>
-[-0.66408471 0.0036921 0.02088357 0.22834167 -0.85575339 0.00138482 0.76566531 0.34631421 -0.00215674 0.43827275]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **a_next.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (5, 10)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **c_next[2]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [ 0.63267805  1.00570849  0.35504474  0.20690913 -1.64566718  0.11832942</code></pre>
-0.76449811 -0.0981561 -0.74348425 -0.26810932]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **c_next.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (5, 10)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **yt[1]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [ 0.79913913  0.15986619  0.22412122  0.15606108  0.97057211  0.31146381</code></pre>
-0.00943007 0.12666353 0.39380172 0.07828381]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **yt.shape**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       (2, 10)
-    &lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-    &lt;td&gt;
-        **cache[1][3]**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       [-0.16263996  1.03729328  0.72938082 -0.54101719  0.02752074 -0.30821874</code></pre>
-0.07651101 -1.03752894 1.41219977 -0.37647422]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **len(cache)**:
-    &lt;/td&gt;
-    &lt;td&gt;
-       10
-    &lt;/td&gt;
-&lt;/tr&gt;</code></pre>
+    <tr>
+        <td>
+            **a_next[4]**:
+        </td>
+        <td>
+           [-0.66408471  0.0036921   0.02088357  0.22834167 -0.85575339  0.00138482
+  0.76566531  0.34631421 -0.00215674  0.43827275]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **a_next.shape**:
+        </td>
+        <td>
+           (5, 10)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **c_next[2]**:
+        </td>
+        <td>
+           [ 0.63267805  1.00570849  0.35504474  0.20690913 -1.64566718  0.11832942
+  0.76449811 -0.0981561  -0.74348425 -0.26810932]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **c_next.shape**:
+        </td>
+        <td>
+           (5, 10)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **yt[1]**:
+        </td>
+        <td>
+           [ 0.79913913  0.15986619  0.22412122  0.15606108  0.97057211  0.31146381
+  0.00943007  0.12666353  0.39380172  0.07828381]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **yt.shape**:
+        </td>
+        <td>
+           (2, 10)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            **cache[1][3]**:
+        </td>
+        <td>
+           [-0.16263996  1.03729328  0.72938082 -0.54101719  0.02752074 -0.30821874
+  0.07651101 -1.03752894  1.41219977 -0.37647422]
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **len(cache)**:
+        </td>
+        <td>
+           10
+        </td>
+    </tr>
+
 </table>
-<h3 id="forward-pass-for-lstm">2.2 - Forward pass for LSTM</h3>
-<p>Now that you have implemented one step of an LSTM, you can now iterate this over this using a for-loop to process a sequence of <span class="math inline">\(T_x\)</span> inputs.</p>
-<img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132817.jpg" />
-<caption>
-<center>
-<strong>Figure 4</strong>: LSTM over multiple time-steps.
-</center>
-</caption>
-<p><strong>Exercise:</strong> Implement <code>lstm_forward()</code> to run an LSTM over <span class="math inline">\(T_x\)</span> time-steps.</p>
-<p><strong>Note</strong>: <span class="math inline">\(c^{\langle 0 \rangle}\)</span> is initialized with zeros.</p>
+
+<h3 id="2-2-Forward-pass-for-LSTM"><a href="#2-2-Forward-pass-for-LSTM" class="headerlink" title="2.2 - Forward pass for LSTM"></a>2.2 - Forward pass for LSTM</h3><p>Now that you have implemented one step of an LSTM, you can now iterate this over this using a for-loop to process a sequence of $T_x$ inputs. </p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-01-29-132817.jpg" alt=""></p>
+<caption><center> **Figure 4**: LSTM over multiple time-steps. </center></caption>
+
+<p><strong>Exercise:</strong> Implement <code>lstm_forward()</code> to run an LSTM over $T_x$ time-steps. </p>
+<p><strong>Note</strong>: $c^{\langle 0 \rangle}$ is initialized with zeros.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GRADED FUNCTION: lstm_forward</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lstm_forward</span>(<span class="params">x, a0, parameters</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Implement the forward propagation of the recurrent neural network using an LSTM-cell described in Figure (3).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    x -- Input data for every time-step, of shape (n_x, m, T_x).</span></span><br><span class="line"><span class="string">    a0 -- Initial hidden state, of shape (n_a, m)</span></span><br><span class="line"><span class="string">    parameters -- python dictionary containing:</span></span><br><span class="line"><span class="string">                        Wf -- Weight matrix of the forget gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bf -- Bias of the forget gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wi -- Weight matrix of the update gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bi -- Bias of the update gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wc -- Weight matrix of the first &quot;tanh&quot;, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bc -- Bias of the first &quot;tanh&quot;, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wo -- Weight matrix of the output gate, numpy array of shape (n_a, n_a + n_x)</span></span><br><span class="line"><span class="string">                        bo -- Bias of the output gate, numpy array of shape (n_a, 1)</span></span><br><span class="line"><span class="string">                        Wy -- Weight matrix relating the hidden-state to the output, numpy array of shape (n_y, n_a)</span></span><br><span class="line"><span class="string">                        by -- Bias relating the hidden-state to the output, numpy array of shape (n_y, 1)</span></span><br><span class="line"><span class="string">                        </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    a -- Hidden states for every time-step, numpy array of shape (n_a, m, T_x)</span></span><br><span class="line"><span class="string">    y -- Predictions for every time-step, numpy array of shape (n_y, m, T_x)</span></span><br><span class="line"><span class="string">    caches -- tuple of values needed for the backward pass, contains (list of all the caches, x)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize &quot;caches&quot;, which will track the list of all the caches</span></span><br><span class="line">    caches = []</span><br><span class="line">    </span><br><span class="line">    <span class="comment">### START CODE HERE ###</span></span><br><span class="line">    <span class="comment"># Retrieve dimensions from shapes of x and parameters[&#x27;Wy&#x27;] (≈2 lines)</span></span><br><span class="line">    n_x, m, T_x = x.shape</span><br><span class="line">    n_y, n_a = parameters[<span class="string">&quot;Wy&quot;</span>].shape</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># initialize &quot;a&quot;, &quot;c&quot; and &quot;y&quot; with zeros (≈3 lines)</span></span><br><span class="line">    a = np.zeros((n_a, m, T_x))</span><br><span class="line">    c = np.zeros((n_a, m, T_x))</span><br><span class="line">    y = np.zeros((n_y, m, T_x))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize a_next and c_next (≈2 lines)</span></span><br><span class="line">    a_next = a0</span><br><span class="line">    c_next = np.zeros((n_a, m))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># loop over all time-steps</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T_x):</span><br><span class="line">        <span class="comment"># Update next hidden state, next memory state, compute the prediction, get the cache (≈1 line)</span></span><br><span class="line">        a_next, c_next, yt, cache = lstm_cell_forward(x[:, :, t], a_next, c_next, parameters)</span><br><span class="line">        <span class="comment"># Save the value of the new &quot;next&quot; hidden state in a (≈1 line)</span></span><br><span class="line">        a[:,:,t] = a_next</span><br><span class="line">        <span class="comment"># Save the value of the prediction in y (≈1 line)</span></span><br><span class="line">        y[:,:,t] = yt</span><br><span class="line">        <span class="comment"># Save the value of the next cell state (≈1 line)</span></span><br><span class="line">        c[:,:,t]  = c_next</span><br><span class="line">        <span class="comment"># Append the cache into caches (≈1 line)</span></span><br><span class="line">        caches.append(cache)</span><br><span class="line">        </span><br><span class="line">    <span class="comment">### END CODE HERE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># store values needed for backward propagation in cache</span></span><br><span class="line">    caches = (caches, x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> a, y, c, caches</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">1</span>)</span><br><span class="line">x = np.random.randn(<span class="number">3</span>,<span class="number">10</span>,<span class="number">7</span>)</span><br><span class="line">a0 = np.random.randn(<span class="number">5</span>,<span class="number">10</span>)</span><br><span class="line">Wf = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bf = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wi = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bi = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wo = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bo = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wc = np.random.randn(<span class="number">5</span>, <span class="number">5</span>+<span class="number">3</span>)</span><br><span class="line">bc = np.random.randn(<span class="number">5</span>,<span class="number">1</span>)</span><br><span class="line">Wy = np.random.randn(<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line">by = np.random.randn(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">parameters = &#123;<span class="string">&quot;Wf&quot;</span>: Wf, <span class="string">&quot;Wi&quot;</span>: Wi, <span class="string">&quot;Wo&quot;</span>: Wo, <span class="string">&quot;Wc&quot;</span>: Wc, <span class="string">&quot;Wy&quot;</span>: Wy, <span class="string">&quot;bf&quot;</span>: bf, <span class="string">&quot;bi&quot;</span>: bi, <span class="string">&quot;bo&quot;</span>: bo, <span class="string">&quot;bc&quot;</span>: bc, <span class="string">&quot;by&quot;</span>: by&#125;</span><br><span class="line"></span><br><span class="line">a, y, c, caches = lstm_forward(x, a0, parameters)</span><br><span class="line">print(<span class="string">&quot;a[4][3][6] = &quot;</span>, a[<span class="number">4</span>][<span class="number">3</span>][<span class="number">6</span>])</span><br><span class="line">print(<span class="string">&quot;a.shape = &quot;</span>, a.shape)</span><br><span class="line">print(<span class="string">&quot;y[1][4][3] =&quot;</span>, y[<span class="number">1</span>][<span class="number">4</span>][<span class="number">3</span>])</span><br><span class="line">print(<span class="string">&quot;y.shape = &quot;</span>, y.shape)</span><br><span class="line">print(<span class="string">&quot;caches[1][1[1]] =&quot;</span>, caches[<span class="number">1</span>][<span class="number">1</span>][<span class="number">1</span>])</span><br><span class="line">print(<span class="string">&quot;c[1][2][1]&quot;</span>, c[<span class="number">1</span>][<span class="number">2</span>][<span class="number">1</span>])</span><br><span class="line">print(<span class="string">&quot;len(caches) = &quot;</span>, <span class="built_in">len</span>(caches))</span><br></pre></td></tr></table></figure>
 <pre><code>a[4][3][6] =  0.172117767533
@@ -412,73 +425,75 @@ y.shape =  (2, 10, 7)
 caches[1][1[1]] = [ 0.82797464  0.23009474  0.76201118 -0.22232814 -0.20075807  0.18656139
   0.41005165]
 c[1][2][1] -0.855544916718
-len(caches) =  2</code></pre>
-<p><strong>Expected Output</strong>:</p>
+len(caches) =  2
+</code></pre><p><strong>Expected Output</strong>:</p>
 <table>
-<tr>
-<td>
-<strong>a[4][3][6]</strong> =
-</td>
-<td>
-0.172117767533
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **a.shape** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       (5, 10, 7)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **y[1][4][3]** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       0.95087346185
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **y.shape** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       (2, 10, 7)
-    &lt;/td&gt;
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **caches[1][1][1]** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       [ 0.82797464  0.23009474  0.76201118 -0.22232814 -0.20075807  0.18656139</code></pre>
-0.41005165]
-</td>
-</tr>
-<pre><code>&lt;tr&gt;
-    &lt;td&gt;
-        **c[1][2][1]** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       -0.855544916718
-    &lt;/td&gt;
-&lt;/tr&gt;       
-    
-&lt;/tr&gt;
-    &lt;tr&gt;
-    &lt;td&gt;
-        **len(caches)** =
-    &lt;/td&gt;
-    &lt;td&gt;
-       2
-    &lt;/td&gt;
-&lt;/tr&gt;</code></pre>
+    <tr>
+        <td>
+            **a[4][3][6]** =
+        </td>
+        <td>
+           0.172117767533
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **a.shape** =
+        </td>
+        <td>
+           (5, 10, 7)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **y[1][4][3]** =
+        </td>
+        <td>
+           0.95087346185
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **y.shape** =
+        </td>
+        <td>
+           (2, 10, 7)
+        </td>
+    </tr>
+        <tr>
+        <td>
+            **caches[1][1][1]** =
+        </td>
+        <td>
+           [ 0.82797464  0.23009474  0.76201118 -0.22232814 -0.20075807  0.18656139
+  0.41005165]
+        </td>
+
+     </tr>
+        <tr>
+        <td>
+            **c[1][2][1]** =
+        </td>
+        <td>
+           -0.855544916718
+        </td>
+    </tr>       
+
+    </tr>
+        <tr>
+        <td>
+            **len(caches)** =
+        </td>
+        <td>
+           2
+        </td>
+    </tr>
+
 </table>
-<p>Congratulations! You have now implemented the forward passes for the basic RNN and the LSTM. When using a deep learning framework, implementing the forward pass is sufficient to build systems that achieve great performance.</p>
-<h3 id="congratulations">Congratulations !</h3>
-<p>Congratulations on completing this assignment. You now understand how recurrent neural networks work!</p>
-<p>Lets go on to the next exercise, where you'll use an RNN to build a character-level language model.</p>
+
+<p>Congratulations! You have now implemented the forward passes for the basic RNN and the LSTM. When using a deep learning framework, implementing the forward pass is sufficient to build systems that achieve great performance. </p>
+<h3 id="Congratulations"><a href="#Congratulations" class="headerlink" title="Congratulations !"></a>Congratulations !</h3><p>Congratulations on completing this assignment. You now understand how recurrent neural networks work! </p>
+<p>Lets go on to the next exercise, where you’ll use an RNN to build a character-level language model.</p>
 	  
 	</div>
 
@@ -624,35 +639,55 @@ len(caches) =  2</code></pre>
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

@@ -124,24 +124,17 @@
 <p>Adam 算法本质上是将动量梯度下降算法和 RMSprop 结合了起来。</p>
 <p>如果读过前几篇文章，那么对下面的算法描述一定不陌生：</p>
 <blockquote>
-<p>第 t 次迭代：<br />
-        ①. 在当前的 mini-batch 上计算 dW, db<br />
-        ②. <span class="math inline">\(v_{dW} = β_1 · v_{dW} + (1 - β) · dW\)</span>，<span class="math inline">\(v_{db} = β_1 · v_{db} + (1 - β) · db\)</span><br />
-        ③. <span class="math inline">\(s_{dW} = β_2 · s_{dW} + (1 - β) · dW^2\)</span>，<span class="math inline">\(s_{db} = β_2 · s_{db} + (1 - β) · db^2\)</span><br />
-        ④. <span class="math inline">\(v^{corrected}_{dW} = \cfrac{v_{dW}}{1 - \beta_1^t}\)</span>，<span class="math inline">\(v^{corrected}_{db} = \cfrac{v_{db}}{1 - \beta_1^t}\)</span><br />
-        ⑤. <span class="math inline">\(s^{corrected}_{dW} = \cfrac{s_{dW}}{1 - \beta_1^t}\)</span>，<span class="math inline">\(s^{corrected}_{db} = \cfrac{s_{db}}{1 - \beta_1^t}\)</span><br />
-        ⑥. <span class="math inline">\(W := W - α · \cfrac{v_{dW}^{corrected}}{\sqrt{s_{dW}^{corredted}} + \epsilon}\)</span><br />
-        ⑦. <span class="math inline">\(b := b - α · \cfrac{v_{db}^{corrected}}{\sqrt{s_{db}^{corredted}} + \epsilon}\)</span></p>
+<p>第 t 次迭代：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①. 在当前的 mini-batch 上计算 dW, db<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;②. $v<em>{dW} = β_1 · v</em>{dW} + (1 - β) · dW$，$v<em>{db} = β_1 · v</em>{db} + (1 - β) · db$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③. $s<em>{dW} = β_2 · s</em>{dW} + (1 - β) · dW^2$，$s<em>{db} = β_2 · s</em>{db} + (1 - β) · db^2$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④. $v^{corrected}<em>{dW} = \cfrac{v</em>{dW}}{1 - \beta<em>1^t}$，$v^{corrected}</em>{db} = \cfrac{v<em>{db}}{1 - \beta_1^t}$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑤. $s^{corrected}</em>{dW} = \cfrac{s<em>{dW}}{1 - \beta_1^t}$，$s^{corrected}</em>{db} = \cfrac{s<em>{db}}{1 - \beta_1^t}$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑥. $W := W - α · \cfrac{v</em>{dW}^{corrected}}{\sqrt{s<em>{dW}^{corredted}} + \epsilon}$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑦. $b := b - α · \cfrac{v</em>{db}^{corrected}}{\sqrt{s_{db}^{corredted}} + \epsilon}$  </p>
 </blockquote>
-<p>这实际上就是将前面几篇文章里的算法放在了一起，其中为了区分清楚，动量梯度下降中的参数 <span class="math inline">\(\beta\)</span> 替换成了 <span class="math inline">\(\beta_1\)</span>，即上面的 ②；RMSprop 中的参数 <span class="math inline">\(\beta\)</span> 替换成了 <span class="math inline">\(\beta_2\)</span>，即上面的 ③。</p>
+<p>这实际上就是将前面几篇文章里的算法放在了一起，其中为了区分清楚，动量梯度下降中的参数 $\beta$ 替换成了 $\beta_1$，即上面的 ②；RMSprop 中的参数 $\beta$ 替换成了 $\beta_2$，即上面的 ③。</p>
 <p>另外，④、⑤ 两步的目的是消除偏差，可以参考 <a href="">指数加权平均</a> 这篇文章。</p>
-<p>⑥、⑦ 两步中的 <span class="math inline">\(\epsilon\)</span> 是一个非常小的数，其目的是防止分子除以 0，因此加上了一个非常小的数以防止这种情况出现。</p>
+<p>⑥、⑦ 两步中的 $\epsilon$ 是一个非常小的数，其目的是防止分子除以 0，因此加上了一个非常小的数以防止这种情况出现。</p>
 <p>这个算法中有很多超参数：</p>
 <ul>
-<li><span class="math inline">\(\beta_1\)</span>：动量梯度下降中的参数，通常取 0.9</li>
-<li><span class="math inline">\(\beta_2\)</span>：RMSprop 中的参数，通常取 0.999</li>
-<li><span class="math inline">\(\alpha\)</span>：学习率，这个参数需要在实践中调整</li>
-<li><span class="math inline">\(\epsilon\)</span>：防止分母为 0 的参数，通常取 <span class="math inline">\(10^{-8}\)</span></li>
+<li>$\beta_1$：动量梯度下降中的参数，通常取 0.9</li>
+<li>$\beta_2$：RMSprop 中的参数，通常取 0.999</li>
+<li>$\alpha$：学习率，这个参数需要在实践中调整</li>
+<li>$\epsilon$：防止分母为 0 的参数，通常取 $10^{-8}$</li>
 </ul>
 <p>Adam 算法这个名字的由来是 Adaptive Moment Estimation，即自适应矩估计，因为动量梯度下降计算的是导数的粗略平均值，即一阶矩，而 RMSprop 计算的是导数平方的粗略平均值，即二阶矩，这就是 Adam 优化算法名字的由来。</p>
 <p>以上就是对 Adam 优化算法的简要介绍，Adam 在很多场合都可以使用，它被嵌入在了许多深度学习框架之中，可以直接使用。</p>
@@ -290,35 +283,55 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

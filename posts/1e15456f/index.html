@@ -121,21 +121,20 @@
 <p>在计算机视觉的发展过程中，出现了很多经典的卷积神经网络模型，它们对后来的研究有很大影响，这篇文章简要谈谈 LeNet-5、AlexNet 和 VGGNet.</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="lenet-5">LeNet-5</h3>
-<p>LeNet-5 是由 LeCun 在 1998 年的一篇论文中提出的，与今天的一些神经网络相比，LeNet-5 是一个小型神经网络，它只有大约 60000 个参数，而今天经常会有包含千万到亿量级参数的神经网络，我们先来看一下 LeNet-5 的模型：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-061526.png" /></p>
+<h3 id="LeNet-5"><a href="#LeNet-5" class="headerlink" title="LeNet-5"></a>LeNet-5</h3><p>LeNet-5 是由 LeCun 在 1998 年的一篇论文中提出的，与今天的一些神经网络相比，LeNet-5 是一个小型神经网络，它只有大约 60000 个参数，而今天经常会有包含千万到亿量级参数的神经网络，我们先来看一下 LeNet-5 的模型：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-061526.png" alt=""></p>
 <p>如图所示，输入是一张维度为 (32, 32, 1) 的图片，在这个例子中该图片是一张手写体数字的灰度图片，内容为数字 7，由于这是一张灰度图，因此通道数为 1，下面依次对该网络每层进行说明：</p>
 <ul>
-<li>第一层：
-<ul>
+<li>第一层：<ul>
 <li>6 个大小为 5 × 5 的过滤器，Padding = 1，Stride = 1. 输出维度为 (28, 28, 6) 的图片。</li>
 <li>均值池化层，过滤器大小为 2 × 2，Stride = 2. 输出维度为 (14, 14, 6) 的图片。</li>
-</ul></li>
-<li>第二层：
-<ul>
+</ul>
+</li>
+<li>第二层：<ul>
 <li>6 个大小为 5 × 5 的过滤器，Padding = 1，Stride = 1. 输出维度为 (10, 10, 6) 的图片。</li>
 <li>均值池化层，过滤器大小为 2 × 2，Stride = 2. 输出维度为 (5, 5, 6) 的图片。</li>
-</ul></li>
+</ul>
+</li>
 <li>第三层：全连接层，共 120 个结点</li>
 <li>第四层：全连接层，共 84 个结点</li>
 <li>第五层：输出层，输出预测值</li>
@@ -143,36 +142,34 @@
 <p><strong>Note:</strong> 由于池化层并不包含任何参数，因此将其与前一个卷积层共算作一层。</p>
 <p>这个网络可以完成手写体数字识别的任务，输入一张大小为 32 × 32 的灰度图，最终输出对图中数字的预测，其中池化层用的是均值池化，而目前更常用的最大池化，另外，现在输出层通常使用 softmax 函数，而当时使用的是另一种函数。</p>
 <p>该网络中用到结构在现今仍非常常用，即先使用一层或几层卷积层，再使用一层池化层，然后再使用一层或几层卷积层，再使用一层池化层，最后再使用几层全连接层，最后输出结果。这种结构方式在今天也非常常见。</p>
-<h3 id="alexnet">AlexNet</h3>
-<p>与 LeNet-5 只有大约 60000 个参数不同，AlexNet 有大约 6 千万个参数，不过这二者拥有很相似的结构，只是 AlexNet 拥有更多的隐藏神经元，在更大的数据上训练，这使得它有更好的性能，它的结构如下</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-064438.png" /></p>
+<h3 id="AlexNet"><a href="#AlexNet" class="headerlink" title="AlexNet"></a>AlexNet</h3><p>与 LeNet-5 只有大约 60000 个参数不同，AlexNet 有大约 6 千万个参数，不过这二者拥有很相似的结构，只是 AlexNet 拥有更多的隐藏神经元，在更大的数据上训练，这使得它有更好的性能，它的结构如下</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-064438.png" alt=""></p>
 <ul>
-<li>第一层：
-<ul>
+<li>第一层：<ul>
 <li>96 个大小为 11 × 11 的过滤器，Padding = 1，Stride = 4. 输出维度为 (55, 55, 96).</li>
 <li>最大池化层，过滤器大小为 3 × 3，Stride = 2. 输出维度为 (27, 27, 96).</li>
-</ul></li>
-<li>第二层：
-<ul>
+</ul>
+</li>
+<li>第二层：<ul>
 <li>256 个大小为 5 × 5 的过滤器，Padding = same，Stride = 1. 输出维度为 (27, 27, 256).</li>
 <li>最大池化层，过滤器大小为 3 × 3，Stride = 2. 输出维度为 (13, 13, 256).</li>
-</ul></li>
+</ul>
+</li>
 <li>第三层：384 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 384).</li>
 <li>第四层：384 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 384).</li>
-<li>第五层：
-<ul>
+<li>第五层：<ul>
 <li>256 个大小为 3 × 3 的过滤器，Padding = same，Stride = 1. 输出维度为 (13, 13, 256).</li>
 <li>最大池化层：过滤器大小为 3 × 3，Stride = 2. 输出维度为 (6, 6, 256).</li>
-</ul></li>
+</ul>
+</li>
 <li>第六层：全连接层，共 4096 个结点</li>
 <li>第七层：全连接层，共 4096 个结点</li>
 <li>第八层：输出层，使用 softmax 输出预测类别</li>
 </ul>
 <p>另一个与 LeNet-5 不同之处是，AlexNet 的激活函数使用了 ReLU，而非 LeNet-5 使用的 sigmoid 或者 tanh，这也使得其性能更好一些。</p>
 <p>实际上上面列出的结构是原始 AlexNet 的简化，原始的 AlexNet 中还有局部响应归一层，但后来并不太常用，因此这里做了简化。</p>
-<h3 id="vgg-16">VGG-16</h3>
-<p>VGG-16 中的 16 是指该网络中有 16 层带有权重的层，这是一个很大的神经网络，这导致该网络中的参数多达 1 亿 3 千 8 百万个。但是 VGG 的结构非常统一，该网络中的所有卷积层的过滤器大小都是 3 × 3，Stride 都是 1，Padding 都是 same，而池化层过滤器的大小全为 2 × 2，Stride 全为 2。结构方面，总是现有几层卷积层，然后是池化层，再来几层卷积层，再来一个池化层。由于该网络层数很多，结构图稍微简化了一些：</p>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-073535.png" /></p>
+<h3 id="VGG-16"><a href="#VGG-16" class="headerlink" title="VGG-16"></a>VGG-16</h3><p>VGG-16 中的 16 是指该网络中有 16 层带有权重的层，这是一个很大的神经网络，这导致该网络中的参数多达 1 亿 3 千 8 百万个。但是 VGG 的结构非常统一，该网络中的所有卷积层的过滤器大小都是 3 × 3，Stride 都是 1，Padding 都是 same，而池化层过滤器的大小全为 2 × 2，Stride 全为 2。结构方面，总是现有几层卷积层，然后是池化层，再来几层卷积层，再来一个池化层。由于该网络层数很多，结构图稍微简化了一些：</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-01-073535.png" alt=""></p>
 <p>其中，</p>
 <ul>
 <li>[CONV 64] × 2 是指两层各有 64 个过滤器的卷积层</li>
@@ -328,35 +325,55 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

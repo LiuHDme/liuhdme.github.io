@@ -121,126 +121,69 @@
 <p>上一周的主要内容是围绕单元线性回归介绍了机器学习中的几个基础概念，第二周将围绕多元线性回归讲解。</p>
 </blockquote>
 <a id="more"></a>
-#
-<p style="color:#3A5FCD">
-多元线性回归
-</p>
-<p>先列举出将会用到的一些符号</p>
+<h1 id="多元线性回归"><a href="#多元线性回归" class="headerlink" title=" 多元线性回归 "></a><p style="color:#3A5FCD"> 多元线性回归 </p></h1><p>先列举出将会用到的一些符号</p>
 <blockquote>
-\(
-<p>\)</p>
+<p>\(<br>\begin{align*}<br>x_j^{(i)} &amp;= \text{ 第 } i \text{ 组训练数据的第 } j \text{ 个特征的值 } \newline<br> x^{(i)}&amp; = \text{ 第 } i \text{ 组训练数据的所有特征构成的列向量 } \newline<br>m &amp;= \text{训练集的数据量} \newline<br>n &amp;= \left| x^{(i)} \right| ; \text{ (每组训练数据特征数量) }<br>\end{align*}<br>\)</p>
 </blockquote>
-<h2 id="假设函数">假设函数</h2>
-<p>下面是多元线性回归中的假设函数</p>
-<p><span class="math display">\[h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \cdots + \theta_n x_n\]</span></p>
-<p>如果任务是预测房价，那么在这个式子中，\(_0\) 可以被看作是起步价，\(_1\) 是每平米的价格，\(_2\) 是每层的价格等等，而 \(x_1\) 就是房子的大小，\(x_2\) 是房子的层数等等。利用每个特征的参数，我们就能通过输入房子的特征来得到房价。</p>
+<h2 id="假设函数"><a href="#假设函数" class="headerlink" title="假设函数"></a>假设函数</h2><p>下面是多元线性回归中的假设函数</p>
+<script type="math/tex; mode=display">h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \cdots + \theta_n x_n</script><p>如果任务是预测房价，那么在这个式子中，\(\theta_0\) 可以被看作是起步价，\(\theta_1\) 是每平米的价格，\(\theta_2\) 是每层的价格等等，而 \(x_1\) 就是房子的大小，\(x_2\) 是房子的层数等等。利用每个特征的参数，我们就能通过输入房子的特征来得到房价。</p>
 <p>希望你学过并且还记得矩阵，利用矩阵乘法，假设函数可以被表达成向量形式</p>
-<p><span class="math display">\[
-h_\theta(x) =\begin{bmatrix}\theta_0 \hspace{2em}  \theta_1 \hspace{2em}  ...  \hspace{2em}  \theta_n\end{bmatrix}\begin{bmatrix}x_0 \newline x_1 \newline \vdots \newline x_n\end{bmatrix}= \theta^T x\]</span></p>
-<p>方便起见，可以认为 \(x_0 = 1\)</p>
+<script type="math/tex; mode=display">
+h_\theta(x) =\begin{bmatrix}\theta_0 \hspace{2em}  \theta_1 \hspace{2em}  ...  \hspace{2em}  \theta_n\end{bmatrix}\begin{bmatrix}x_0 \newline x_1 \newline \vdots \newline x_n\end{bmatrix}= \theta^T x</script><p>方便起见，可以认为 \(x_0 = 1\)</p>
 <p>假如我们有三组训练数据，每组数据都有一个特征，那么数据集和特征就可以用矩阵和列向量来表示</p>
-<p><span class="math display">\[
-\begin{align\*}X = \begin{bmatrix}x^{(1)}_0 &amp; x^{(1)}_1  \newline x^{(2)}_0 &amp; x^{(2)}_1  \newline x^{(3)}_0 &amp; x^{(3)}_1 \end{bmatrix}&amp;,\theta = \begin{bmatrix}\theta_0 \newline \theta_1 \newline\end{bmatrix}\end{align\*}
-\]</span></p>
-<p>其中，\(_0\) 相当于之前提到的起步价，\(x_0\) 都为 1。矩阵 \(X\) 的每一行就相当于一组训练数据，列向量 \(\) 保存了所有特征的参数。这时假设函数只需短短的一个表达式就能表达</p>
-<p><span class="math display">\[h_\theta(X) = X \theta\]</span></p>
-<p><small style="color:red"><strong>在接下来的内容以及以后的文章中，大写的 \(X\) 都代表一个矩阵，其中每一行都是一组训练数据。</strong></small></p>
-<h2 id="损失函数">损失函数</h2>
-<p>假设函数并没有什么区别，依然是如下形式</p>
-<p><span class="math display">\[
-J(\theta) = \dfrac {1}{2m} \displaystyle \sum_{i=1}^m \left (h_\theta (x^{(i)}) - y^{(i)} \right)^2
-\]</span></p>
-<p>但它可以被表达为向量形式</p>
-<p><span class="math display">\[
-J(\theta) = \dfrac {1}{2m} (X\theta - \vec{y})^{T} (X\theta - \vec{y})
-\]</span></p>
-<p>其中，\(\) 表示包含了所有真实值的列向量。</p>
-<h2 id="多元线性回归的梯度下降">多元线性回归的梯度下降</h2>
-<p>梯度下降也没什么变化，唯一要注意的就是，比起在单元线性回归中只用更新 \(_0\) 和 \(_1\) 的值，多元线性回归中要更新所有的参数值，即从 \(_0\) 到 \(_n\) 都要更新。即不断执行以下内容直到达到最优解</p>
-<p><span class="math display">\[
-\theta_j := \theta_j - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} \;\;\;\;\;\; \text{for j := 0..n}
-\]</span></p>
-<h3 id="矩阵表示">矩阵表示</h3>
-<p>梯度下降可以被这样表达</p>
-<p><span class="math display">\[\theta := \theta - \alpha \nabla J(\theta)\]</span></p>
-<p>其中，\(J()\) 是损失函数对每个特征所对应的参数的偏导所构成的列向量，即所有参数的梯度值，表达如下</p>
-<p><span class="math display">\[
-\nabla J(\theta)  = \begin{bmatrix}\frac{\partial J(\theta)}{\partial \theta_0}   \newline \frac{\partial J(\theta)}{\partial \theta_1}   \newline \vdots   \newline \frac{\partial J(\theta)}{\partial \theta_n} \end{bmatrix}
-\]</span></p>
-<p>由上一周中对梯度下降公式的推导结果可以知道，第 \(j\) 个参数的梯度值为</p>
-<p><span class="math display">\[
-\frac{\partial J(\theta)}{\partial \theta_j} =  \frac{1}{m} \sum\limits_{i=1}^{m}  \left(h_\theta(x^{(i)}) - y^{(i)} \right) \cdot x_j^{(i)}
-\]</span></p>
-<p>该式可以进一步变形为</p>
-<p><span class="math display">\[
-\frac{\partial J(\theta)}{\partial \theta_j} = \frac{1}{m} \sum\limits_{i=1}^{m}   x_j^{(i)} \cdot \left(h_\theta(x^{(i)}) - y^{(i)}  \right)
-\]</span></p>
-<p>我们再把这个式子变为矩阵表示。其中</p>
+<script type="math/tex; mode=display">
+\begin{align\*}X = \begin{bmatrix}x^{(1)}_0 & x^{(1)}_1  \newline x^{(2)}_0 & x^{(2)}_1  \newline x^{(3)}_0 & x^{(3)}_1 \end{bmatrix}&,\theta = \begin{bmatrix}\theta_0 \newline \theta_1 \newline\end{bmatrix}\end{align\*}</script><p>其中，\(\theta_0\) 相当于之前提到的起步价，\(x_0\) 都为 1。矩阵 \(X\) 的每一行就相当于一组训练数据，列向量 \(\theta\) 保存了所有特征的参数。这时假设函数只需短短的一个表达式就能表达</p>
+<script type="math/tex; mode=display">h_\theta(X) = X \theta</script><p><small style="color:red"><strong>在接下来的内容以及以后的文章中，大写的 \(X\) 都代表一个矩阵，其中每一行都是一组训练数据。</strong></small></p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>假设函数并没有什么区别，依然是如下形式</p>
+<script type="math/tex; mode=display">
+J(\theta) = \dfrac {1}{2m} \displaystyle \sum_{i=1}^m \left (h_\theta (x^{(i)}) - y^{(i)} \right)^2</script><p>但它可以被表达为向量形式</p>
+<script type="math/tex; mode=display">
+J(\theta) = \dfrac {1}{2m} (X\theta - \vec{y})^{T} (X\theta - \vec{y})</script><p>其中，\(\vec{y}\) 表示包含了所有真实值的列向量。</p>
+<h2 id="多元线性回归的梯度下降"><a href="#多元线性回归的梯度下降" class="headerlink" title="多元线性回归的梯度下降"></a>多元线性回归的梯度下降</h2><p>梯度下降也没什么变化，唯一要注意的就是，比起在单元线性回归中只用更新 \(\theta_0\) 和 \(\theta_1\) 的值，多元线性回归中要更新所有的参数值，即从 \(\theta_0\) 到 \(\theta_n\) 都要更新。即不断执行以下内容直到达到最优解</p>
+<script type="math/tex; mode=display">
+\theta_j := \theta_j - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} \;\;\;\;\;\; \text{for j := 0..n}</script><h3 id="矩阵表示"><a href="#矩阵表示" class="headerlink" title="矩阵表示"></a>矩阵表示</h3><p>梯度下降可以被这样表达</p>
+<script type="math/tex; mode=display">\theta := \theta - \alpha \nabla J(\theta)</script><p>其中，\(\nabla J(\theta)\) 是损失函数对每个特征所对应的参数的偏导所构成的列向量，即所有参数的梯度值，表达如下</p>
+<script type="math/tex; mode=display">
+\nabla J(\theta)  = \begin{bmatrix}\frac{\partial J(\theta)}{\partial \theta_0}   \newline \frac{\partial J(\theta)}{\partial \theta_1}   \newline \vdots   \newline \frac{\partial J(\theta)}{\partial \theta_n} \end{bmatrix}</script><p>由上一周中对梯度下降公式的推导结果可以知道，第 \(j\) 个参数的梯度值为</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(\theta)}{\partial \theta_j} =  \frac{1}{m} \sum\limits_{i=1}^{m}  \left(h_\theta(x^{(i)}) - y^{(i)} \right) \cdot x_j^{(i)}</script><p>该式可以进一步变形为</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(\theta)}{\partial \theta_j} = \frac{1}{m} \sum\limits_{i=1}^{m}   x_j^{(i)} \cdot \left(h_\theta(x^{(i)}) - y^{(i)}  \right)</script><p>我们再把这个式子变为矩阵表示。其中</p>
 <blockquote>
-<ol type="1">
-<li>\(x<sup>{(i)}<em>j\) 是第 \(i\) 组数据的第 \(j\) 个特征值，那么 \(</em>{i=1}</sup>mx^{(i)}_j\) 就表示所有组数据的第 \(j\) 个特征值，那么它们就构成了一个列向量 \(\)；</li>
-<li>\(h_(x^{(i)}) - y^{(i)}\) 是第 \(i\) 组数据的预测结果与真实结果的差值，那么 \(_{i=1}<sup>m(h_(x</sup>{(i)}) - y^{(i)})\) 就表示所有组数据的预测值与真实值的差值，即 \(X- \)。</li>
+<ol>
+<li>\(x^{(i)}<em>j\) 是第 \(i\) 组数据的第 \(j\) 个特征值，那么 \(\sum\limits</em>{i=1}^mx^{(i)}_j\) 就表示所有组数据的第 \(j\) 个特征值，那么它们就构成了一个列向量 \(\vec{x_j}\)；</li>
+<li>\(h<em>\theta(x^{(i)}) - y^{(i)}\) 是第 \(i\) 组数据的预测结果与真实结果的差值，那么 \(\sum\limits</em>{i=1}^m\left(h_\theta(x^{(i)}) - y^{(i)}\right)\) 就表示所有组数据的预测值与真实值的差值，即 \(X\theta - \vec{y}\)。</li>
 </ol>
 </blockquote>
 <p>那么第 \(j\) 个参数的梯度值就可以进一步变为</p>
-<p><span class="math display">\[
-\frac{\partial J(\theta)}{\partial \theta_j} = \frac1m  \vec{x_j}^{T} (X\theta - \vec{y})
-\]</span></p>
-<p>如果 \(j\) 从 \(0\) 到 \(n\)，那么这就构成了所有参数的梯度值 \(J()\)，即</p>
-<p><span class="math display">\[
-\nabla J(\theta) = \frac1mX^T\left(X\theta - \vec{y}\right)
-\]</span></p>
-<p>最后，梯度下降的式子就可以被表示为</p>
-<p><span class="math display">\[
-\theta := \theta - \frac{\alpha}{m} X^{T} (X\theta - \vec{y})
-\]</span></p>
-#
-<p style="color:#3A5FCD">
-特征归一化
-</p>
-<p>如果我们把所有的输入都控制在大致类似的范围内，那么梯度下降的速度将会提高。这是因为，\(\) 在较小范围内下降地较快，而在大范围内只会慢慢下降，因此当输入的变量分布地非常不均匀时，梯度下降的效率将会非常低下。</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(\theta)}{\partial \theta_j} = \frac1m  \vec{x_j}^{T} (X\theta - \vec{y})</script><p>如果 \(j\) 从 \(0\) 到 \(n\)，那么这就构成了所有参数的梯度值 \(\nabla J(\theta)\)，即</p>
+<script type="math/tex; mode=display">
+\nabla J(\theta) = \frac1mX^T\left(X\theta - \vec{y}\right)</script><p>最后，梯度下降的式子就可以被表示为</p>
+<script type="math/tex; mode=display">
+\theta := \theta - \frac{\alpha}{m} X^{T} (X\theta - \vec{y})</script><h1 id="特征归一化"><a href="#特征归一化" class="headerlink" title=" 特征归一化 "></a><p style="color:#3A5FCD"> 特征归一化 </p></h1><p>如果我们把所有的输入都控制在大致类似的范围内，那么梯度下降的速度将会提高。这是因为，\(\theta\) 在较小范围内下降地较快，而在大范围内只会慢慢下降，因此当输入的变量分布地非常不均匀时，梯度下降的效率将会非常低下。</p>
 <p>防止这一点的方法就是把输入变量的取值范围修改为大致相同的范围，比如像</p>
-<p><span class="math display">\[-1 ≤ x_{(i)} ≤ 1\]</span></p>
-<p>或者</p>
-<p><span class="math display">\[-0.5 ≤ x_{(i)} ≤ 0.5\]</span></p>
-<p>当然这不是必须的，我们的只是希望加速梯度下降的速度而已。</p>
+<script type="math/tex; mode=display">-1 ≤ x_{(i)} ≤ 1</script><p>或者</p>
+<script type="math/tex; mode=display">-0.5 ≤ x_{(i)} ≤ 0.5</script><p>当然这不是必须的，我们的只是希望加速梯度下降的速度而已。</p>
 <p>那么如何控制变量的范围呢，有两个方法：<big style="color:red">特征缩放</big>和<big style="color:red">均值归一化</big>。</p>
 <p>特征缩放就是让每个特征的输入除以其取值范围（最大值减最小值），均值归一化就是让每个特征的输入减去其平均值，下面举个例子：</p>
-<p>\(x_i\) 是某训练集中的房价，取值范围是 8000元/平米 到 19000元/平米，训练集中房价的平均值为 1000，那么经过特征缩放和均值归一化后 \(x_i\) 就为 \(\)。</p>
-#
-<p style="color:#3A5FCD">
-梯度下降中的技巧
-</p>
-<p><big style="color:red">检查错误：</big>通过绘制一副以梯度下降中的迭代次数为横轴，损失函数\(J()\) 的值为纵轴的图像，可以直观的看到损失函数的值的变化情况，如果你发现 \(J()\) 在增加，那么你可能需要减小学习率 \(\)。</p>
-<p><big style="color:red">自动收敛检验：</big>设置一个值 E，如果在一次迭代中 \(J()\) 减小到小于 E，则说明已经收敛，即达到最优解，不过在实际应用中很难决定这个值。</p>
-#
-<p style="color:#3A5FCD">
-特征与多项式回归
-</p>
-<p>在一个数据集中，每一组数据的输入都有很多特征，然而，这些特征是人工选择的，因此不一定都是最恰当的，往往好的特征也能带来好的预测函数，那么改进特征和预测函数有很多方法。</p>
+<p>\(x_i\) 是某训练集中的房价，取值范围是 8000元/平米 到 19000元/平米，训练集中房价的平均值为 1000，那么经过特征缩放和均值归一化后 \(x_i\) 就为 \(\frac{x_i - 1000}{1900}\)。</p>
+<h1 id="梯度下降中的技巧"><a href="#梯度下降中的技巧" class="headerlink" title=" 梯度下降中的技巧 "></a><p style="color:#3A5FCD"> 梯度下降中的技巧 </p></h1><p><big style="color:red">检查错误：</big>通过绘制一副以梯度下降中的迭代次数为横轴，损失函数\(J(\theta)\) 的值为纵轴的图像，可以直观的看到损失函数的值的变化情况，如果你发现 \(J(\theta)\) 在增加，那么你可能需要减小学习率 \(\alpha\)。</p>
+<p><big style="color:red">自动收敛检验：</big>设置一个值 E，如果在一次迭代中 \(J(\theta)\) 减小到小于 E，则说明已经收敛，即达到最优解，不过在实际应用中很难决定这个值。</p>
+<h1 id="特征与多项式回归"><a href="#特征与多项式回归" class="headerlink" title=" 特征与多项式回归 "></a><p style="color:#3A5FCD"> 特征与多项式回归 </p></h1><p>在一个数据集中，每一组数据的输入都有很多特征，然而，这些特征是人工选择的，因此不一定都是最恰当的，往往好的特征也能带来好的预测函数，那么改进特征和预测函数有很多方法。</p>
 <p>我们可以把一些已有的特征组合产生新的特征，比如把特征 \(x_1\) 和 \(x_2\) 组合成 \(x_3 = x_1 · x_2\)。</p>
-<h2 id="多项式回归">多项式回归</h2>
-<p>如果我们的预测函数不能很好的预测结果，那么应该尽量避免其是直线形式。</p>
+<h2 id="多项式回归"><a href="#多项式回归" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>如果我们的预测函数不能很好的预测结果，那么应该尽量避免其是直线形式。</p>
 <p>我们可以通过加入一些二次方或三次方项来改变预测函数的形式。</p>
-<p>比如，如果预测函数为 \(h_(x) = _0 + <em>1 x_1\)，那么我们可以针对 \(x_1\) 新增二次项和三次项，\(h</em>(x) = _0 + _1 x_1 + _2 x_1^2 + _3 x_1^3\)。</p>
+<p>比如，如果预测函数为 \(h<em>\theta(x) = \theta_0 + \theta_1 x_1\)，那么我们可以针对 \(x_1\) 新增二次项和三次项，\(h</em>\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_1^2 + \theta_3 x_1^3\)。</p>
 <p>有一点需要注意的是，如果你选择这种方法增加特征，那么特征归一化将很重要，因为这种方法将会使得特征值分布的范围各不相同。</p>
-#
-<p style="color:#3A5FCD">
-正规方程
-</p>
-<p>正规方程是另一种寻找最优参数值的方法，相比于梯度下降需要不断迭代直到找到最优解，但正规方程不需要迭代。</p>
+<h1 id="正规方程"><a href="#正规方程" class="headerlink" title=" 正规方程 "></a><p style="color:#3A5FCD"> 正规方程 </p></h1><p>正规方程是另一种寻找最优参数值的方法，相比于梯度下降需要不断迭代直到找到最优解，但正规方程不需要迭代。</p>
 <p>直接通过下面的式子就能直接得到所有参数值</p>
-<p><span class="math display">\[\theta = (X^T X)^{-1}X^T y\]</span></p>
-<p>而且正规方程不需要特征归一化。</p>
+<script type="math/tex; mode=display">\theta = (X^T X)^{-1}X^T y</script><p>而且正规方程不需要特征归一化。</p>
 <p>关于正规方程的推导过程需要用到线性代数的知识，如果你感兴趣，可以通过 Coursera 给出的两个链接查看（英文），或者百度一下</p>
-<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)">https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics">https://en.wikipedia.org/wiki/Linear<em>least_squares</em>(mathematics)</a>)</p>
 <p><a target="_blank" rel="noopener" href="http://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression">http://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression</a></p>
 <p>虽然正规方程看上去很方便，但如果特征量非常大，那么使用正规方程将会花掉比梯度下降多很多的时间，因为其计算量很大。一般在实际应用中，如果特征数在 10000 以内，正规方程还可以胜任，但如果大于 10000，也许梯度下降会是更好的选择。</p>
-#
-<p style="color:#3A5FCD">
-总结
-</p>
-<p>这一周先对单元线性回归进行了拓展，在多元线性回归中，概念没有太大的变化，只是进一步介绍了如何用向量、矩阵形式来表示相应的式子。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title=" 总结 "></a><p style="color:#3A5FCD"> 总结 </p></h1><p>这一周先对单元线性回归进行了拓展，在多元线性回归中，概念没有太大的变化，只是进一步介绍了如何用向量、矩阵形式来表示相应的式子。</p>
 <p>之后又介绍了提高梯度下降效率的特征归一化（分为两个步骤：特征缩放和均值归一化），以及在梯度下降中的两个技巧。</p>
 <p>如果你觉得已有的特征不够恰当，可以适当的利用已有的特征增加一些新的特征。</p>
 <p>最后简单介绍了正规方程，在特征量较小时，它也许比需要迭代的梯度下降方便，但如果特征量很大，梯度下降会是更好的选择。</p>
@@ -389,35 +332,55 @@ J(\theta) = \dfrac {1}{2m} (X\theta - \vec{y})^{T} (X\theta - \vec{y})
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>

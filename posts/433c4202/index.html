@@ -117,21 +117,19 @@
 	<div class="mypage">		
 	  		
 
-	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-%E4%B8%8B%E8%BD%BD.png" /></p>
+	  <p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-%E4%B8%8B%E8%BD%BD.png" alt=""></p>
 <a id="more"></a>
-<h3 id="导入需要的包">导入需要的包</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastai <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> fastai.vision <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
-<h3 id="准备数据">准备数据</h3>
-<p>数据集含 7393 张图片，37 个不同猫狗品种</p>
+<h3 id="导入需要的包"><a href="#导入需要的包" class="headerlink" title="导入需要的包"></a>导入需要的包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastai <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> fastai.vision <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
+<h3 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h3><p>数据集含 7393 张图片，37 个不同猫狗品种</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">bs = <span class="number">64</span> <span class="comment"># batch-size</span></span><br><span class="line"><span class="comment"># 下载数据集</span></span><br><span class="line">path = untar_data(URLs.PETS)</span><br><span class="line">path_anno = path/<span class="string">&#x27;annotations&#x27;</span></span><br><span class="line">path_img = path/<span class="string">&#x27;images&#x27;</span></span><br><span class="line"></span><br><span class="line">fnames = get_image_files(path_img)</span><br><span class="line"><span class="comment"># 利用正则表达式获得类别，组装成训练集和验证集</span></span><br><span class="line">pat = re.<span class="built_in">compile</span>(<span class="string">r&#x27;/([^/]+)_\d+.jpg$&#x27;</span>)</span><br><span class="line">data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transfrom(), size=<span class="number">224</span>, bs=bs, num_workers=<span class="number">0</span>).normalize(imagenet_stats)</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">data.show_batch(rows=<span class="number">3</span>, figsize=(<span class="number">7</span>,<span class="number">6</span>))</span><br></pre></td></tr></table></figure>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-%E4%B8%8B%E8%BD%BD.png" /></p>
-<h3 id="使用-resnet34-迁移学习">使用 ResNet34 迁移学习</h3>
-<p>使用本地 CPU 迭代 4 次需大约 2 hours，使用 GCP 仅需 2 mins</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-%E4%B8%8B%E8%BD%BD.png" alt=""></p>
+<h3 id="使用-ResNet34-迁移学习"><a href="#使用-ResNet34-迁移学习" class="headerlink" title="使用 ResNet34 迁移学习"></a>使用 ResNet34 迁移学习</h3><p>使用本地 CPU 迭代 4 次需大约 2 hours，使用 GCP 仅需 2 mins</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 ResNet34</span></span><br><span class="line">learn = create_cnn(data, models.resnet34, metrics=error_rate)</span><br><span class="line"><span class="comment"># 训练</span></span><br><span class="line">learn.fit_one_cycle(<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
 <p>Total time: 02:10</p>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>epoch</th>
 <th>train_loss</th>
 <th>valid_loss</th>
@@ -139,25 +137,25 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>1.363533</td>
 <td>0.374314</td>
 <td>0.110961</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>0.551215</td>
 <td>0.287073</td>
 <td>0.094723</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>0.346619</td>
 <td>0.271395</td>
 <td>0.081867</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td>0.249408</td>
 <td>0.254900</td>
@@ -165,39 +163,35 @@
 </tr>
 </tbody>
 </table>
+</div>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存模型</span></span><br><span class="line">learn.save(<span class="string">&#x27;stage-1&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="评估">评估</h3>
-<p><strong>losses</strong></p>
+<h3 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h3><p><strong>losses</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">interp = ClassficationInterpretation.from_learner(learn)</span><br><span class="line"><span class="comment"># losses 从大到小存至 list</span></span><br><span class="line">losses, idxs = interp.top_losses()</span><br><span class="line"><span class="comment"># losses 最大的 9 张图</span></span><br><span class="line">interp.plot_top_losses(<span class="number">9</span>, fjgsize=(<span class="number">15</span>, <span class="number">11</span>))</span><br></pre></td></tr></table></figure>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-081750.jpg" /></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-081750.jpg" alt=""></p>
 <p><strong>confusion matrix</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绘制 confusion matrix</span></span><br><span class="line">interp.plot_confusion_matrix(figsize=(<span class="number">12</span>, <span class="number">12</span>), dpi=<span class="number">60</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-082753.jpg" /></p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-082753.jpg" alt=""></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 混淆次数最多的几个品种</span></span><br><span class="line">interp.most_confused(min_val=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>[('american_pit_bull_terrier', 'staffordshire_bull_terrier', 10),<br />
-('Russian_Blue', 'British_Shorthair', 5),<br />
-('american_pit_bull_terrier', 'american_bulldog', 5),<br />
-('american_pit_bull_terrier', 'miniature_pinscher', 4),<br />
-('Egyptian_Mau', 'Bengal', 3),<br />
-('american_bulldog', 'staffordshire_bull_terrier', 3),<br />
-('english_cocker_spaniel', 'english_setter', 3)]</p>
+<p>[(‘american_pit_bull_terrier’, ‘staffordshire_bull_terrier’, 10),<br> (‘Russian_Blue’, ‘British_Shorthair’, 5),<br> (‘american_pit_bull_terrier’, ‘american_bulldog’, 5),<br> (‘american_pit_bull_terrier’, ‘miniature_pinscher’, 4),<br> (‘Egyptian_Mau’, ‘Bengal’, 3),<br> (‘american_bulldog’, ‘staffordshire_bull_terrier’, 3),<br> (‘english_cocker_spaniel’, ‘english_setter’, 3)]</p>
 </blockquote>
 <p>看来斯塔福郡斗牛梗和美国比特斗牛犬最难分辨，是有点像</p>
+<div class="table-container">
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>美国比特斗牛犬</th>
 <th>斯塔福郡斗牛梗</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-083904.jpg" /></td>
-<td><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-084247.jpg" /></td>
+<tr>
+<td><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-083904.jpg" alt=""></td>
+<td><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2019-02-03-084247.jpg" alt=""></td>
 </tr>
 </tbody>
 </table>
+</div>
 	  
 	</div>
 
@@ -343,35 +337,55 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>
