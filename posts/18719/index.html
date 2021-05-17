@@ -335,7 +335,16 @@
 <li>可以看出，广告请求是被分配到自运营广告库，还是对接其他广告网络，或是以 RTB 方式对接 DSP，是根据其收益动态计算决定的，该方案称为<strong>动态分配（dynamic allocation）</strong>。对应的产品形态称为<strong>供给方平台（supply side platform，SSP）</strong></li>
 </ul>
 <h3 id="供给方平台产品策略">5.1 供给方平台产品策略</h3>
-<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2021-05-14-v2-33739c1d459bd0b9d4f6144e22207e38_r.jpg" /> 1. 聚合（mediation）：集成多个 ADN 的 JS 代码或 SDK，在线动态决定向谁请求广告。选择 ADN 的逻辑，即为根据某次展示机会的 (u, c)，对候选的 ADN 估计 eCPM。由于此时没有具体广告，只能粗略估计，实际中考虑的因素主要有：1. ADN 的分成模式和比例 2. ADN 的广告返回率 3. 如果某 ADN 主要投放某种行业类型的广告，那么 (u, c) 中的人群和环境标签也有帮助 2. 广告投放（ad serving）：估计媒体自行销售的广告的 eCPM，像是帮助媒体实现了一个私有的 ADN 3. 市场（marketplace）：SSP 以 RTB 方式向 DSP 请求广告，这形成了一个市场。SSP 里的市场与 ADX 没有本质区别，尤其当 DSP 越来越多，ADN 越来越少时，SSP 与 ADX 呈现出越来越强的同质化趋势 - 有时 SSP 向选出的 ADN 投放请求后，该 ADN 不一定能填充这次展示机会，那么 SSP 就要跳转向排名第二的需求方，若还是 ADN，则再次请求广告，依此类推，该模式称为<strong>瀑布模式</strong>。 - 瀑布模式中的多次请求使得总体请求广告的延迟大大增加，比较低效，Header Bidding 模式在一定程度可以解决此问题。</p>
+<p><img src="http://liuhdme-blog.oss-cn-beijing.aliyuncs.com/2021-05-14-v2-33739c1d459bd0b9d4f6144e22207e38_r.jpg" /></p>
+<ol type="1">
+<li>聚合（mediation）：集成多个 ADN 的 JS 代码或 SDK，在线动态决定向谁请求广告。选择 ADN 的逻辑，即为根据某次展示机会的 (u, c)，对候选的 ADN 估计 eCPM。由于此时没有具体广告，只能粗略估计，实际中考虑的因素主要有：1. ADN 的分成模式和比例 2. ADN 的广告返回率 3. 如果某 ADN 主要投放某种行业类型的广告，那么 (u, c) 中的人群和环境标签也有帮助</li>
+<li>广告投放（ad serving）：估计媒体自行销售的广告的 eCPM，像是帮助媒体实现了一个私有的 ADN</li>
+<li>市场（marketplace）：SSP 以 RTB 方式向 DSP 请求广告，这形成了一个市场。SSP 里的市场与 ADX 没有本质区别，尤其当 DSP 越来越多，ADN 越来越少时，SSP 与 ADX 呈现出越来越强的同质化趋势</li>
+</ol>
+<ul>
+<li>有时 SSP 向选出的 ADN 投放请求后，该 ADN 不一定能填充这次展示机会，那么 SSP 就要跳转向排名第二的需求方，若还是 ADN，则再次请求广告，依此类推，该模式称为<strong>瀑布模式</strong>。</li>
+<li>瀑布模式中的多次请求使得总体请求广告的延迟大大增加，比较低效，Header Bidding 模式在一定程度可以解决此问题。</li>
+</ul>
 <h3 id="header-bidding">5.2 Header Bidding</h3>
 <ul>
 <li>Header Bidding 时 Bidder 和媒体建立直连，绕过 ADX 的一种方式。Bidder 有机会在实时竞价开始前就直接向媒体报价，媒体根据报价高低决定中标者。这里的 Bidder 指所有可以进行报价的服务，可以是 DSP，也可以是 ADX 或其他广告参与者。</li>
@@ -510,35 +519,55 @@
   <span>▲</span> 
 </a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
+<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
+<script src="<%- config.root %>js/gallery.js"></script>
+<script src="<%- config.root %>js/bootstrap.min.js"></script>
+<script src="<%- config.root %>js/main.js"></script>
+<script src="<%- config.root %>js/search.js"></script> 
 
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<% if (theme.fancybox){ %>
+<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
+<% } %>
 
-
-
+<% if (config.search) { %>
    <script type="text/javascript">      
-     var search_path = "search.xml";
+     var search_path = "<%= config.search.path %>";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "/" + search_path;
+	 var path = "<%= config.root %>" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-
+<% } %>
 
 <!-- syntax highlighting -->
+<% if (theme.comment_js) { %>
+  <script>
+  marked.setOptions({
+    highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+    }
+  });
+  function Highlighting(){
+    var markdowns = document.getElementsByClassName('markdown');
+    for(var i=0;i<markdowns.length;i++){
+        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', Highlighting, false);
+  window.addEventListener('load', Highlighting, false);
+  </script>
+<% } %>
 
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
 </body>
 </html>
