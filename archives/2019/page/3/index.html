@@ -610,45 +610,45 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
-		
 			<li><a href="/tags/Knowledge-Graph/">Knowledge Graph<span>1</span></a></li>
 		
-			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
-		
-			<li><a href="/tags/考试/">考试<span>1</span></a></li>
-		
-			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
-		
-			<li><a href="/tags/Deep-Learning/">Deep Learning<span>22</span></a></li>
-		
-			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
-		
-			<li><a href="/tags/译文/">译文<span>2</span></a></li>
-		
-			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span>1</span></a></li>
-		
 			<li><a href="/tags/NLP/">NLP<span>5</span></a></li>
+		
+			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+		
+			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+		
+			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
 		
 			<li><a href="/tags/计算广告/">计算广告<span>2</span></a></li>
 		
 			<li><a href="/tags/优化算法/">优化算法<span>6</span></a></li>
 		
-			<li><a href="/tags/Recommender-System/">Recommender System<span>1</span></a></li>
-		
-			<li><a href="/tags/Android/">Android<span>3</span></a></li>
-		
-			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
-		
-			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+			<li><a href="/tags/Information-Theory/">Information Theory<span>1</span></a></li>
 		
 			<li><a href="/tags/爬虫/">爬虫<span>1</span></a></li>
 		
-			<li><a href="/tags/Computer-Vision/">Computer Vision<span>8</span></a></li>
+			<li><a href="/tags/考试/">考试<span>1</span></a></li>
 		
-			<li><a href="/tags/Graph-Neural-Network/">Graph Neural Network<span>1</span></a></li>
+			<li><a href="/tags/生活/">生活<span>3</span></a></li>
+		
+			<li><a href="/tags/Probability-theory/">Probability theory<span>1</span></a></li>
+		
+			<li><a href="/tags/Paper-Notes/">Paper Notes<span>1</span></a></li>
+		
+			<li><a href="/tags/数字图像处理/">数字图像处理<span>2</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>1</span></a></li>
+		
+			<li><a href="/tags/译文/">译文<span>2</span></a></li>
+		
+			<li><a href="/tags/Scipy/">Scipy<span>1</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span>1</span></a></li>
+		
+			<li><a href="/tags/Android/">Android<span>3</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>3</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span>21</span></a></li>
@@ -754,55 +754,35 @@
   <span>▲</span> 
 </a>
 
-<script src="<%- config.root %>js/jquery.imagesloaded.min.js"></script>
-<script src="<%- config.root %>js/gallery.js"></script>
-<script src="<%- config.root %>js/bootstrap.min.js"></script>
-<script src="<%- config.root %>js/main.js"></script>
-<script src="<%- config.root %>js/search.js"></script> 
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
 
-<% if (theme.fancybox){ %>
-<link rel="stylesheet" href="<%- config.root %>fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="<%- config.root %>fancybox/jquery.fancybox.pack.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
 </script>
-<% } %>
 
-<% if (config.search) { %>
+
+
    <script type="text/javascript">      
-     var search_path = "<%= config.search.path %>";
+     var search_path = "search.xml";
 	 if (search_path.length == 0) {
 	 	search_path = "search.xml";
 	 }
-	 var path = "<%= config.root %>" + search_path;
+	 var path = "/" + search_path;
      searchFunc(path, 'local-search-input', 'local-search-result');
    </script>
-<% } %>
+
 
 <!-- syntax highlighting -->
-<% if (theme.comment_js) { %>
-  <script>
-  marked.setOptions({
-    highlight: function (code, lang) {
-        return hljs.highlightAuto(code).value;
-    }
-  });
-  function Highlighting(){
-    var markdowns = document.getElementsByClassName('markdown');
-    for(var i=0;i<markdowns.length;i++){
-        if(markdowns[i].innerHTML) markdowns[i].innerHTML =marked(markdowns[i].innerHTML);
-    }
-  }
-  window.addEventListener('DOMContentLoaded', Highlighting, false);
-  window.addEventListener('load', Highlighting, false);
-  </script>
-<% } %>
 
-<% if (page.mathjax){ %>
-<%- partial('mathjax') %>
-<% } %>
 
 </body>
 </html>
